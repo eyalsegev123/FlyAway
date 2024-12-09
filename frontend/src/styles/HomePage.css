@@ -1,0 +1,70 @@
+/* Homepage.css */
+
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Overall container for the homepage */
+  .homepage-container {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    padding: 20px;
+  }
+  
+  /* Header styles */
+  .homepage-header {
+    text-align: center;
+    background-color: blue;
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+  }
+  
+  .homepage-header h1 {
+    font-size: 2.5em;
+  }
+  
+  .homepage-header p {
+    font-size: 1.2em;
+    margin-top: 10px;
+  }
+  
+  /* Content section styles */
+  .homepage-content {
+    margin-top: 40px;
+    text-align: center;
+  }
+  
+  .homepage-content h2 {
+    font-size: 2em;
+    color: #333;
+  }
+  
+  .homepage-content ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .homepage-content li {
+    font-size: 1.2em;
+    margin: 10px 0;
+  }
+  
+  /* Footer styles */
+  .homepage-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border-radius: 4px;
+  }
+  
+  .homepage-footer p {
+    font-size: 1em;
+  }
+  
