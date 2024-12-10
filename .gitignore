@@ -1,0 +1,55 @@
+# =======================
+# Global .gitignore rules
+# =======================
+
+# Ignore node_modules and other dependencies
+node_modules/
+# Ignore environment variables
+.env
+# Ignore log files
+*.log
+# Ignore macOS specific files
+.DS_Store
+# Ignore Windows specific files
+Thumbs.db
+# Ignore coverage directories for testing
+coverage/
+
+# ===========================
+# Frontend-specific ignores
+# ===========================
+
+# Ignore build output for React
+/build/
+# Ignore IDE/editor specific files for frontend
+.vscode/
+.idea/
+
+# ===========================
+# Backend-specific ignores
+# ===========================
+
+# Ignore node_modules in backend
+/backend/node_modules/
+# Ignore build and distribution folders in backend
+/backend/build/
+backend/dist/
+
+# ===========================
+# Local Configurations and Miscellaneous
+# ===========================
+
+# Ignore local environment files for specific environments
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore npm-debug logs and yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore Yarn PnP files if using Yarn
+/.pnp
+.pnp.js
