@@ -1,11 +1,25 @@
-const express = require('express');
-const app = express();
-const port = 5001; // You can choose any port you want
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const userRoutes = require("./routes/users");
+const pool = require('./config/db');
 
-app.get('/', (req, res) => {
-  res.send('Hello from the backend!');
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/api/users", userRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Welcome to FlyAway!");
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
