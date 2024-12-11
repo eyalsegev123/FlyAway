@@ -1,0 +1,21 @@
+/* Style for form elements */
+.form-group {
+  margin-bottom: 20px; /* Adds space between form groups */
+}
+
+/* Style for labels */
+.form-group label {
+  font-size: 14px;  /* Controls the size of the label text */
+  margin-bottom: 8px; /* Adds space below the label */
+  display: block;  /* Ensures the label takes up its own line */
+}
+
+/* Style for input fields */
+.form-group input {
+  padding: 10px; /* Adds padding inside the input field */
+  width: 100%; /* Makes the input field take up full width of the container */
+  box-sizing: border-box; /* Prevents the input from overflowing */
+  border-radius: 4px; /* Rounded corners for input fields */
+  border: 1px solid #ccc; /* Light border for the input fields */
+  margin-bottom: 16px; /* Adds space below the input field */
+}

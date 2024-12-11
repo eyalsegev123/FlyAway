@@ -1,0 +1,49 @@
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Make sure the body and html cover the full height */
+body, html {
+  height: 100%; /* Full height for the page */
+}
+
+/* Overall container for the homepage */
+.homepage-container {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Allow full height for content */
+  position: relative; /* Position the content relative to the background */
+}
+
+/* Apply the background image to the body */
+body {
+  background-image: url('/photos/HomePage_wallpaper.jpeg'); /* Correct image path */
+  background-size: cover; /* Ensure the image covers the entire container */
+  background-position: center; /* Center the background */
+  background-attachment: fixed; /* Keep the background fixed while scrolling */
+  background-repeat: no-repeat; /* Don't repeat the image */
+  height: 100%; /* Ensure full height */
+}
+
+/* Main content area */
+.homepage-main {
+  display: flex;
+  flex: 1; /* Take up the remaining space */
+  z-index: 1; /* Ensure content is on top of background */
+  margin-left: 250px; /* Account for the sidebar width */
+  padding: 20px;
+  overflow-y: auto; /* Allows scrolling if content exceeds height */
+}
+
+/* Content area */
+.homepage-content {
+  text-align: center;
+  color: #333;
+  font-size: 2rem;
+  z-index: 1; /* Ensure content appears on top of background */
+}
