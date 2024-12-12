@@ -1,3 +1,10 @@
+/* Define CSS variables for colors and fonts */
+:root {
+  --primary-color: #333;
+  --font-family: 'Arial', sans-serif;
+  --font-size-large: 2rem;
+}
+
 /* Reset some default styles */
 * {
   margin: 0;
@@ -12,10 +19,10 @@ body, html {
 
 /* Overall container for the homepage */
 .homepage-container {
-  font-family: 'Arial', sans-serif;
-  color: #333;
+  font-family: var(--font-family);
+  color: var(--primary-color);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%; /* Allow full height for content */
   position: relative; /* Position the content relative to the background */
 }
@@ -35,15 +42,19 @@ body {
   display: flex;
   flex: 1; /* Take up the remaining space */
   z-index: 1; /* Ensure content is on top of background */
-  margin-left: 250px; /* Account for the sidebar width */
   padding: 20px;
   overflow-y: auto; /* Allows scrolling if content exceeds height */
+  transition: margin 0.3s ease; /* Smooth transition for margin */
+  margin-left: 0; /* Default margin for open left sidebar */
+  margin-top: 60px; /* Adjust this value based on the header height */
+  margin-right: 150px; /* Adjust this value based on the right sidebar width */
 }
 
 /* Content area */
 .homepage-content {
   text-align: center;
-  color: #333;
-  font-size: 2rem;
+  color: var(--primary-color);
+  font-size: var(--font-size-large);
   z-index: 1; /* Ensure content appears on top of background */
 }
+

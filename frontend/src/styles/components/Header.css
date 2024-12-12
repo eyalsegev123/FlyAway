@@ -28,12 +28,6 @@
   margin-right: 10px; /* Space between the logo and title */
 }
 
-.header h1 {
-  font-size: 2rem;
-  margin: 0;
-  color: #333;
-}
-
 /* Style for the buttons */
 .header-buttons {
   display: flex;

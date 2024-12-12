@@ -1,17 +1,20 @@
 /* Sidebar styles */
 .sidebar {
   width: 0;
-  background-color: #2d87f5;
+  background-color: #4a90e2; /* Changed to a nicer blue color */
   color: white;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full height of the viewport */
+  height: calc(100vh - 60px); /* Adjust height to be under the header */
   position: fixed; /* Keeps the sidebar fixed in place */
-  top: 20;
+  top: 142px; /* Adjust top position to be under the header */
   left: 0;
   z-index: 999; /* Ensure sidebar is below the header */
   overflow: hidden; /* Hide the content when sidebar is closed */
+  -webkit-transition: width 0.3s ease; /* Smooth transition when opening/closing */
+  -moz-transition: width 0.3s ease; /* Smooth transition when opening/closing */
+  -o-transition: width 0.3s ease; /* Smooth transition when opening/closing */
   transition: width 0.3s ease; /* Smooth transition when opening/closing */
 }
 
@@ -20,7 +23,8 @@
 }
 
 .sidebar.closed {
-  width: 0; /* Sidebar width when closed */
+  width: 70px; /* Sidebar width when closed */
+  margin-left: 0; /* Adjust margin when sidebar is closed */
 }
 
 /* Hamburger button */
@@ -30,14 +34,14 @@
   color: white;
   font-size: 2rem;
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 10px;
+  left: 5px;
   z-index: 1100; /* Ensure the hamburger button is above the sidebar */
   cursor: pointer;
 }
 
 .hamburger div {
-  width: 30px;
+  width: 15px;
   height: 4px;
   background-color: white;
   margin: 6px 0;

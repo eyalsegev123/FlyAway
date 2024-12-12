@@ -1,7 +1,7 @@
 // src/components/Sidebar.jsx
 import React, { useState } from "react";
-import SidebarItem from "./SidebarItem";
-import HamburgerButton from "./HamburgerButton"; // Import the hamburger button
+import SidebarItem from "./SidebarItem.jsx";
+import HamburgerButton from "./HamburgerButton.jsx"; // Import the hamburger button
 import "../styles/components/Sidebar.css"; // Ensure the CSS file is linked
 
 const Sidebar = () => {
@@ -15,17 +15,17 @@ const Sidebar = () => {
 
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
-      {/* Hamburger menu button */}
-      <HamburgerButton toggleSidebar={toggleSidebar} />
-
       <div className="sidebar-header">
-        <h2>Menu</h2> {/* Branding or profile name */}
+        <HamburgerButton toggleSidebar={toggleSidebar} />
+        {isOpen && <h2>Menu</h2>}
       </div>
-      <ul className="nav-list">
-        <SidebarItem to="/" text="Home" />
-        <SidebarItem to="/PlanTrip" text="Plan a Trip" />
-        <SidebarItem to="/AboutUs" text="About Us" />
-      </ul>
+      {isOpen && (
+        <ul className="nav-list">
+          <SidebarItem to="/" text="Home" />
+          <SidebarItem to="/PlanTrip" text="Plan a Trip" />
+          <SidebarItem to="/AboutUs" text="About Us" />
+        </ul>
+      )}
     </div>
   );
 };

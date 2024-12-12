@@ -3,36 +3,36 @@ button {
   padding: 10px 20px; /* Comfortable button size */
   border: 2px solid transparent; /* Transparent border for smoother look */
   border-radius: 8px; /* Larger rounded corners for a softer feel */
-  background-color: #4CAF50; /* Vibrant green background */
+  background-color: transparent; /* Transparent background */
   color: #fff; /* White text for contrast */
   font-size: 16px; /* Slightly larger font size for better readability */
   font-weight: 500; /* Medium weight for better text visibility */
   cursor: pointer; /* Pointer cursor for interactivity */
   transition: all 0.3s ease; /* Smooth transition for all states */
   text-transform: uppercase; /* Make button text uppercase for style */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  box-shadow: none; /* Remove shadow */
   outline: none; /* Remove default outline */
 }
 
 button:hover {
-  background-color: #45a049; /* Darker green on hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+  background-color: rgba(69, 160, 73, 0.2); /* Nice shade on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   transform: translateY(-2px); /* Slight lift on hover */
 }
 
 button:active {
-  background-color: #388e3c; /* Even darker shade on click */
+  background-color: rgba(56, 142, 60, 0.2); /* Even darker shade on click */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Active shadow effect */
   transform: translateY(2px); /* Slight press-down effect */
 }
 
 button:focus {
   outline: none; /* Remove focus outline */
-  border: 2px solid #2c6e49; /* Add a subtle border color on focus */
+  border: 2px solid rgba(44, 110, 73, 0.2); /* Add a subtle border color on focus */
 }
 
 button:disabled {
-  background-color: #c8e6c9; /* Light green background when disabled */
+  background-color: transparent; /* Transparent background when disabled */
   color: #a5d6a7; /* Light text color when disabled */
   cursor: not-allowed; /* Change cursor to indicate disabled state */
   box-shadow: none; /* Remove shadow when disabled */
