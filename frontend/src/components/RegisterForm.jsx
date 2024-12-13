@@ -1,15 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios"; // For making HTTP requests
+import "../styles/components/Form.css"; // Ensure this path is correct
+
 
 const RegisterForm = ({ onRegisterSuccess, onError }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [birthday, setBirthday] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+     // Check if the name contains only alphabetic characters (A-Z, a-z)
+  const nameRegex = /^[A-Za-z\s]+$/;
+    if (!nameRegex.test(name)) {
+      onError("Name must contain only alphabetic characters and spaces.");
+    setLoading(false);
+    return;
+  }
 
     // Check if passwords match
     if (password !== confirmPassword) {
@@ -18,12 +30,22 @@ const RegisterForm = ({ onRegisterSuccess, onError }) => {
       return;
     }
 
+    // Validate birthday format
+    const birthdayRegex = /^\d{2}\/\d{2}\/\d{4}$/; // Format: DD/MM/YYYY
+    if (!birthdayRegex.test(birthday)) {
+      onError("Invalid birthday format. Please use DD/MM/YYYY.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:5000/api/users/register", // Replace with your actual API endpoint
         {
+          name,
           email,
           password,
+          birthday
         }
       );
 
@@ -39,6 +61,16 @@ const RegisterForm = ({ onRegisterSuccess, onError }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="name">Name</label>
+        <input
+          type="name"
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </div>
       <div className="form-group">
         <label htmlFor="email">Email</label>
         <input
@@ -67,6 +99,17 @@ const RegisterForm = ({ onRegisterSuccess, onError }) => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="birthday">Birthday (DD/MM/YYYY)</label>
+        <input
+          type="text"
+          id="birthday"
+          value={birthday}
+          onChange={(e) => setBirthday(e.target.value)}
+          required
+          placeholder="e.g., 25/12/2000"
         />
       </div>
       <button type="submit" disabled={loading}>

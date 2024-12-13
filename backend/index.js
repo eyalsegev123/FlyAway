@@ -1,15 +1,15 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const userRoutes = require("./routes/users");
-const tripRoutes = require("./routes/trips");
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const userRoutes = require('./routes/users');
+const tripRoutes = require('./routes/trips');
 const wishRoutes = require('./routes/wishes');
 const pool = require('./config/db');
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = 5000;
 
 // Middleware
 app.use(cors());
@@ -17,8 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/users", userRoutes);
 app.use("/api/trips", tripRoutes);
-app.use("/api/wishes", tripRoutes);
-app.use()
+app.use("/api/wishes", wishRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to FlyAway!");

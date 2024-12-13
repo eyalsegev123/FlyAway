@@ -1,4 +1,4 @@
-const pool = require("../db"); // Database connection
+const pool = require("../config/db"); // Database connection
 
 // Add a new trip
 exports.addTrip = async (req, res) => {
@@ -84,7 +84,7 @@ exports.addPhotosToAlbum = async (req, res) => {
         const updatedAlbum = [...currentAlbum, ...photos]; // Append new photos to the album
 
         // Update the album in the database
-        await pool.query("UPDATE trips SET album = $1 WHERE trip_id = $2", [updatedAlbum, id]);
+        await pool.query("UPDATE trips SET album = $1 WHERE trip_id = $2", [updatedAlbum, trip_id]);
 
         res.status(200).json({ message: "Photos added to album", album: updatedAlbum });
     } catch (error) {
@@ -165,7 +165,7 @@ exports.updateTrip = async (req, res) => {
                 updatedTrip.start_date,
                 updatedTrip.end_date,
                 updatedTrip.trip_genre,
-                id,
+                trip_id,
             ]
         );
 

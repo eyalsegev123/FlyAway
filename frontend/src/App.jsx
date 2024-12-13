@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar"; // Sidebar component
 import HomePage from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import PlanTrip from "./pages/PlanTrip";
+import LoginForm from "./components/LoginForm";  // Add LoginForm import
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/AboutUs" element={<AboutUs />} />
             <Route path="/PlanTrip" element={<PlanTrip />} />
+            <Route path="/login" element={<LoginForm />} /> {/* Add this route for login */}
           </Routes>
         </div>
       </div>

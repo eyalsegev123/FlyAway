@@ -1,36 +1,63 @@
 const bcrypt = require("bcrypt");
-const pool = require("../db"); // Import the db.js file to get the pool object
+const pool = require("../config/db"); // Import the db.js file to get the pool object
 
 // Register a new user
 const registerUser = async (req, res) => {
-  const { username, email, password, birthday } = req.body;
+  const { name, email, password, birthday } = req.body;
 
-  // Validate input (optional but recommended)
-  if (!username || !email || !password || !birthday) {
+  // Validate input
+  if (!name || !email || !password || !birthday) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  try {
-    // Hash the password before storing it
-    const hashedPassword = await bcrypt.hash(password, 10);
 
+  // Validate birthday format
+  const birthdayRegex = /^\d{2}\/\d{2}\/\d{4}$/; // Format: DD/MM/YYYY
+  if (!birthdayRegex.test(birthday)) {
+    onError("Invalid birthday format. Please use DD/MM/YYYY.");
+    setLoading(false);
+    return;
+  }
+
+  // Validate email format
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
+  // Check if the name contains only alphabetic characters and spaces (A-Z, a-z, and spaces)
+  const nameRegex = /^[A-Za-z\s]+$/;
+  if (!nameRegex.test(name)) {
+    return res.status(400).json({ error: "Name must contain only alphabetic characters and spaces." });
+  }
+
+  // Check if user already exists
+  const existingUser = await pool.query("SELECT * FROM users WHERE mail = $1", [email]);
+  if (existingUser.rows.length > 0) 
+    return res.status(400).json({ error: "User with this email already exists" });
+
+  // Hash the password before storing it
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
     // Insert user into the database
     const result = await pool.query(
       "INSERT INTO users (name, mail, password, birthday, created_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) RETURNING *",
-      [username, email, hashedPassword, birthday]
+      [name, email, hashedPassword, birthday]
     );
-
     const newUser = result.rows[0]; // Get the inserted user data
-
+  
     res.status(201).json({
       message: "User registered successfully",
-      user: { username: newUser.name, email: newUser.mail },
+      user: { name: newUser.name, email: newUser.mail },
     });
   } catch (error) {
-    console.error("Error registering user:", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error registering user:", error); // Log the full error
+    res.status(500).json({ error: error.message || "Internal Server Error" }); // Send back the error message
   }
 };
+
+
 
 // Login user
 const loginUser = async (req, res) => {
@@ -48,16 +75,15 @@ const loginUser = async (req, res) => {
     ]);
 
     if (result.rows.length === 0) {
-      return res.status(400).json({ error: "Invalid email or password" });
+      return res.status(400).json({ error: "Invalid email" });
     }
 
     const user = result.rows[0];
 
     // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
-      return res.status(400).json({ error: "Invalid email or password" });
+      return res.status(400).json({ error: "Invalid password" , given: password, right: user.password});
     }
 
     // If authentication is successful, send a response with a token (you can use JWT)

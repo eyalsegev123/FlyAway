@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styles/components/Form.css";
+import "../styles/components/Form.css"; // Ensure this path is correct
 
 const LoginForm = ({ onLoginSuccess, onError }) => {
   const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ const LoginForm = ({ onLoginSuccess, onError }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/users/login", // Replace with your actual API URL
+        "http://localhost:5000/api/users/login", // Correct API URL
         { email, password }
       );
 
@@ -37,6 +37,7 @@ const LoginForm = ({ onLoginSuccess, onError }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          placeholder="Enter your email" // Optional placeholder
         />
       </div>
       <div className="form-group">
@@ -47,6 +48,7 @@ const LoginForm = ({ onLoginSuccess, onError }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          placeholder="Enter your password" // Optional placeholder
         />
       </div>
       <button type="submit" disabled={loading}>

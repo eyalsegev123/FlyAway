@@ -1,3 +1,14 @@
+/* Style for form container */
+form {
+  max-width: 400px; /* Limits the form width */
+  margin: 50px auto; /* Centers the form */
+  padding: 20px; /* Adds space inside the form */
+  border: 1px solid #ccc; /* Adds a border around the form */
+  border-radius: 8px; /* Rounds the corners of the form */
+  background-color: #f9f9f9; /* Light background color for the form */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
+}
+
 /* Style for form elements */
 .form-group {
   margin-bottom: 20px; /* Adds space between form groups */
@@ -5,17 +16,42 @@
 
 /* Style for labels */
 .form-group label {
-  font-size: 14px;  /* Controls the size of the label text */
+  font-size: 14px; /* Controls the size of the label text */
   margin-bottom: 8px; /* Adds space below the label */
-  display: block;  /* Ensures the label takes up its own line */
+  display: block; /* Ensures the label takes up its own line */
+  font-weight: bold; /* Makes the label text bold */
+  color: #333; /* Darker text color for readability */
 }
 
 /* Style for input fields */
 .form-group input {
   padding: 10px; /* Adds padding inside the input field */
-  width: 100%; /* Makes the input field take up full width of the container */
+  width: 100%; /* Makes the input field take up the full width of the container */
   box-sizing: border-box; /* Prevents the input from overflowing */
   border-radius: 4px; /* Rounded corners for input fields */
   border: 1px solid #ccc; /* Light border for the input fields */
   margin-bottom: 16px; /* Adds space below the input field */
+  font-size: 14px; /* Sets font size inside the input fields */
+}
+
+/* Style for the submit button */
+button {
+  padding: 12px 20px; /* Adds padding to the button */
+  width: 100%; /* Makes the button full width */
+  border: none; /* Removes border */
+  border-radius: 4px; /* Rounded corners for the button */
+  background-color: #4caf50; /* Green background color */
+  color: white; /* White text color */
+  font-size: 16px; /* Larger font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+button:disabled {
+  background-color: #ccc; /* Gray color for disabled button */
+  cursor: not-allowed; /* Prevent clicking on the button */
+}
+
+button:hover:not(:disabled) {
+  background-color: #45a049; /* Darker green on hover for active button */
 }

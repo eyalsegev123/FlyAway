@@ -1,4 +1,4 @@
-const pool = require("../db"); // Import the database connection pool
+const pool = require("../config/db"); // Import the database connection pool
 
 // Get all wishes of a specific user
 const getWishesByUserId = async (req, res) => {
