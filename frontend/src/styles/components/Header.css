@@ -6,8 +6,8 @@
   justify-content: space-between; /* Space between logo and buttons */
   align-items: center;
   padding: 20px 30px; /* Adjusted padding for a more spacious feel */
-  background-color: #120505; /* Clean, modern background color */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Softer shadow for elegance */
+  background-color: #494646; /* Clean, modern background color */
+  box-shadow: 0 4px 8px rgba(66, 66, 66, 0.1); /* Softer shadow for elegance */
   border-bottom: 1px solid #eaeaea; /* Subtle border for separation */
   position: fixed; /* Make the header fixed at the top */
   top: 0; /* Always stay at the top of the viewport */

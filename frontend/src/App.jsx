@@ -9,18 +9,15 @@ import PlanTrip from "./pages/PlanTrip";
 function App() {
   return (
     <Router>
-      {/* Main content area */}
-      <div style={{ marginLeft: "250px", padding: "20px", flex: 1 }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/AboutUs" element={<AboutUs />} />
-          <Route path="/PlanTrip" element={<PlanTrip />} />
-        </Routes>
-      </div>
-      
-      <div style={{ display: "flex" }}>
-        {/* Sidebar is now included */}
+      <div className="App">
         <Sidebar />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/AboutUs" element={<AboutUs />} />
+            <Route path="/PlanTrip" element={<PlanTrip />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

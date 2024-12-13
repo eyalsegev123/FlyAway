@@ -27,26 +27,6 @@
   margin-left: 0; /* Adjust margin when sidebar is closed */
 }
 
-/* Hamburger button */
-.hamburger {
-  background-color: transparent;
-  border: none;
-  color: white;
-  font-size: 2rem;
-  position: absolute;
-  top: 10px;
-  left: 5px;
-  z-index: 1100; /* Ensure the hamburger button is above the sidebar */
-  cursor: pointer;
-}
-
-.hamburger div {
-  width: 15px;
-  height: 4px;
-  background-color: white;
-  margin: 6px 0;
-  transition: 0.4s;
-}
 
 /* Sidebar header */
 .sidebar-header {

@@ -39,13 +39,13 @@ body {
 
 /* Main content area */
 .homepage-main {
-  display: flex;
+  display: inline-block;
   flex: 1; /* Take up the remaining space */
   z-index: 1; /* Ensure content is on top of background */
   padding: 20px;
   overflow-y: auto; /* Allows scrolling if content exceeds height */
   transition: margin 0.3s ease; /* Smooth transition for margin */
-  margin-left: 0; /* Default margin for open left sidebar */
+  margin-left: 70px; /* Default margin for open left sidebar */
   margin-top: 60px; /* Adjust this value based on the header height */
   margin-right: 150px; /* Adjust this value based on the right sidebar width */
 }

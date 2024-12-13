@@ -1,9 +1,9 @@
 import React from "react";
-import "../styles/components/Button.css"; // Import the CSS file
+import "../styles/components/Buttons.css"; // Import the CSS file
 
-const Button = ({ label, onClick }) => {
+const Button = ({ label, onClick , }) => {
   return (
-    <button className="button" onClick={onClick}>
+    <button onClick={onClick}>
       {label}
     </button>
   );

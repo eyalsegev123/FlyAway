@@ -33,23 +33,30 @@ const Header = () => {
     <div className="header">
       {/* Logo and title */}
       <div className="header-logo">
-        <img src="/photos/logo.jpeg" alt="FlyAway Logo" className="header-logo-img" />
+        <img
+          src="/photos/logo.jpeg"
+          alt="FlyAway Logo"
+          className="header-logo-img"
+        />
       </div>
 
       {/* Register and Login buttons */}
-      <div className="header-buttons">
-        <Button label="Register" onClick={openRegisterModal} />
-        <Button label="Login" onClick={openLoginModal} />
+      <div>
+        <Button
+          className="header-buttons"
+          label="Register"
+          onClick={openRegisterModal}
+        />
+        <Button
+          className="header-buttons"
+          label="Login"
+          onClick={openLoginModal}
+        />
       </div>
 
       {/* Render the Login Modal */}
-      <Modal 
-        isOpen={isLoginModalOpen}
-        onClose={closeLoginModal}
-        title="Login">
-        <LoginForm 
-          onLoginSuccess={handleLoginSuccess} 
-          onError={handleError} />
+      <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal} title="Login">
+        <LoginForm onLoginSuccess={handleLoginSuccess} onError={handleError} />
       </Modal>
 
       {/* Render the Register Modal */}

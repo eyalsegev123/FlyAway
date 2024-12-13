@@ -3,7 +3,7 @@ import React from "react";
 
 const HamburgerButton = ({ toggleSidebar }) => {
   return (
-    <button className="hamburger" onClick={toggleSidebar}>
+    <button className="hamburger-button" onClick={toggleSidebar}>
       <div></div>
       <div></div>
       <div></div>

@@ -12,7 +12,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
         <Button
-          className="close-button"
+          className="close-button-modal"
           label="&times;"
           onClick={onClose}
         ></Button>
