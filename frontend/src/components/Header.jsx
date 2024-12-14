@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "./Button"; // Import the Button component
 import LoginForm from "../components/LoginForm"; // Import LoginForm
 import RegisterForm from "../components/RegisterForm"; // Import RegisterForm
@@ -8,6 +8,15 @@ import "../styles/components/Header.css"; // Import CSS for styling
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [userName, setUserName] = useState(null);
+
+  // Check if user is logged in (on component mount)
+  useEffect(() => {
+    const storedUserName = localStorage.getItem("user_name");
+    if (storedUserName) {
+      setUserName(JSON.parse(storedUserName)); // Set user name from localStorage
+    }
+  }, []);
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
@@ -18,22 +27,23 @@ const Header = () => {
   const handleLoginSuccess = (data) => {
     alert(data.message); // Display user name
     localStorage.setItem("user_name", JSON.stringify(data.user.name));
-    localStorage.setItem("user_id", JSON.stringify(data.user.id));// Save user info to localStorage
+    localStorage.setItem("user_id", JSON.stringify(data.user.id)); // Save user info to localStorage
+    setUserName(data.user.name); // Update state to reflect logged-in user
     closeLoginModal();
-
-    // Update UI to show "Hello, [name]" instead of login/register buttons
-    // setIsLoggedIn(true); 
-    // setUser(userData);
   };
-
 
   const handleRegisterSuccess = (data) => {
     alert(data.message); // Display user name
     localStorage.setItem("user_name", JSON.stringify(data.user.name));
     localStorage.setItem("user_id", JSON.stringify(data.user.id)); // Save user info to localStorage
+    setUserName(data.user.name); // Update state to reflect logged-in user
     closeRegisterModal();
-    // setIsLoggedIn(true);
-    // setUser(userData);  
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_id");
+    setUserName(null); // Reset state when logging out
   };
 
   const handleError = (message) => {
@@ -51,23 +61,44 @@ const Header = () => {
         />
       </div>
 
-      {/* Register and Login buttons */}
+      {/* Conditionally render buttons */}
       <div>
-        <Button
-          className="header-buttons"
-          label="Register"
-          onClick={openRegisterModal}
-        />
-        <Button
-          className="header-buttons"
-          label="Login"
-          onClick={openLoginModal}
-        />
+        {userName ? (
+          // If user is logged in, show Logout button and greeting
+          <>
+          <div className="header-greeting-box">
+            <span className="header-greeting">Hello, {userName}</span>
+          </div>
+            <Button
+              className="header-buttons"
+              label="Logout"
+              onClick={handleLogout}
+            />
+          </>
+        ) : (
+          // If user is not logged in, show Register and Login buttons
+          <>
+            <Button
+              className="header-buttons"
+              label="Register"
+              onClick={openRegisterModal}
+            />
+            <Button
+              className="header-buttons"
+              label="Login"
+              onClick={openLoginModal}
+            />
+          </>
+        )}
       </div>
 
       {/* Render the Login Modal */}
       <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal} title="Login">
-        <LoginForm onLoginSuccess={handleLoginSuccess} onError={handleError} closeModal={closeLoginModal} />
+        <LoginForm
+          onLoginSuccess={handleLoginSuccess}
+          onError={handleError}
+          closeModal={closeLoginModal}
+        />
       </Modal>
 
       {/* Render the Register Modal */}

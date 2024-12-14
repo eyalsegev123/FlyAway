@@ -1,0 +1,71 @@
+/* Plan-trip-container styles */
+.plan-trip-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 900px; /* Keeps content within a reasonable width */
+    margin: auto;
+    box-sizing: border-box;
+}
+
+/* Form Group Styles (all fields) */
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+/* Label Styles */
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* Input and Select Fields */
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Dropdown styles */
+.dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-toggle {
+    width: 100%;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-menu {
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.dropdown-item input {
+    margin-right: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}

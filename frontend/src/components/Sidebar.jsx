@@ -1,13 +1,14 @@
-// src/components/Sidebar.jsx
 import React, { useState } from "react";
 import SidebarItem from "./SidebarItem.jsx";
-import HamburgerButton from "./HamburgerButton.jsx"; // Import the hamburger button
+import HamburgerButton from "./HamburgerButton.jsx";
 import "../styles/components/Sidebar.css"; // Ensure the CSS file is linked
 import "../styles/components/Buttons.css";
 
 const Sidebar = () => {
   // State to track whether the sidebar is open or closed
   const [isOpen, setIsOpen] = useState(false);
+  const userName = localStorage.getItem("user_name");
+  
 
   // Toggle the sidebar state when the button is clicked
   const toggleSidebar = () => {
@@ -25,6 +26,14 @@ const Sidebar = () => {
           <SidebarItem to="/" text="Home" />
           <SidebarItem to="/PlanTrip" text="Plan a Trip" />
           <SidebarItem to="/AboutUs" text="About Us" />
+          
+          {/* Show these links only if the user is logged in */}
+          {userName && (
+            <>
+              <SidebarItem to="/MyTrips" text="My memories" />
+              <SidebarItem to="/MyWishlist" text="Wishlist" />
+            </>
+          )}
         </ul>
       )}
     </div>

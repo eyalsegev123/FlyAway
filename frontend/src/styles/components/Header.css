@@ -1,5 +1,3 @@
-/* src/styles/components/Header.css */
-
 /* Style for the header */
 .header {
   display: flex;
@@ -32,6 +30,41 @@
 .header-buttons {
   display: flex;
   gap: 10px; /* Space between the buttons */
+}
+
+/* Style for the greeting box */
+.header-greeting-box {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff; /* White background for better contrast */
+  padding: 10px 20px; /* Add padding for spacing */
+  border-radius: 25px; /* Rounded corners */
+  border: 1px solid #cccccc; /* Light gray border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  color: #333333; /* Dark text color */
+  font-size: 16px; /* Font size for the greeting */
+  font-weight: bold; /* Make the greeting stand out */
+  text-transform: capitalize; /* Capitalize the name for better readability */
+}
+
+.header-greeting-box .header-greeting {
+  margin-left: 10px; /* Space between the greeting text and the box */
+  color: #333; /* Ensure the greeting text is dark enough */
+}
+
+/* Style for the logout button */
+.header-buttons.logout {
+  background-color: #ff5c5c; /* Red color for the logout button */
+  color: white;
+  border-radius: 5px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.header-buttons.logout:hover {
+  background-color: #ff3b3b; /* Darker red on hover */
 }
 
 /* Style for the body to prevent overlap with the fixed header */

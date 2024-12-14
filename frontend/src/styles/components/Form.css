@@ -1,17 +1,18 @@
 /* Style for form container */
 form {
-  max-width: 400px; /* Limits the form width */
-  margin: 50px auto; /* Centers the form */
-  padding: 20px; /* Adds space inside the form */
-  border: 1px solid #ccc; /* Adds a border around the form */
-  border-radius: 8px; /* Rounds the corners of the form */
-  background-color: #f9f9f9; /* Light background color for the form */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
+  max-width: 400px;
+  max-height: 70vh; /* Limits the form's height */
+  margin: 20px auto; /* Centers the form */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Style for form elements */
 .form-group {
-  margin-bottom: 20px; /* Adds space between form groups */
+  margin-bottom: 5px; /* Adds space between form groups */
 }
 
 /* Style for labels */
@@ -30,7 +31,7 @@ form {
   box-sizing: border-box; /* Prevents the input from overflowing */
   border-radius: 4px; /* Rounded corners for input fields */
   border: 1px solid #ccc; /* Light border for the input fields */
-  margin-bottom: 16px; /* Adds space below the input field */
+  margin-bottom: 10px; /* Adds space below the input field */
   font-size: 14px; /* Sets font size inside the input fields */
 }
 

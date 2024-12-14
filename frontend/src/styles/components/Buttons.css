@@ -3,102 +3,57 @@ button {
   padding: 10px 20px; /* Comfortable button size */
   border: 2px solid transparent; /* Transparent border for smoother look */
   border-radius: 8px; /* Larger rounded corners for a softer feel */
-  background-color: transparent; /* Transparent background */
+  background-color: #B0BEC5 !important; /* Soft, classic gray background with !important */
   color: #fff; /* White text for contrast */
   font-size: 16px; /* Slightly larger font size for better readability */
   font-weight: 500; /* Medium weight for better text visibility */
   cursor: pointer; /* Pointer cursor for interactivity */
   transition: all 0.3s ease; /* Smooth transition for all states */
   text-transform: uppercase; /* Make button text uppercase for style */
-  box-shadow: none; /* Remove shadow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for a more elegant look */
   outline: none; /* Remove default outline */
 }
 
 button:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #90A4AE !important; /* Darker gray shade on hover with !important */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
   transform: translateY(-2px); /* Slight lift on hover */
 }
 
 button:active {
-  background-color: rgba(56, 142, 60, 0.2); /* Even darker shade on click */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Active shadow effect */
+  background-color: #78909C !important; /* Even darker gray shade on click with !important */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Active shadow effect */
   transform: translateY(2px); /* Slight press-down effect */
 }
 
 button:focus {
   outline: none; /* Remove focus outline */
-  border: 2px solid rgba(44, 110, 73, 0.2); /* Add a subtle border color on focus */
+  border: 2px solid rgba(115, 115, 115, 0.5); /* Subtle border color on focus */
 }
 
 button:disabled {
-  background-color: transparent; /* Transparent background when disabled */
-  color: #a5d6a7; /* Light text color when disabled */
+  background-color: #E0E0E0 !important; /* Lighter gray for disabled state */
+  color: #B0BEC5; /* Lighter text color when disabled */
   cursor: not-allowed; /* Change cursor to indicate disabled state */
   box-shadow: none; /* Remove shadow when disabled */
 }
 
-
-/* Close button in case there's a modal or other content */
-
-.close-button-modal {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.close-button-modal:hover {
-  color: red;
-  background-color: rgba(172, 23, 12, 0.968); /* Nice shade on hover */
-}
-
-/* Register and Login Button styles */
-
-.header-buttons{
+/* Header button styles - ensures gray buttons */
+.header-buttons {
   padding: 10px 20px; /* Comfortable button size */
   border: 2px solid transparent; /* Transparent border for smoother look */
   border-radius: 8px; /* Larger rounded corners for a softer feel */
-  background-color: transparent; /* Transparent background */
-  color: #070707; /* White text for contrast */
+  background-color: #B0BEC5 !important; /* Soft, classic gray background with !important */
+  color: #070707; /* Dark text for contrast */
   font-size: 16px; /* Slightly larger font size for better readability */
   font-weight: 500; /* Medium weight for better text visibility */
   cursor: pointer; /* Pointer cursor for interactivity */
   transition: all 0.3s ease; /* Smooth transition for all states */
   text-transform: uppercase; /* Make button text uppercase for style */
-  box-shadow: none; /* Remove shadow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow */
   outline: none; /* Remove default outline */
 }
 
 .header-buttons:hover {
-  background-color: rgba(69, 160, 73, 0.2); /* Nice shade on hover */
+  background-color: #90A4AE !important; /* Slightly darker gray on hover with !important */
 }
-
-
-/* Hamburger button */
-
-.hamburger-button {
-  background-color: transparent;
-  border: none;
-  color: white;
-  font-size: 2rem;
-  position: absolute;
-  top: 10px;
-  left: 5px;
-  z-index: 1100; /* Ensure the hamburger button is above the sidebar */
-  cursor: pointer;
-}
-
-
-
-.hamburger-button div {
-  width: 15px;
-  height: 4px;
-  background-color: white;
-  margin: 6px 0;
-  transition: 0.4s;
-}
-
-

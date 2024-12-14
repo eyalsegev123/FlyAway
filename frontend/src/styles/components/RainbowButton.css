@@ -1,0 +1,24 @@
+.rainbow-button {
+    background-color: #007bff; /* Blue color */
+    border: none;
+    padding: 20px; /* Adjust padding to make sure text fits */
+    margin: 10px;
+    cursor: pointer;
+    font-size: 14px; /* Decrease font size to fit inside the button */
+    color: rgb(35, 8, 109); /* White text */
+    text-align: center;
+    border-radius: 50%; /* Makes the button circular */ 
+    transition: background-color 0.3s ease;
+    display: inline-flex; /* Use flexbox to center the text */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
+    width: 120px; /* Set a fixed width */
+    height: 120px; /* Set a fixed height to make it circular */
+    box-sizing: border-box; /* Ensures padding doesn't affect the button size */
+    font-weight: bold; /* Bold text */
+  }
+  
+  .rainbow-button:hover {
+    background-color: #69a1dc; /* Darker blue when hovered */
+  }
+  
