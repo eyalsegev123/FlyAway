@@ -48,8 +48,8 @@ const registerUser = async (req, res) => {
     const newUser = result.rows[0]; // Get the inserted user data
   
     res.status(201).json({
-      message: "User registered successfully",
-      user: { name: newUser.name, email: newUser.mail },
+      message: "Welcome to FlyAway" + newUser.name.split(" ")[0],
+      user: { name: newUser.name, id: newUser.user_id },
     });
   } catch (error) {
     console.error("Error registering user:", error); // Log the full error
@@ -89,7 +89,10 @@ const loginUser = async (req, res) => {
     // If authentication is successful, send a response with a token (you can use JWT)
     const token = "exampleToken123"; // Replace with actual JWT logic for production use
 
-    res.status(200).json({ message: "User logged in successfully", token });
+    res.status(200).json({
+      message: "Hello" + newUser.name.split(" ")[0],
+      user: { name: newUser.name.split(" ")[0], id: newUser.user_id },
+    });
   } catch (error) {
     console.error("Error logging in user:", error.message);
     res.status(500).json({ error: "Internal Server Error" });

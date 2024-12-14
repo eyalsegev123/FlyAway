@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import axios from "axios"; // For making HTTP requests
 import "../styles/components/Form.css"; // Ensure this path is correct
 
-
-const RegisterForm = ({ onRegisterSuccess, onError }) => {
+const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,13 +14,13 @@ const RegisterForm = ({ onRegisterSuccess, onError }) => {
     e.preventDefault();
     setLoading(true);
 
-     // Check if the name contains only alphabetic characters (A-Z, a-z)
-  const nameRegex = /^[A-Za-z\s]+$/;
+    // Check if the name contains only alphabetic characters (A-Z, a-z)
+    const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(name)) {
       onError("Name must contain only alphabetic characters and spaces.");
-    setLoading(false);
-    return;
-  }
+      setLoading(false);
+      return;
+    }
 
     // Check if passwords match
     if (password !== confirmPassword) {
@@ -49,11 +48,14 @@ const RegisterForm = ({ onRegisterSuccess, onError }) => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         onRegisterSuccess();
+        closeModal(); // Close the modal after successful registration
       }
     } catch (err) {
-      onError("An error occurred. Please try again.");
+      const errorMessage = err.response?.data?.error || "An error occurred. Please try again.";
+      setErrorMessage(errorMessage); // Display backend error message
+      onError(errorMessage); // Optional: Pass the error to parent
     } finally {
       setLoading(false);
     }
@@ -64,7 +66,7 @@ const RegisterForm = ({ onRegisterSuccess, onError }) => {
       <div className="form-group">
         <label htmlFor="name">Name</label>
         <input
-          type="name"
+          type="text"
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
