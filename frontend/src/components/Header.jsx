@@ -15,14 +15,25 @@ const Header = () => {
   const openRegisterModal = () => setIsRegisterModalOpen(true);
   const closeRegisterModal = () => setIsRegisterModalOpen(false);
 
-  const handleLoginSuccess = () => {
-    alert("Login successful!"); // Replace with your desired action
+  const handleLoginSuccess = (data) => {
+    alert(data.message); // Display user name
+    localStorage.setItem("user_name", JSON.stringify(data.user.name));
+    localStorage.setItem("user_id", JSON.stringify(data.user.id));// Save user info to localStorage
     closeLoginModal();
+
+    // Update UI to show "Hello, [name]" instead of login/register buttons
+    // setIsLoggedIn(true); 
+    // setUser(userData);
   };
 
-  const handleRegisterSuccess = () => {
-    alert("Registration successful!"); // Replace with your desired action
+
+  const handleRegisterSuccess = (data) => {
+    alert(data.message); // Display user name
+    localStorage.setItem("user_name", JSON.stringify(data.user.name));
+    localStorage.setItem("user_id", JSON.stringify(data.user.id)); // Save user info to localStorage
     closeRegisterModal();
+    // setIsLoggedIn(true);
+    // setUser(userData);  
   };
 
   const handleError = (message) => {
@@ -56,7 +67,7 @@ const Header = () => {
 
       {/* Render the Login Modal */}
       <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal} title="Login">
-        <LoginForm onLoginSuccess={handleLoginSuccess} onError={handleError} />
+        <LoginForm onLoginSuccess={handleLoginSuccess} onError={handleError} closeModal={closeLoginModal} />
       </Modal>
 
       {/* Render the Register Modal */}
@@ -68,6 +79,7 @@ const Header = () => {
         <RegisterForm
           onRegisterSuccess={handleRegisterSuccess}
           onError={handleError}
+          closeModal={closeRegisterModal}
         />
       </Modal>
     </div>

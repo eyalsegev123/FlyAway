@@ -11,26 +11,6 @@ const registerUser = async (req, res) => {
   }
 
 
-  // Validate birthday format
-  const birthdayRegex = /^\d{2}\/\d{2}\/\d{4}$/; // Format: DD/MM/YYYY
-  if (!birthdayRegex.test(birthday)) {
-    onError("Invalid birthday format. Please use DD/MM/YYYY.");
-    setLoading(false);
-    return;
-  }
-
-  // Validate email format
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: "Invalid email format" });
-  }
-
-  // Check if the name contains only alphabetic characters and spaces (A-Z, a-z, and spaces)
-  const nameRegex = /^[A-Za-z\s]+$/;
-  if (!nameRegex.test(name)) {
-    return res.status(400).json({ error: "Name must contain only alphabetic characters and spaces." });
-  }
-
   // Check if user already exists
   const existingUser = await pool.query("SELECT * FROM users WHERE mail = $1", [email]);
   if (existingUser.rows.length > 0) 
@@ -48,7 +28,7 @@ const registerUser = async (req, res) => {
     const newUser = result.rows[0]; // Get the inserted user data
   
     res.status(201).json({
-      message: "Welcome to FlyAway" + newUser.name.split(" ")[0],
+      message: "Welcome to FlyAway " + newUser.name,
       user: { name: newUser.name, id: newUser.user_id },
     });
   } catch (error) {
@@ -56,8 +36,6 @@ const registerUser = async (req, res) => {
     res.status(500).json({ error: error.message || "Internal Server Error" }); // Send back the error message
   }
 };
-
-
 
 // Login user
 const loginUser = async (req, res) => {
@@ -90,8 +68,8 @@ const loginUser = async (req, res) => {
     const token = "exampleToken123"; // Replace with actual JWT logic for production use
 
     res.status(200).json({
-      message: "Hello" + newUser.name.split(" ")[0],
-      user: { name: newUser.name.split(" ")[0], id: newUser.user_id },
+      message: "Hello " + user.name,
+      user: { name: user.name, id: user.user_id },
     });
   } catch (error) {
     console.error("Error logging in user:", error.message);

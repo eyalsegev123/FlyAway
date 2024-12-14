@@ -9,22 +9,32 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [birthday, setBirthday] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage(""); // Reset error message on new submission
 
     // Check if the name contains only alphabetic characters (A-Z, a-z)
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(name)) {
-      onError("Name must contain only alphabetic characters and spaces.");
+      setErrorMessage("Name must contain only alphabetic characters and spaces.");
       setLoading(false);
       return;
     }
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      onError("Passwords do not match. Please try again.");
+      setErrorMessage("Passwords do not match. Please try again.");
+      setLoading(false);
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage("invalid email format");
       setLoading(false);
       return;
     }
@@ -32,7 +42,7 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
     // Validate birthday format
     const birthdayRegex = /^\d{2}\/\d{2}\/\d{4}$/; // Format: DD/MM/YYYY
     if (!birthdayRegex.test(birthday)) {
-      onError("Invalid birthday format. Please use DD/MM/YYYY.");
+      setErrorMessage("Invalid birthday format. Please use DD/MM/YYYY.");
       setLoading(false);
       return;
     }
@@ -49,7 +59,8 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
       );
 
       if (response.status === 201) {
-        onRegisterSuccess();
+        console.log(response);
+        onRegisterSuccess(response.data);
         closeModal(); // Close the modal after successful registration
       }
     } catch (err) {
@@ -114,6 +125,7 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
           placeholder="e.g., 25/12/2000"
         />
       </div>
+      {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
       <button type="submit" disabled={loading}>
         {loading ? "Registering..." : "Register"}
       </button>

@@ -18,7 +18,7 @@ const LoginForm = ({ onLoginSuccess, onError }) => {
       );
 
       if (response.status === 200) {
-        onLoginSuccess(); // Notify parent of success
+        onLoginSuccess(response.data); // Notify parent of success
       }
     } catch (err) {
       onError("Invalid credentials. Please try again."); // Notify parent of error

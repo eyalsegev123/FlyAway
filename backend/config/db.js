@@ -5,8 +5,8 @@ require("dotenv").config(); // Load environment variables from .env file
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'FlyAway',
-  password: 'Lior1609',  // Ensure this is a valid string
+  database: 'flyAway',
+  password: 'TamNiz5431',  // Ensure this is a valid string
   port: 5432,
 });
 // Test the connection
