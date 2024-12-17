@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/users", userRoutes);
 app.use("/api/trips", tripRoutes);
 app.use("/api/wishes", wishRoutes);
+app.use("/api/openAI", openAiRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to FlyAway!");

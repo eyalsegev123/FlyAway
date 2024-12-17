@@ -41,7 +41,7 @@ const PlanTrip = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/planTrip", // Replace with your OpenAI controller URL
+        `http://localhost:${process.env.PORT}/api/planTrip`, // Replace with your OpenAI controller URL
         {
           destination,
           startDate,
