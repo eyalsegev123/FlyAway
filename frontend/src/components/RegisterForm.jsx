@@ -49,7 +49,7 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:${process.env.PORT}/api/users/register", // Replace with your actual API endpoint
+        `http://localhost:${process.env.PORT}/api/usersRoutes/register`, // Replace with your actual API endpoint
         {
           name,
           email,

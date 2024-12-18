@@ -14,8 +14,7 @@ exports.askOpenAi = async (req, res) => {
       travelers,
     } = req.body;
 
-    const genreList =
-      tripGenre && tripGenre.length > 0 ? tripGenre.join(", ") : "none";
+    const genreList = tripGenre && tripGenre.length > 0 ? tripGenre.join(", ") : "none";
 
     const message = `Hello, I want to plan a vacation to ${destination}. 
     The period of the vacation needs to be between ${startDate} to ${endDate}, 
@@ -29,10 +28,12 @@ exports.askOpenAi = async (req, res) => {
     //Step 1: Create a thread
     const threadResponse = await openAiService.createThread(message);
     const threadId = threadResponse.id;
+    console.log(threadId + " created");
 
     //Step 2: Create a run
     const runResponse = await openAiService.createRun(threadId);
     const runId = runResponse.id;
+    console.log(runId+ " created");
 
     //Step 3: Check Status of the run
     let runStatus = "in_progress";
@@ -47,11 +48,14 @@ exports.askOpenAi = async (req, res) => {
     console.log("Run completed successfully!");
     const listMessagesResponse = await openAiService.listMessages(threadId);
     const messageToReturn =
-      listMessagesResponse.data[listMessagesResponse.data.length - 1].content[0]
+      listMessagesResponse.data[0].content[0]
         .text.value;
+
+    console.log("message returned:" + messageToReturn);
 
     //Step 4: Delete the thread
     await openAiService.deleteThread(threadId);
+    console.log("thread deleted");
 
     //Step 5: Return the response to the client
     res
