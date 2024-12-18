@@ -6,6 +6,8 @@ import HomePage from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import PlanTrip from "./pages/PlanTrip";
 import LoginForm from "./components/LoginForm";  // Add LoginForm import
+import Recommendation from "./pages/Recommendation";
+
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
             <Route path="/AboutUs" element={<AboutUs />} />
             <Route path="/PlanTrip" element={<PlanTrip />} />
             <Route path="/login" element={<LoginForm />} /> {/* Add this route for login */}
+            <Route path="/reccomnedation" element={<Recommendation />} />
           </Routes>
         </div>
       </div>
