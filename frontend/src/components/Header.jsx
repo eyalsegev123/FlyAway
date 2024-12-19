@@ -62,21 +62,19 @@ const Header = () => {
       </div>
 
       {/* Conditionally render buttons */}
-      <div>
+      <div className="header-buttons-container">
         {userName ? (
-          // If user is logged in, show Logout button and greeting
-          <>
-          <div className="header-greeting-box">
-            <span className="header-greeting">Hello, {userName}</span>
-          </div>
+          <div className="header-greeting-container">
+            <div className="header-greeting-box">
+              <span className="header-greeting">Hello, {userName}</span>
+            </div>
             <Button
-              className="header-buttons"
+              className="header-buttons logout"
               label="Logout"
               onClick={handleLogout}
             />
-          </>
+          </div>
         ) : (
-          // If user is not logged in, show Register and Login buttons
           <>
             <Button
               className="header-buttons"

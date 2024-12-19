@@ -34,7 +34,7 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
     // Validate email format
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!emailRegex.test(email)) {
-      setErrorMessage("invalid email format");
+      setErrorMessage("Invalid email format");
       setLoading(false);
       return;
     }
@@ -47,14 +47,19 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
       return;
     }
 
+    // Convert birthday to YYYY-MM-DD format
+    const [day, month, year] = birthday.split("/");
+    const formattedBirthday = `${year}-${month}-${day}`;
+
+    console.log("Attempting to register user...");
     try {
       const response = await axios.post(
-        `http://localhost:${process.env.PORT}/api/usersRoutes/register`, // Replace with your actual API endpoint
+        `http://localhost:5001/api/usersRoutes/register`, // Correct API URL
         {
           name,
           email,
           password,
-          birthday
+          birthday: formattedBirthday
         }
       );
 

@@ -10,16 +10,16 @@ const registerUser = async (req, res) => {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-
-  // Check if user already exists
-  const existingUser = await pool.query("SELECT * FROM users WHERE mail = $1", [email]);
-  if (existingUser.rows.length > 0) 
-    return res.status(400).json({ error: "User with this email already exists" });
-
-  // Hash the password before storing it
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   try {
+    // Check if user already exists
+    const existingUser = await pool.query("SELECT * FROM users WHERE mail = $1", [email]);
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ error: "User with this email already exists" });
+    }
+
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Insert user into the database
     const result = await pool.query(
       "INSERT INTO users (name, mail, password, birthday, created_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) RETURNING *",

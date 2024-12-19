@@ -1,10 +1,74 @@
-/* Plan-trip-container styles */
-.plan-trip-container {
+/* Plan-trip-page styles */
+.plan-trip-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px; /* Space for fixed header height */
     padding: 20px;
-    width: 100%;
-    max-width: 900px; /* Keeps content within a reasonable width */
-    margin: auto;
     box-sizing: border-box;
+}
+
+.plan-trip-container {
+    max-width: 800px;
+    width: 90%; /* Allows flexibility */
+    margin: 0 auto; /* Centers the container */
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
+}
+
+.plan-trip-content {
+    max-width: 1200px; /* Further increase the max-width */
+    width: 100%;
+    margin: 80px auto 0; /* Adjust margin-top to be just under the header */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.plan-trip-title {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.plan-trip-subtitle {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.trip-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 1000px; /* Increase the minimum height */
+    width: 80%; /* Make the form wider */
+    max-width: 800px; /* Set a maximum width for the form */
+    margin: 0 auto; /* Center the form */
+}
+
+.submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: red;
+    margin-top: 20px;
 }
 
 /* Form Group Styles (all fields) */
@@ -21,9 +85,9 @@
 }
 
 /* Input and Select Fields */
-input, select {
-    width: 100%;
-    padding: 10px;
+.form-input, .form-select, .dropdown-toggle {
+    width: 100%; /* Ensure input fields take full width of the form */
+    padding: 15px; /* Increase padding for better spacing */
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;

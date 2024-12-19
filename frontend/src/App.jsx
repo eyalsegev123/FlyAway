@@ -20,7 +20,7 @@ function App() {
             <Route path="/AboutUs" element={<AboutUs />} />
             <Route path="/PlanTrip" element={<PlanTrip />} />
             <Route path="/login" element={<LoginForm />} /> {/* Add this route for login */}
-            <Route path="/reccomnedation" element={<Recommendation />} />
+            <Route path="/Recommendation" element={<Recommendation />} />
           </Routes>
         </div>
       </div>
