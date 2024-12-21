@@ -26,17 +26,35 @@
   margin-right: 10px; /* Space between the logo and title */
 }
 
-/* Style for the buttons */
-.header-buttons {
-  display: flex;
-  gap: 10px; /* Space between the buttons */
-}
 
 .header-buttons-container {
   display: flex;
   align-items: center;
   gap: 10px; /* Space between the buttons */
 }
+
+/* Style for the buttons */
+.header-buttons {
+  display: flex;
+  gap: 10px; /* Space between the buttons */
+  padding: 10px 20px; /* Comfortable button size */
+  border: 2px solid transparent; /* Transparent border for smoother look */
+  border-radius: 8px; /* Larger rounded corners for a softer feel */
+  background-color: #B0BEC5 !important; /* Soft, classic gray background with !important */
+  color: #070707; /* Dark text for contrast */
+  font-size: 16px; /* Slightly larger font size for better readability */
+  font-weight: 500; /* Medium weight for better text visibility */
+  cursor: pointer; /* Pointer cursor for interactivity */
+  transition: all 0.3s ease; /* Smooth transition for all states */
+  text-transform: uppercase; /* Make button text uppercase for style */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  outline: none; /* Remove default outline */
+}
+
+.header-buttons:hover {
+  background-color: #90A4AE !important; /* Slightly darker gray on hover with !important */
+}
+
 
 .header-greeting-container {
   display: flex;

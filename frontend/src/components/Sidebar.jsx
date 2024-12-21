@@ -8,7 +8,6 @@ const Sidebar = () => {
   // State to track whether the sidebar is open or closed
   const [isOpen, setIsOpen] = useState(false);
   const userName = localStorage.getItem("user_name");
-  
 
   // Toggle the sidebar state when the button is clicked
   const toggleSidebar = () => {
@@ -17,16 +16,22 @@ const Sidebar = () => {
 
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
-      <div className="sidebar-header">
+      <div>
         <HamburgerButton toggleSidebar={toggleSidebar} />
-        {isOpen && <h2>Menu</h2>}
       </div>
+
+      {isOpen && (
+        <div className="sidebar-header">
+          <h2>Menu</h2>
+        </div>
+      )}
+      
       {isOpen && (
         <ul className="nav-list">
           <SidebarItem to="/" text="Home" />
           <SidebarItem to="/PlanTrip" text="Plan a Trip" />
           <SidebarItem to="/AboutUs" text="About Us" />
-          
+
           {/* Show these links only if the user is logged in */}
           {userName && (
             <>

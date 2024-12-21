@@ -1,0 +1,50 @@
+.hamburger-button {
+  position: fixed;
+  left: 15px; /* (70px - 40px) / 2 = 15px for perfect center */
+  top: 160px; /* Matches sidebar top position (142px) + some padding */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  z-index: 1000; /* Ensure button stays above sidebar */
+}
+
+.hamburger-button div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+  margin-right: 10px;
+  position: relative;
+}
+
+.hamburger-button:hover div {
+  background-color: #d3d9dc;
+}
+
+.hamburger-button:active div {
+  background-color: #d3d9dc;
+}
+
+/* Optional: Animation for open state */
+.hamburger-button.open div:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-button.open div:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-button.open div:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
