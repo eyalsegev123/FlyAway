@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import Button from "./Button"; // Import the Button component
 import LoginForm from "../components/LoginForm"; // Import LoginForm
 import RegisterForm from "../components/RegisterForm"; // Import RegisterForm
 import Modal from "../components/Modal"; // Import the new Modal component
+import { AuthContext } from "../context/AuthContext"; // Import Auth context
 import "../styles/components/Header.css"; // Import CSS for styling
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [userName, setUserName] = useState(null);
-
-  // Check if user is logged in (on component mount)
-  useEffect(() => {
-    const storedUserName = localStorage.getItem("user_name");
-    if (storedUserName) {
-      setUserName(JSON.parse(storedUserName)); // Set user name from localStorage
-    }
-  }, []);
+  const { user, login, logout } = useContext(AuthContext); // Use context
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
@@ -25,29 +18,27 @@ const Header = () => {
   const closeRegisterModal = () => setIsRegisterModalOpen(false);
 
   const handleLoginSuccess = (data) => {
-    alert(data.message); // Display user name
-    localStorage.setItem("user_name", JSON.stringify(data.user.name));
-    localStorage.setItem("user_id", JSON.stringify(data.user.id)); // Save user info to localStorage
-    setUserName(data.user.name); // Update state to reflect logged-in user
+    alert(data.message); // Display message
+    login(data.user.name, data.user.id); // Use context to login user
     closeLoginModal();
   };
 
   const handleRegisterSuccess = (data) => {
-    alert(data.message); // Display user name
-    localStorage.setItem("user_name", JSON.stringify(data.user.name));
-    localStorage.setItem("user_id", JSON.stringify(data.user.id)); // Save user info to localStorage
-    setUserName(data.user.name); // Update state to reflect logged-in user
+    alert(data.message); // Display message
+    login(data.user.name, data.user.id); // Use context to login user
     closeRegisterModal();
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user_name");
-    localStorage.removeItem("user_id");
-    setUserName(null); // Reset state when logging out
+  const handleLogoutClick = () => {
+    logout(); // Use context to logout user
   };
 
   const handleError = (message) => {
     alert(message); // Display error message
+  };
+
+  const getFirstName = (fullName) => {
+    return fullName.split(" ")[0]; // Split the full name and return the first element
   };
 
   return (
@@ -63,15 +54,15 @@ const Header = () => {
 
       {/* Conditionally render buttons */}
       <div className="header-buttons-container">
-        {userName ? (
+        {user ? (
           <div className="header-greeting-container">
             <div className="header-greeting-box">
-              <span className="header-greeting">Hello, {userName}</span>
+              <span className="header-greeting">Hello {getFirstName(user.name)}</span>
             </div>
             <Button
               className="header-buttons logout"
               label="Logout"
-              onClick={handleLogout}
+              onClick={handleLogoutClick}
             />
           </div>
         ) : (
@@ -114,5 +105,7 @@ const Header = () => {
     </div>
   );
 };
+
+
 
 export default Header;

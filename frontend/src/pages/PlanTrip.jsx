@@ -15,7 +15,7 @@ const PlanTrip = () => {
   const [travelers, setTravelers] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [tripRecommendation, setTripRecommendation] = useState(null);
+  // const [tripRecommendation, setTripRecommendation] = useState(null);
 
   const [showGenreDropdown, setShowGenreDropdown] = useState(false);
   const [showTravelersDropdown, setShowTravelersDropdown] = useState(false);
@@ -44,7 +44,7 @@ const PlanTrip = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:${process.env.BACK_PORT}/api/openAiRoutes/planTrip`,
+        `http://localhost:5001/api/openAiRoutes/planTrip`,
         {
           destination,
           startDate,

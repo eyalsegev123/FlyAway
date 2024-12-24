@@ -3,7 +3,7 @@ const router = express.Router();
 const tripController = require("../controllers/tripController");
 
 // Add a new trip
-router.post("/", tripController.addTrip);
+router.post("/addTrip", tripController.addTrip);
 
 // Delete a trip by ID
 router.delete("/:id", tripController.deleteTrip);
