@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios"; // For making HTTP requests
 import "../styles/components/Form.css"; // Ensure this path is correct
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
 
 const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
   const [name, setName] = useState("");
