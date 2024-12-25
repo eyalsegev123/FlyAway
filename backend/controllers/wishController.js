@@ -13,7 +13,7 @@ const getWishesByUserId = async (req, res) => {
 };
 
 // Get a specific wish of a user by a name
-const getWishByUserIdAndName = async (req, res) => {
+const getWishesByUserIdAndName = async (req, res) => {
   const { user_id, name } = req.params;
 
   try {
@@ -29,7 +29,7 @@ const getWishByUserIdAndName = async (req, res) => {
 };
 
 // Get a specific wish of a user by a destination
-const getWishByUserIdAndDestination = async (req, res) => {
+const getWishesByUserIdAndDestination = async (req, res) => {
   const { user_id, destination } = req.params;
 
   try {
@@ -45,14 +45,15 @@ const getWishByUserIdAndDestination = async (req, res) => {
 };
 
 // Add a new wishlist
-const addWishlist = async (req, res) => {
-  const { name, destination, start_range, end_range, trip_genre, trip_length } = req.body;
-  const {user_id} = req.params;
+const addToWishlist = async (req, res) => {
+  const { destination, start_range, end_range, trip_genre, trip_length, budget, content, notes, wish_name } = req.body;
+  const { user_id } = req.params;  // Extracting user_id from URL parameters
+
   try {
     const result = await pool.query(
-      `INSERT INTO wishlist (user_id, name, destination, start_range, end_range, trip_genre, trip_length)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [user_id, name, destination, start_range, end_range, trip_genre, trip_length]
+      `INSERT INTO wishlist (user_id, destination, start_range, end_range, trip_genre, trip_length, budget, content, notes, wish_name)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      [user_id, destination, start_range, end_range, trip_genre, trip_length, budget, content, notes, wish_name]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -61,8 +62,9 @@ const addWishlist = async (req, res) => {
   }
 };
 
+
 // Delete a wishlist
-const deleteWishlist = async (req, res) => {
+const deleteFromWishlist = async (req, res) => {
   const { wish_id } = req.params;
 
   try {

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import WishlistButton from "../components/WishlistButton";
+import WishlistSecForm from "../components/WishlistSecForm";
 import CategoryCard from "../components/CategoryCard";
+import axios from "axios";
 import {
   Stepper,
   Step,
@@ -24,6 +26,8 @@ const Recommendation = () => {
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [parsedResponse, setParsedResponse] = useState(null);
+  const [showWishlistForm, setShowWishlistForm] = useState(false);
+
 
   useEffect(() => {
     if (tripRecommendation?.answer) {
@@ -59,6 +63,36 @@ const Recommendation = () => {
         parsedResponse?.activities || "No activities recommendations available",
     },
   };
+
+  const handleWishlistSubmit = async (wishName, notes) => {
+    const userId = localStorage.getItem("user_id");
+    try {
+      const response = await axios.post(`http://localhost:5001/api/wishesRoutes/user/${userId}`, {
+        destination: tripRecommendation.destination,
+        start_range: tripRecommendation.startDate,
+        end_range: tripRecommendation.endDate,
+        trip_genre: tripRecommendation.tripGenres.join(', '),
+        trip_length: tripRecommendation.tripLength,
+        budget: tripRecommendation.budget,
+        content: "Here goes content if needed", // OpenAi answer
+        notes: notes,
+        wish_name: wishName
+      });
+  
+      if (response.status === 201) {
+        alert('Added to your wish list!');
+        setShowWishlistForm(false); // Close the form on success
+      } else {
+        throw new Error('Failed to add to wish list');
+      }
+    } catch ( error ) {
+      console.error('An error occurred while adding to your wish list:', error);
+      alert('An error occurred while adding to your wish list.');
+      setShowWishlistForm(false); // Optionally close the form on error
+    }
+  };
+  
+  
 
   const steps = Object.values(categories);
   const maxSteps = steps.length;
@@ -98,7 +132,7 @@ const Recommendation = () => {
         >
           Your Trip Recommendations
         </Typography>
-
+  
         {/* Desktop Stepper */}
         <Box sx={{ display: { xs: "none", md: "block" } }}>
           <Stepper activeStep={activeStep} alternativeLabel>
@@ -109,14 +143,14 @@ const Recommendation = () => {
             ))}
           </Stepper>
         </Box>
-
+  
         {/* Content Card */}
         <CategoryCard
           title={steps[activeStep].title}
           content={steps[activeStep].content}
           type={steps[activeStep].type}
         />
-
+  
         {/* Mobile Stepper */}
         <MobileStepper
           variant="dots"
@@ -152,15 +186,19 @@ const Recommendation = () => {
             </Button>
           }
         />
-
+  
         {user && (
           <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-            <WishlistButton onClick={() => console.log("Add to wishlist")} />
+            <WishlistButton onClick={() => setShowWishlistForm(true)}>Add to Wishlist</WishlistButton>
+            {showWishlistForm && (
+              <WishlistSecForm onSubmit={handleWishlistSubmit} onCancel={() => setShowWishlistForm(false)} />
+            )}
           </Box>
         )}
       </Paper>
     </div>
   );
+  
 };
 
 export default Recommendation;

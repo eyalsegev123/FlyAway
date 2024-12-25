@@ -25,7 +25,8 @@
   gap: 1rem;
 }
 
-.mytrip-form input {
+.mytrip-form input,
+.mytrip-form textarea {
   padding: 0.8rem;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -33,9 +34,15 @@
   transition: border-color 0.3s ease;
 }
 
-.mytrip-form input:focus {
+.mytrip-form input:focus,
+.mytrip-form textarea:focus {
   outline: none;
   border-color: #4a90e2;
+}
+
+.mytrip-form textarea {
+  resize: none;
+  height: 100px;
 }
 
 .mytrip-form button {
@@ -56,6 +63,24 @@
 .mytrip-form button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+.mytrip-stars {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mytrip-stars span {
+  font-size: 1.5rem;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.mytrip-stars span:hover,
+.mytrip-stars span.selected {
+  color: #ffd700; /* Gold color for selected stars */
 }
 
 .trips-list {
@@ -112,6 +137,19 @@
   transform: scale(1.1);
   background-color: #357abd;
 }
+
+.stars-container span {
+  font-size: 1.5rem;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.stars-container span:hover,
+.stars-container span.selected {
+  color: #ffd700; /* Gold color for selected stars */
+}
+
 
 .error-message-mytrip {
   color: #dc3545;

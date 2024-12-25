@@ -9,6 +9,8 @@ const MyTrips = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [photos, setPhotos] = useState(null);
+  const [stars, setStars] = useState(0);
+  const [review, setReview] = useState("");
   const [trips, setTrips] = useState([]);
   const [showForm, setShowForm] = useState(false); // Manage form visibility
   const [loading, setLoading] = useState(false);
@@ -27,6 +29,8 @@ const MyTrips = () => {
         startDate,
         endDate,
         photos,
+        stars,
+        review,
       };
 
       // Send the data to the backend using axios
@@ -47,6 +51,11 @@ const MyTrips = () => {
     }
   };
 
+  // Handle star selection
+  const handleStarClick = (value) => {
+    setStars(value);
+  };
+
   return (
     <div className="trips-container">
       <Header />
@@ -55,7 +64,7 @@ const MyTrips = () => {
       </button>
 
       {showForm && (
-        <div className="trip-form">
+        <div className="mytrip-form">
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -88,6 +97,26 @@ const MyTrips = () => {
               onChange={(e) => setPhotos(e.target.files)}
               multiple
             />
+            <div className="stars-container">
+              {Array(5)
+                .fill(0)
+                .map((_, index) => (
+                  <span
+                    key={index + 1}
+                    className={`star ${index + 1 <= stars ? "selected" : ""}`}
+                    onClick={() => handleStarClick(index + 1)}
+                  >
+                    ★
+                  </span>
+                ))}
+            </div>
+            <textarea
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+              placeholder="Write your review about the trip"
+              rows="4"
+              required
+            ></textarea>
             <button type="submit" disabled={loading}>
               {loading ? "Saving..." : "Save Trip"}
             </button>
@@ -103,6 +132,8 @@ const MyTrips = () => {
             <p>
               {trip.startDate} - {trip.endDate}
             </p>
+            <p>Rating: {trip.stars} ★</p>
+            <p>Review: {trip.review}</p>
           </div>
         ))}
       </div>
