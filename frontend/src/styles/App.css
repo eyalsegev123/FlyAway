@@ -1,4 +1,6 @@
 .App {
+  display: flex;
+  min-height: 100vh;
   text-align: center;
 }
 
@@ -22,6 +24,20 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 70px; /* Width of closed sidebar */
+  margin-top: 142px; /* Height of header */
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 70px);
+}
+
+/* Adjust margin when sidebar is open */
+.sidebar.open + .main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
 }
 
 .App-link {

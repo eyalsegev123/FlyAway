@@ -1,5 +1,5 @@
 // src/App.js
-import React from "react";
+import React, { useState } from "react";
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar"; // Sidebar component
@@ -9,15 +9,19 @@ import PlanTrip from "./pages/PlanTrip";
 import LoginForm from "./components/LoginForm";  // Add LoginForm import
 import Recommendation from "./pages/Recommendation";
 import MyTrips from "./pages/MyTrips";
+import Header from "./components/Header";
 
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-          <Sidebar />
-          <div className="main-content">
+          <Header/>
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+          <div className={`main-content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/AboutUs" element={<AboutUs />} />

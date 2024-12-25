@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios"; // For making HTTP requests
+import axios from "axios";
 import "../styles/components/Form.css"; // Ensure this path is correct
-import dotenv from "dotenv";
-import path from "path";
+// import dotenv from "dotenv";
+// import path from "path-browserify";
 
-dotenv.config({ path: path.join(__dirname, '../.env') });
+// dotenv.config({ path: path.join(__dirname, '../.env') });
 
 
 const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {

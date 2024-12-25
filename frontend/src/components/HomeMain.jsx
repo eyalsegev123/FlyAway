@@ -1,18 +1,73 @@
 import React from "react";
+import Slider from "react-slick";
+import HomeTripCard from "./HomeTripCard";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "../styles/components/HomeMain.css";
+import parisImage from '../assets/paris.jpeg';
+import tokyoImage from '../assets/tokyo.jpg';
+import newyorkImage from '../assets/newyork.webp';
 
 const HomeMain = () => {
+  const trips = [
+    {
+      id: 1,
+      destination: "Paris",
+      description: "City of Light and Romance",
+      image: parisImage
+    },
+    {
+      id: 2,
+      destination: "Tokyo",
+      description: "Modern Meets Traditional",
+      image: tokyoImage
+    },
+    {
+      id: 3,
+      destination: "New York",
+      description: "The City That Never Sleeps",
+      image: newyorkImage
+    }
+  ];
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1
+        }
+      }
+    ]
+  };
+
   return (
     <div className="homepage-main">
       <div className="homepage-title">
         <h1>Welcome to FlyAway!</h1>
+        <p>Discover your next adventure</p>
       </div>
-      <p>
-        We are a group of travel enthusiasts who love to explore new places and
-        share our experiences with others. Check out our latest posts and start
-        planning your next adventure today!
-      </p>
+      <div className="carousel-container">
+        <Slider {...settings}>
+          {trips.map((trip) => (
+            <HomeTripCard key={trip.id} trip={trip} />
+          ))}
+        </Slider>
+      </div>
     </div>
   );
 };
 
 export default HomeMain;
+

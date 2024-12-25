@@ -1,0 +1,89 @@
+.homepage-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  padding: 2rem;
+  background: #f5f5f5;
+}
+
+.homepage-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.carousel-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.home-trip-card {
+  margin: 0 1rem;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.home-trip-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.home-trip-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1.5rem;
+  background: white;
+}
+
+.card-content h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.card-content p {
+  color: #666;
+  margin: 0;
+}
+
+/* Slick carousel customization */
+.slick-dots {
+  bottom: -40px;
+}
+
+.slick-prev, .slick-next {
+  z-index: 1;
+}
+
+/* Ensure the background image stays centered */
+.homepage-main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-position: center;
+  background-size: cover;
+  z-index: -1;
+}
+
+.loading-text {
+  color: #666;
+  font-style: italic;
+  margin-top: 0.5rem;
+}

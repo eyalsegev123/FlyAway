@@ -29,7 +29,7 @@ body, html {
 
 /* Apply the background image to the body */
 body {
-  background-image: url('/photos/HomePage_wallpaper.jpeg'); /* Correct image path */
+  background-image: url('../../assets/HomePage_wallpaper.jpeg'); /* Correct image path */
   background-size: cover; /* Ensure the image covers the entire container */
   background-position: center; /* Center the background */
   background-attachment: fixed; /* Keep the background fixed while scrolling */
