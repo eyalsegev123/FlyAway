@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/pages/MyTrips.css";
 import axios from "axios";
 import Header from "../components/Header";
+
 
 const MyTrips = () => {
   const [tripName, setTripName] = useState("");
@@ -15,6 +16,37 @@ const MyTrips = () => {
   const [showForm, setShowForm] = useState(false); // Manage form visibility
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+
+  // Fetch trips when the component mounts
+useEffect(() => {
+  const fetchTrips = async () => {
+    setLoading(true);
+    try {
+      // Retrieve the user_id from localStorage
+        const user_id = localStorage.getItem("user_id");
+
+        if (!user_id) {
+          setErrorMessage("User not logged in.");
+          return;
+        }
+
+      const response = await axios.get(
+        `http://localhost:5001/tripsRoutes/getUserTrips${user_id}`
+      );
+      if (response.status === 200) {
+        setTrips(response.data);  // Update state with the trips data
+      }
+    } catch (err) {
+      setErrorMessage("An error occurred while getting the trips");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchTrips();
+}, []); 
+ 
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -35,7 +67,7 @@ const MyTrips = () => {
 
       // Send the data to the backend using axios
       const response = await axios.post(
-        `http://localhost:5001/api/trips`, // Backend endpoint to save the trip
+        `http://localhost:5001/tripsRoutes/addTrip`, // Backend endpoint to save the trip
         newTrip
       );
 
@@ -56,6 +88,11 @@ const MyTrips = () => {
     setStars(value);
   };
 
+  // Function to close the form
+  const closeForm = () => {
+    setShowForm(false);
+  };
+
   return (
     <div className="trips-container">
       <Header />
@@ -65,6 +102,7 @@ const MyTrips = () => {
 
       {showForm && (
         <div className="mytrip-form">
+          <button className="mytrips-close-button" onClick={closeForm}>X</button>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -92,12 +130,16 @@ const MyTrips = () => {
               onChange={(e) => setEndDate(e.target.value)}
               required
             />
-            <input
-              type="file"
-              onChange={(e) => setPhotos(e.target.files)}
-              multiple
-            />
+            <label>
+              Upload Your Trip Photos:
+              <input
+                type="file"
+                onChange={(e) => setPhotos(e.target.files)}
+                multiple
+              />
+            </label>
             <div className="stars-container">
+              <label>Rate Your Trip:   </label>
               {Array(5)
                 .fill(0)
                 .map((_, index) => (
@@ -138,7 +180,9 @@ const MyTrips = () => {
         ))}
       </div>
 
-      {errorMessage && <div className="error-message-mytrip">{errorMessage}</div>}
+      {errorMessage && (
+        <div className="error-message-mytrip">{errorMessage}</div>
+      )}
     </div>
   );
 };

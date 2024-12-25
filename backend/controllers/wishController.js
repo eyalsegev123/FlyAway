@@ -46,8 +46,18 @@ const getWishesByUserIdAndDestination = async (req, res) => {
 
 // Add a new wishlist
 const addToWishlist = async (req, res) => {
-  const { destination, start_range, end_range, trip_genre, trip_length, budget, content, notes, wish_name } = req.body;
-  const { user_id } = req.params;  // Extracting user_id from URL parameters
+  const {
+    destination,
+    start_range,
+    end_range,
+    trip_genre,
+    trip_length,
+    budget,
+    content,
+    notes,
+    wish_name,
+    user_id,
+  } = req.body;
 
   try {
     const result = await pool.query(
@@ -104,9 +114,9 @@ const editWishlist = async (req, res) => {
 
 module.exports = {
   getWishesByUserId,
-  getWishByUserIdAndName,
-  getWishByUserIdAndDestination,
-  addWishlist,
-  deleteWishlist,
+  getWishesByUserIdAndName,
+  getWishesByUserIdAndDestination,
+  addToWishlist,
+  deleteFromWishlist,
   editWishlist,
 };

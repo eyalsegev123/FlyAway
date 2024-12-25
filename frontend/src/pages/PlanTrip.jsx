@@ -15,7 +15,7 @@ const PlanTrip = () => {
   const [travelers, setTravelers] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-// const [tripRecommendation, setTripRecommendation] = useState(null);
+  // const [tripRecommendation, setTripRecommendation] = useState(null);
 
   const [showGenreDropdown, setShowGenreDropdown] = useState(false);
   const [showTravelersDropdown, setShowTravelersDropdown] = useState(false);
@@ -58,8 +58,17 @@ const PlanTrip = () => {
       );
 
       if (response.status === 200) {
+        console.log(destination, startDate, endDate, tripLength, budget); 
         navigate("/Recommendation", {
-          state: { tripRecommendation: response.data },
+          state: {
+            destination: destination,
+            start_range: startDate,
+            end_range: endDate,
+            trip_genre: tripGenres.join(", "),
+            trip_length: tripLength,
+            budget: budget,
+            content: response.data, // OpenAi answer
+          },
         });
       }
     } catch (err) {

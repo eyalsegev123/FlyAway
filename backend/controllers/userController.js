@@ -77,7 +77,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-
 // Update user details (user_id is now in req.params)
 const updateUser = async (req, res) => {
   const user_id = req.params.user_id; // Get the user_id from the URL params

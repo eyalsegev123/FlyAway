@@ -10,6 +10,7 @@ import LoginForm from "./components/LoginForm";  // Add LoginForm import
 import Recommendation from "./pages/Recommendation";
 import MyTrips from "./pages/MyTrips";
 import Header from "./components/Header";
+import MyWishlist from "./pages/MyWishlist";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
               <Route path="/login" element={<LoginForm />} /> {/* Add this route for login */}
               <Route path="/Recommendation" element={<Recommendation />} />
               <Route path ="/MyTrips" element = {<MyTrips />} />
+              <Route path ="/MyWishlist" element = {<MyWishlist />} />
             </Routes>
           </div>
         </div>

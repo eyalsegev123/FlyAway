@@ -3,13 +3,13 @@ const router = express.Router();
 const tripController = require("../controllers/tripController");
 
 // Add a new trip
-router.post("/addTrip", tripController.addTrip);
+router.post("/addTrip/:user_id", tripController.addTrip);
 
 // Delete a trip by ID
 router.delete("/:id", tripController.deleteTrip);
 
 // Get all trips of a user
-router.get("/user/:user_id", tripController.getUserTrips);
+router.get("/getUserTrips/:user_id", tripController.getUserTrips);
 
 // Delete all trips of a user
 router.delete("/user/:user_id", tripController.deleteAllUserTrips);

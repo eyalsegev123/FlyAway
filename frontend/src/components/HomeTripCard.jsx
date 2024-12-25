@@ -28,11 +28,12 @@ const HomeTripCard = ({ trip }) => {
         predefinedTripDetails
       );
 
-      if (response.status === 200) {
+      if (response.status === 200) { //Need to handle this
         navigate("/Recommendation", {
           state: { tripRecommendation: response.data }
         });
       }
+      
     } catch (error) {
       console.error('Error planning trip:', error);
     } finally {

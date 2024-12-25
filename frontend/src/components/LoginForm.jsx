@@ -18,6 +18,7 @@ const LoginForm = ({ onLoginSuccess, onError }) => {
       );
 
       if (response.status === 200) {
+        localStorage.setItem("user_id", response.data.user.user_id);
         onLoginSuccess(response.data); // Notify parent of success
       }
     } catch (err) {
