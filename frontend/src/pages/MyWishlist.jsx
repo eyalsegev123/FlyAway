@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 //import Header from "../components/Header";
 
 
@@ -7,14 +8,14 @@ const MyWishList = () => {
   const [wishlist, setWishlist] = useState([]); // State to store wishlist trips
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { user } = useAuth();
 
   // Fetch wishlist when the component mounts
   useEffect(() => {
     const fetchWishlist = async () => {
       setLoading(true);
       try {
-        // Retrieve the user_id from localStorage
-        const user_id = localStorage.getItem("user_id");
+        const user_id = user.id;
 
         if (!user_id) {
           setErrorMessage("User not logged in.");
@@ -23,7 +24,7 @@ const MyWishList = () => {
 
         // Fetch wishlist items for the user
         const response = await axios.get(
-          `http://localhost:5001/wishlistRoutes/getWishes/${user_id}`
+          `http://localhost:5001/api/wishesRoutes/getUserWishes/${user_id}`
         );
 
         if (response.status === 200) {

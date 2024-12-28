@@ -12,7 +12,7 @@ const {
 // Define routes
 
 // Get all wishes of a specific user
-router.get('/getWishes/:user_id', getWishesByUserId);
+router.get('/getUserWishes/:user_id', getWishesByUserId);
 
 // Get a specific wish of a user by name
 router.get('/user/:user_id/name/:name', getWishesByUserIdAndName);
