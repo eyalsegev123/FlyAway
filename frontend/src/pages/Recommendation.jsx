@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import WishlistButton from "../components/WishlistButton";
-import WishlistSecForm from "../components/WishlistSecForm";
 import CategoryCard from "../components/CategoryCard";
 import axios from "axios";
 import {
@@ -13,6 +12,7 @@ import {
   Paper,
   Typography,
   Box,
+  TextField,
   MobileStepper,
 } from "@mui/material";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
@@ -22,12 +22,21 @@ import { parseOpenAIResponse } from "../utils/responseParser";
 const Recommendation = () => {
   const theme = useTheme();
   const location = useLocation();
-  const { tripRecommendation } = location.state || {};
+  const {
+    tripRecommendation,
+    destination,
+    start_range: startDate,
+    end_range: endDate,
+    trip_genre: tripGenres,
+    trip_length: tripLength,
+    budget
+  } = location.state || {};
+
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [parsedResponse, setParsedResponse] = useState(null);
-  const [showWishlistForm, setShowWishlistForm] = useState(false);
-
+  const [wishName, setWishName] = useState('');
+  const [notes, setNotes] = useState('');
 
   useEffect(() => {
     if (tripRecommendation?.answer) {
@@ -64,35 +73,32 @@ const Recommendation = () => {
     },
   };
 
-  const handleWishlistSubmit = async (wishName, notes) => {
-    const userId = localStorage.getItem("user_id");
+  const handleWishlistSubmit = async () => {
+    const userId = user.id;
     try {
-      const response = await axios.post(`http://localhost:5001/api/wishesRoutes/user/${userId}`, {
-        destination: tripRecommendation.destination,
-        start_range: tripRecommendation.startDate,
-        end_range: tripRecommendation.endDate,
-        trip_genre: tripRecommendation.tripGenres.join(', '),
-        trip_length: tripRecommendation.tripLength,
-        budget: tripRecommendation.budget,
-        content: "Here goes content if needed", // OpenAi answer
-        notes: notes,
-        wish_name: wishName
+      const response = await axios.post(`http://localhost:5001/api/wishesRoutes/addToWishList`, {
+        user_id: userId,
+        destination: destination,
+        start_range: startDate,
+        end_range: endDate,
+        trip_genre: tripGenres,
+        trip_length: tripLength,
+        budget: budget,
+        content: tripRecommendation.answer, // OpenAi answer
+        wish_name: wishName,
+        notes: notes
       });
-  
+
       if (response.status === 201) {
         alert('Added to your wish list!');
-        setShowWishlistForm(false); // Close the form on success
       } else {
         throw new Error('Failed to add to wish list');
       }
-    } catch ( error ) {
+    } catch (error) {
       console.error('An error occurred while adding to your wish list:', error);
       alert('An error occurred while adding to your wish list.');
-      setShowWishlistForm(false); // Optionally close the form on error
     }
   };
-  
-  
 
   const steps = Object.values(categories);
   const maxSteps = steps.length;
@@ -132,7 +138,7 @@ const Recommendation = () => {
         >
           Your Trip Recommendations
         </Typography>
-  
+
         {/* Desktop Stepper */}
         <Box sx={{ display: { xs: "none", md: "block" } }}>
           <Stepper activeStep={activeStep} alternativeLabel>
@@ -143,14 +149,14 @@ const Recommendation = () => {
             ))}
           </Stepper>
         </Box>
-  
+
         {/* Content Card */}
         <CategoryCard
           title={steps[activeStep].title}
           content={steps[activeStep].content}
           type={steps[activeStep].type}
         />
-  
+
         {/* Mobile Stepper */}
         <MobileStepper
           variant="dots"
@@ -186,19 +192,35 @@ const Recommendation = () => {
             </Button>
           }
         />
-  
+
+        {/* Additional Details Section */}
         {user && (
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-            <WishlistButton onClick={() => setShowWishlistForm(true)}>Add to Wishlist</WishlistButton>
-            {showWishlistForm && (
-              <WishlistSecForm onSubmit={handleWishlistSubmit} onCancel={() => setShowWishlistForm(false)} />
-            )}
+          <Box sx={{ mt: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Typography variant="h6" gutterBottom>
+              Additional Details
+            </Typography>
+            <TextField
+              label="Name Your Wish"
+              variant="outlined"
+              value={wishName}
+              onChange={(e) => setWishName(e.target.value)}
+              sx={{ mb: 1, width: '90%' }}
+            />
+            <TextField
+              label="Notes"
+              variant="outlined"
+              multiline
+              rows={4}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              sx={{ mb: 2, width: '90%' }}
+            />
+            <WishlistButton onAddToWishlist={handleWishlistSubmit}>Add to Wishlist</WishlistButton>
           </Box>
         )}
       </Paper>
     </div>
   );
-  
 };
 
 export default Recommendation;

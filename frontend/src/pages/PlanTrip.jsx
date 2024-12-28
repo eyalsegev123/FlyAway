@@ -61,13 +61,13 @@ const PlanTrip = () => {
         console.log(destination, startDate, endDate, tripLength, budget); 
         navigate("/Recommendation", {
           state: {
+            tripRecommendation: response.data,
             destination: destination,
             start_range: startDate,
             end_range: endDate,
             trip_genre: tripGenres.join(", "),
             trip_length: tripLength,
             budget: budget,
-            content: response.data, // OpenAi answer
           },
         });
       }
