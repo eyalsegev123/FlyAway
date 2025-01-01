@@ -3,13 +3,16 @@ import Button from "./Button"; // Import the Button component
 import LoginForm from "../components/LoginForm"; // Import LoginForm
 import RegisterForm from "../components/RegisterForm"; // Import RegisterForm
 import Modal from "../components/Modal"; // Import the new Modal component
-import { AuthContext } from "../context/AuthContext"; // Import Auth context
+import { AuthContext, useAuth } from "../context/AuthContext"; // Import Auth context
 import "../styles/components/Header.css"; // Import CSS for styling
+import HeaderButton from './HeaderButton'; // Import HeaderButton component
+import HelloMessage from './HelloMessage'; // Ensure correct path
+
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const { user, login, logout } = useContext(AuthContext); // Use context
+  const { user, login, logout } = useAuth(); // Use context
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
@@ -57,9 +60,12 @@ const Header = () => {
         {user ? (
           <div className="header-greeting-container">
             <div className="header-greeting-box">
-              <span className="header-greeting">Hello {getFirstName(user.name)}</span>
+              <HelloMessage
+                text={`Hello ${getFirstName(user.name)}`}
+                tooltipText="Happy to see you again !"  // Example tooltip text
+              />
             </div>
-            <Button
+            <HeaderButton
               className="header-buttons logout"
               label="Logout"
               onClick={handleLogoutClick}
@@ -67,12 +73,12 @@ const Header = () => {
           </div>
         ) : (
           <>
-            <Button
+            <HeaderButton
               className="header-buttons"
               label="Register"
               onClick={openRegisterModal}
             />
-            <Button
+            <HeaderButton
               className="header-buttons"
               label="Login"
               onClick={openLoginModal}
@@ -82,7 +88,7 @@ const Header = () => {
       </div>
 
       {/* Render the Login Modal */}
-      <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal} title="Login">
+      <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal} title="">
         <LoginForm
           onLoginSuccess={handleLoginSuccess}
           onError={handleError}
@@ -94,7 +100,7 @@ const Header = () => {
       <Modal
         isOpen={isRegisterModalOpen}
         onClose={closeRegisterModal}
-        title="Register"
+        title=""
       >
         <RegisterForm
           onRegisterSuccess={handleRegisterSuccess}
@@ -105,7 +111,5 @@ const Header = () => {
     </div>
   );
 };
-
-
 
 export default Header;

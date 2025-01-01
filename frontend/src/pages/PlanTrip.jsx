@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
 import "../styles/pages/PlanTrip.css";
 import Header from "../components/Header";
 
@@ -79,73 +80,83 @@ const PlanTrip = () => {
   };
 
   return (
-    <div className="plan-trip-page">
+    <StyledWrapper>
       <Header />
-      <div className="plan-trip-content">
-        <h1 className="plan-trip-title">Plan Your Trip</h1>
-        <p className="plan-trip-subtitle">
-          Use our tools to plan the perfect vacation for you!
-        </p>
-
-        <form className="trip-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="destination">Destination</label>
+      <form className="form" onSubmit={handleSubmit}>
+        <p className="title">Plan Your Trip</p>
+        <p className="message">Use our tools to plan the perfect vacation for you!</p>
+        <div className="form-group">
+          <label htmlFor="destination">
             <input
+              className="input"
               type="text"
               id="destination"
+              placeholder="Enter your destination"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               required
             />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="startDate">Start Date</label>
+            <span>Destination</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="startDate">
             <input
+              className="input"
               type="date"
               id="startDate"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               required
             />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="endDate">End Date</label>
+            <span>Start Date</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="endDate">
             <input
+              className="input"
               type="date"
               id="endDate"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               required
             />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="tripLength">Length of Trip (in days)</label>
+            <span>End Date</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="tripLength">
             <input
+              className="input"
               type="number"
               id="tripLength"
+              placeholder="Enter the length of your trip in days"
               value={tripLength}
               onChange={(e) => setTripLength(e.target.value)}
               required
             />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="budget">Budget</label>
+            <span>Length of Trip (in days)</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="budget">
             <input
+              className="input"
               type="number"
               id="budget"
+              placeholder="Enter your budget"
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
               required
             />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="currency">Currency</label>
+            <span>Budget</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="currency">
             <select
+              className="input"
               id="currency"
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
@@ -156,10 +167,11 @@ const PlanTrip = () => {
               <option value="GBP">GBP</option>
               <option value="NIS">NIS</option>
             </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="tripGenres">Trip Genre (Select multiple)</label>
+            <span>Currency</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="tripGenres">
             <div className="dropdown">
               <button
                 type="button"
@@ -187,10 +199,11 @@ const PlanTrip = () => {
                 </div>
               )}
             </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="travelers">Travelers</label>
+            <span>Trip Genre (Select multiple)</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="travelers">
             <div className="dropdown">
               <button
                 type="button"
@@ -202,9 +215,8 @@ const PlanTrip = () => {
               {showTravelersDropdown && (
                 <div className="dropdown-menu">
                   {[
+                    "Solo",
                     "Couple",
-                    "Couples",
-                    "Family",
                     "Families",
                     "Friends (Women)",
                     "Friends (Men)",
@@ -222,19 +234,101 @@ const PlanTrip = () => {
                 </div>
               )}
             </div>
-          </div>
-
-          <div className="form-group">
-            <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? "Submitting..." : "Submit"}
-            </button>
-          </div>
-        </form>
-
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-      </div>
-    </div>
+            <span>Travelers</span>
+          </label>
+        </div>
+        <button className="submit" type="submit" disabled={loading}>
+          {loading ? "Planning..." : "Plan Trip"}
+        </button>
+        {errorMessage && <p className="error">{errorMessage}</p>}
+      </form>
+    </StyledWrapper>
   );
 };
+
+const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Full viewport height */
+  background-color: #f0f0f0; /* Optional: background color for the page */
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 600px; /* Increased maximum width */
+    width: 100%; /* Ensure the form takes full width up to the max-width */
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+  }
+
+  .title {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    color: #00bfff;
+  }
+
+  .message {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .form-group {
+    position: relative;
+  }
+
+  .form-group .input {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+    padding: 20px 5px 5px 10px;
+    outline: 0;
+    border: 1px solid rgba(105, 105, 105, 0.397);
+    border-radius: 10px;
+  }
+
+  .form-group .input + span {
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    font-size: 0.9em;
+    cursor: text;
+    transition: 0.3s ease;
+  }
+
+  .form-group .input:focus + span,
+  .form-group .input:valid + span {
+    color: #00bfff;
+    top: 0px;
+    font-size: 0.7em;
+    font-weight: 600;
+  }
+
+  .submit {
+    border: none;
+    outline: none;
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    background-color: #00bfff;
+    transition: background-color 0.3s ease;
+  }
+
+  .submit:hover {
+    background-color: #00bfff96;
+  }
+`;
 
 export default PlanTrip;

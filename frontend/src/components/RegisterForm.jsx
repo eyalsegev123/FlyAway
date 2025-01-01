@@ -1,11 +1,6 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import axios from "axios";
-import "../styles/components/Form.css"; // Ensure this path is correct
-// import dotenv from "dotenv";
-// import path from "path-browserify";
-
-// dotenv.config({ path: path.join(__dirname, '../.env') });
-
 
 const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
   const [name, setName] = useState("");
@@ -44,17 +39,13 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
       return;
     }
 
-    // Validate birthday format
-    const birthdayRegex = /^\d{2}\/\d{2}\/\d{4}$/; // Format: DD/MM/YYYY
+    // Validate birthday format (YYYY-MM-DD)
+    const birthdayRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
     if (!birthdayRegex.test(birthday)) {
-      setErrorMessage("Invalid birthday format. Please use DD/MM/YYYY.");
+      setErrorMessage("Invalid birthday format. Please use YYYY-MM-DD.");
       setLoading(false);
       return;
     }
-
-    // Convert birthday to YYYY-MM-DD format
-    const [day, month, year] = birthday.split("/");
-    const formattedBirthday = `${year}-${month}-${day}`;
 
     console.log("Attempting to register user...");
     try {
@@ -64,7 +55,7 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
           name,
           email,
           password,
-          birthday: formattedBirthday
+          birthday: birthday
         }
       );
 
@@ -83,64 +74,210 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="birthday">Birthday (DD/MM/YYYY)</label>
-        <input
-          type="text"
-          id="birthday"
-          value={birthday}
-          onChange={(e) => setBirthday(e.target.value)}
-          required
-          placeholder="e.g., 25/12/2000"
-        />
-      </div>
-      {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
-      <button type="submit" disabled={loading}>
-        {loading ? "Registering..." : "Register"}
-      </button>
-    </form>
+    <StyledWrapper>
+      <form className="form" onSubmit={handleSubmit}>
+        <p className="title">Register</p>
+        <p className="message">Signup now and get full access our features! </p>
+        <div className="flex">
+          <label>
+            <input
+              className="input"
+              type="text"
+              placeholder
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <span>Name</span>
+          </label>
+          <label>
+            <input
+              className="input"
+              type="date"
+              placeholder
+              value={birthday}
+              onChange={(e) => setBirthday(e.target.value)}
+              required
+            />
+            <span>Birthday</span>
+          </label>
+        </div>
+        <label>
+          <input
+            className="input"
+            type="email"
+            placeholder
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <span>Email</span>
+        </label>
+        <label>
+          <input
+            className="input"
+            type="password"
+            placeholder
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <span>Password</span>
+        </label>
+        <label>
+          <input
+            className="input"
+            type="password"
+            placeholder
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <span>Confirm password</span>
+        </label>
+        <button className="submit" type="submit" disabled={loading}>
+          Submit
+        </button>
+        {errorMessage && <p className="error">{errorMessage}</p>}
+      </form>
+    </StyledWrapper>
   );
 };
+
+const StyledWrapper = styled.div`
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 350px;
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+  }
+
+  .title {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    color: #00bfff;
+  }
+
+  .title::before {
+    width: 18px;
+    height: 18px;
+  }
+
+  .title::after {
+    width: 18px;
+    height: 18px;
+    animation: pulse 1s linear infinite;
+  }
+
+  .title::before,
+  .title::after {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    left: 0px;
+    background-color: #00bfff;
+  }
+
+  .message, 
+  .signin {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .signin a:hover {
+    text-decoration: underline royalblue;
+  }
+
+  .signin a {
+    color: #00bfff;
+  }
+
+  .flex {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .form label {
+    position: relative;
+  }
+
+  .form label .input {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+    padding: 20px 05px 05px 10px;
+    outline: 0;
+    border: 1px solid rgba(105, 105, 105, 0.397);
+    border-radius: 10px;
+  }
+
+  .form label .input + span {
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    font-size: 0.9em;
+    cursor: text;
+    transition: 0.3s ease;
+  }
+
+  .form label .input:placeholder-shown + span {
+    top: 12.5px;
+    font-size: 0.9em;
+  }
+
+  .form label .input:focus + span,
+  .form label .input:valid + span {
+    color: #00bfff;
+    top: 0px;
+    font-size: 0.7em;
+    font-weight: 600;
+  }
+
+  .input {
+    font-size: medium;
+  }
+
+  .submit {
+    border: none;
+    outline: none;
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    transform: .3s ease;
+    background-color: #00bfff;
+  }
+
+  .submit:hover {
+    background-color: #00bfff96;
+  }
+
+  @keyframes pulse {
+    from {
+      transform: scale(0.9);
+      opacity: 1;
+    }
+
+    to {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+  }
+`;
 
 export default RegisterForm;

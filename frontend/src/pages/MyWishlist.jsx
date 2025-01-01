@@ -38,7 +38,7 @@ const MyWishList = () => {
     };
 
     fetchWishlist();
-  }, []);
+  }, [user.id]);
 
   return (
     <div className="wishlist-list">

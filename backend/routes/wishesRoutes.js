@@ -21,7 +21,7 @@ router.get('/user/:user_id/name/:name', getWishesByUserIdAndName);
 router.get('/user/:user_id/destination/:destination', getWishesByUserIdAndDestination);
 
 // Add a new wishlist
-router.post('/addToWishList', addToWishlist);
+router.post('/addToWishlist', addToWishlist);
 
 // Delete a wishlist
 router.delete('/:wish_id', deleteFromWishlist);

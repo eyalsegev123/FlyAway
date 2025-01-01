@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/components/Modal.css"; // Add your own styles for the modal
-import Button from "./Button";
+import CloseButton from "./CloseButton";
 
 const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null; // Don't render the modal if it's not open
@@ -11,11 +11,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         className="modal-content"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
-        <Button
+        <CloseButton
           className="close-button-modal"
           label="&times;"
           onClick={onClose}
-        ></Button>
+        ></CloseButton>
         <h2>{title}</h2>
         {children} {/* Render the form passed as a child */}
       </div>

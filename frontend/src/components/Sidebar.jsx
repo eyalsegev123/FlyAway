@@ -3,7 +3,6 @@ import SidebarItem from "./SidebarItem.jsx";
 import HamburgerButton from "./HamburgerButton.jsx";
 import { useAuth } from '../context/AuthContext'; // Import the Auth context
 import "../styles/components/Sidebar.css"; // Ensure the CSS file is linked
-import "../styles/components/Buttons.css";
 
 const Sidebar = () => {
   // State to track whether the sidebar is open or closed
