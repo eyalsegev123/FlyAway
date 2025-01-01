@@ -19,33 +19,33 @@ const MyTrips = () => {
 
 
   // Fetch trips when the component mounts
-useEffect(() => {
-  const fetchTrips = async () => {
-    setLoading(true);
-    try {
-      // Retrieve the user_id from localStorage
-        const user_id = localStorage.getItem("user_id");
+  useEffect(() => {
+    const fetchTrips = async () => {
+      setLoading(true);
+      try {
+        // Retrieve the user_id from localStorage
+          const user_id = localStorage.getItem("user_id");
 
-        if (!user_id) {
-          setErrorMessage("User not logged in.");
-          return;
+          if (!user_id) {
+            setErrorMessage("User not logged in.");
+            return;
+          }
+
+        const response = await axios.get(
+          `http://localhost:5001/tripsRoutes/getUserTrips${user_id}`
+        );
+        if (response.status === 200) {
+          setTrips(response.data);  // Update state with the trips data
         }
-
-      const response = await axios.get(
-        `http://localhost:5001/tripsRoutes/getUserTrips${user_id}`
-      );
-      if (response.status === 200) {
-        setTrips(response.data);  // Update state with the trips data
+      } catch (err) {
+        setErrorMessage("An error occurred while getting the trips");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setErrorMessage("An error occurred while getting the trips");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchTrips();
-}, []); 
+    fetchTrips();
+  }, []); 
  
 
   // Handle form submission

@@ -120,14 +120,24 @@ const Recommendation = () => {
   }
 
   return (
-    <div className="recommendation-container">
+    <div className="recommendation-container" style={{
+      padding: '20px',
+      marginLeft: '140px', // account for sidebar width
+      marginTop: '160px',   // account for header height
+      boxSizing: 'border-box',
+      minHeight: 'calc(100vh - 64px)',
+      display: 'flex',
+      justifyContent: 'center'
+    }}>
       <Paper 
         elevation={3} 
         className="recommendation-paper"
         sx={{ 
           width: '100%',
-          maxWidth: '100%',
-          boxSizing: 'border-box'
+          maxWidth: '1200px', // limit maximum width
+          boxSizing: 'border-box',
+          padding: '24px',
+          margin: '0 auto'
         }}
       >
         <Typography

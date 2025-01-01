@@ -53,5 +53,4 @@ yarn-error.log*
 # Ignore Yarn PnP files if using Yarn
 /.pnp
 .pnp.js
-
 .codegpt

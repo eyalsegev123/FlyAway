@@ -1,10 +1,9 @@
 .recommendation-container {
-  max-width: 600px;
-  width: 50%;
-  margin: 100px auto 0 250px; /* top right bottom left */
+  max-width: 800px;
+  width: calc(100% - 400px); /* Increased to move content right */
+  margin: 180px auto 20px 350px; /* Increased top margin to 180px and left margin to 350px */
   padding: 20px;
-  position: relative; /* Change from absolute to relative positioning */
-  transform: none; /* Remove the transform */
+  position: relative;
 }
 
 .recommendation-paper.MuiPaper-root { /* Add specificity to override MUI styles */
@@ -44,8 +43,8 @@
   }
 
   .recommendation-container {
-    margin: 80px auto 0 0; /* Remove left margin on mobile */
     width: 90%;
+    margin: 160px auto 20px; /* Adjust for mobile */
     padding: 12px;
   }
 
