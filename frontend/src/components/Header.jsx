@@ -61,8 +61,8 @@ const Header = () => {
           <div className="header-greeting-container">
             <div className="header-greeting-box">
               <HelloMessage
-                text={`Hello ${getFirstName(user.name)}`}
-                tooltipText="Happy to see you again !"  // Example tooltip text
+                text = {`Hello ${getFirstName(user.name)} 👋`}
+                tooltipText={`Great to see u again !`}
               />
             </div>
             <HeaderButton

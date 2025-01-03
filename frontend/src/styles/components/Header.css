@@ -6,7 +6,7 @@
   padding: 20px 30px; /* Adjusted padding for a more spacious feel */
   background-color: #494646; /* Clean, modern background color */
   box-shadow: 0 4px 8px rgba(66, 66, 66, 0.1); /* Softer shadow for elegance */
-  border-bottom: 1px solid #eaeaea; /* Subtle border for separation */
+  border-bottom: 1px solid #494646; /* Subtle border for separation */
   position: fixed; /* Make the header fixed at the top */
   top: 0; /* Always stay at the top of the viewport */
   left: 0; /* Align to the left side of the screen */
@@ -40,7 +40,7 @@
   padding: 10px 20px; /* Comfortable button size */
   border: 2px solid transparent; /* Transparent border for smoother look */
   border-radius: 8px; /* Larger rounded corners for a softer feel */
-  background-color: #B0BEC5 !important; /* Soft, classic gray background with !important */
+  background-color: #363434 !important; /* Soft, classic gray background with !important */
   color: #070707; /* Dark text for contrast */
   font-size: 16px; /* Slightly larger font size for better readability */
   font-weight: 500; /* Medium weight for better text visibility */
@@ -52,7 +52,7 @@
 }
 
 .header-buttons:hover {
-  background-color: #90A4AE !important; /* Slightly darker gray on hover with !important */
+  background-color: #363434 !important; /* Slightly darker gray on hover with !important */
 }
 
 
@@ -65,17 +65,8 @@
 
 /* Style for the greeting box */
 .header-greeting-box {
-  display: flex;
-  align-items: center;
-  background-color: #ffffff; /* White background for better contrast */
-  padding: 10px 20px; /* Add padding for spacing */
-  border-radius: 25px; /* Rounded corners */
-  border: 1px solid #cccccc; /* Light gray border */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
-  color: #333333; /* Dark text color */
-  font-size: 16px; /* Font size for the greeting */
-  font-weight: bold; /* Make the greeting stand out */
-  text-transform: capitalize; /* Capitalize the name for better readability */
+  border: 1px solid #494646; /* Light gray border */
+  padding: 10px 20px;
 }
 
 .header-greeting-box .header-greeting {
@@ -100,6 +91,6 @@
 
 /* Style for the body to prevent overlap with the fixed header */
 body {
-  margin-top: 80px; /* Adjust this if you want to provide more space */
+  margin-top: 150px; /* Adjust this if you want to provide more space */
   padding: 0; /* Ensure no extra padding on the body */
 }

@@ -6,8 +6,7 @@ const HelloMessage = ({ text, tooltipText }) => {
     <StyledHelloMessage>
       <div className="hello-container">
         <span className="hello">{text}</span>
-        <span className="tooltip-text">Tooltip 👆</span>
-        <span>{tooltipText}</span>
+        <span className="tooltip-text">{tooltipText}</span>
       </div>
     </StyledHelloMessage>
   );
@@ -15,102 +14,62 @@ const HelloMessage = ({ text, tooltipText }) => {
 
 const StyledHelloMessage = styled.div`
   .hello-container {
-    --background: #333333;
-    --color: #e8e8e8;
+    --background: #494646;  /* Dark grey background */
+    --color: #FFFFFF;  /* White text */
     position: relative;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    font-size: 18px;
+    font-size: 12px; /* Smaller font size */
     font-weight: 600;
     color: var(--color);
-    padding: 0.7em 1.8em;
+    padding: 0.4em 1.2em; /* Smaller padding */
     border-radius: 8px;
-    text-transform: uppercase;
-    height: 60px;
-    width: 180px;
+    text-transform: uppercase; /* This makes all text uppercase in the container */
+    height: 40px; /* Smaller height */
+    width: 140px; /* Smaller width */
     display: grid;
     place-items: center;
-    border: 2px solid var(--color);
+    border: 2px solid transparent;
+    background-color: var(--background);
+    margin: 0 10px 0 0; /* Added right margin */
+    box-shadow: none;  /* No box shadow */
   }
 
   .tooltip-text {
     position: absolute;
-    top: 0;
+    top: 100%; /* Adjusted from bottom to top */
     left: 50%;
-    transform: translateX(-50%);
-    padding: 0.3em 0.6em;
+    transform: translateX(-50%) translateY(10px); /* Adjust to move tooltip below the box */
+    padding: 0.2em 0.4em;
     opacity: 0;
     pointer-events: none;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    background: var(--background);
-    z-index: -1;
+    background: #000000; /* Black tooltip background */
+    color: var(--color); /* White tooltip text */
+    z-index: 1000; /* Ensure it's above all other content */
     border-radius: 8px;
-    scale: 0;
-    transform-origin: 0 0;
-    text-transform: capitalize;
     font-weight: 400;
-    font-size: 16px;
-    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    font-size: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    visibility: hidden;
+    text-transform: none; /* Override to keep the original text case */
   }
 
   .tooltip-text::before {
-    position: absolute;
     content: "";
+    position: absolute;
     height: 0.6em;
     width: 0.6em;
-    bottom: -0.2em;
+    top: -0.3em; /* Adjust to correctly position the arrow pointing upwards */
     left: 50%;
-    transform: translate(-50%) rotate(45deg);
-    background: var(--background);
+    transform: translateX(-50%) rotate(45deg);
+    background: #000000; /* Arrow matches tooltip background */
   }
 
   .hello-container:hover .tooltip-text {
-    top: -100%;
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    scale: 1;
-    animation: shake 0.5s ease-in-out both;
-  }
-
-  .hello-container:hover {
-    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-    color: white;
-    border-color: transparent;
-  }
-
-  .hello-container:hover span:last-child {
-    transform: scale(1);
-    left: 0;
-  }
-
-  .hello-container:hover .tooltip-text {
-    opacity: 0;
-    top: 0%;
-    left: 100%;
-    transform: scale(0);
-  }
-
-  @keyframes shake {
-    0% {
-      rotate: 0;
-    }
-
-    25% {
-      rotate: 7deg;
-    }
-
-    50% {
-      rotate: -7deg;
-    }
-
-    75% {
-      rotate: 1deg;
-    }
-
-    100% {
-      rotate: 0;
-    }
   }
 `;
 
