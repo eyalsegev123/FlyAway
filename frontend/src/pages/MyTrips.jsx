@@ -32,7 +32,7 @@ const MyTrips = () => {
           }
 
         const response = await axios.get(
-          `http://localhost:5001/tripsRoutes/getUserTrips${user_id}`
+          `http://localhost:5001/tripsRoutes/getUserTrips/${user_id}`
         );
         if (response.status === 200) {
           setTrips(response.data);  // Update state with the trips data

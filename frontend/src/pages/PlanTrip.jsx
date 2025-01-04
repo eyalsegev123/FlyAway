@@ -251,7 +251,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh; /* Full viewport height */
-  background-color: #f0f0f0; /* Optional: background color for the page */
+  background-color: transparent; /* Optional: background color for the page */
 
   .form {
     display: flex;

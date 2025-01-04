@@ -1,9 +1,8 @@
-import React, { useState, useContext } from "react";
-import Button from "./Button"; // Import the Button component
+import React, { useState } from "react";
 import LoginForm from "../components/LoginForm"; // Import LoginForm
 import RegisterForm from "../components/RegisterForm"; // Import RegisterForm
 import Modal from "../components/Modal"; // Import the new Modal component
-import { AuthContext, useAuth } from "../context/AuthContext"; // Import Auth context
+import { useAuth } from "../context/AuthContext"; // Import Auth context
 import "../styles/components/Header.css"; // Import CSS for styling
 import HeaderButton from './HeaderButton'; // Import HeaderButton component
 import HelloMessage from './HelloMessage'; // Ensure correct path
