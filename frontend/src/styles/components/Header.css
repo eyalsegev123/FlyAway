@@ -3,10 +3,8 @@
   display: flex;
   justify-content: space-between; /* Space between logo and buttons */
   align-items: center;
-  padding: 20px 30px; /* Adjusted padding for a more spacious feel */
-  background-color: #494646; /* Clean, modern background color */
-  box-shadow: 0 4px 8px rgba(66, 66, 66, 0.1); /* Softer shadow for elegance */
-  border-bottom: 1px solid #494646; /* Subtle border for separation */
+  padding: 5px 30px; /* Adjusted padding for a more spacious feel */
+  background-color: transparent;
   position: fixed; /* Make the header fixed at the top */
   top: 0; /* Always stay at the top of the viewport */
   left: 0; /* Align to the left side of the screen */
@@ -21,8 +19,8 @@
 }
 
 .header-logo-img {
-  width: 600px; /* Adjust logo size */
-  height: 100px; /* Maintain aspect ratio */
+  width: 300px; /* Adjust logo size */
+  height: 80px; /* Maintain aspect ratio */
   margin-right: 10px; /* Space between the logo and title */
 }
 
@@ -33,29 +31,6 @@
   gap: 10px; /* Space between the buttons */
 }
 
-/* Style for the buttons */
-.header-buttons {
-  display: flex;
-  gap: 10px; /* Space between the buttons */
-  padding: 10px 20px; /* Comfortable button size */
-  border: 2px solid transparent; /* Transparent border for smoother look */
-  border-radius: 8px; /* Larger rounded corners for a softer feel */
-  background-color: #363434 !important; /* Soft, classic gray background with !important */
-  color: #070707; /* Dark text for contrast */
-  font-size: 16px; /* Slightly larger font size for better readability */
-  font-weight: 500; /* Medium weight for better text visibility */
-  cursor: pointer; /* Pointer cursor for interactivity */
-  transition: all 0.3s ease; /* Smooth transition for all states */
-  text-transform: uppercase; /* Make button text uppercase for style */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow */
-  outline: none; /* Remove default outline */
-}
-
-.header-buttons:hover {
-  background-color: #363434 !important; /* Slightly darker gray on hover with !important */
-}
-
-
 .header-greeting-container {
   display: flex;
   align-items: center;
@@ -65,7 +40,7 @@
 
 /* Style for the greeting box */
 .header-greeting-box {
-  border: 1px solid #494646; /* Light gray border */
+  border: 1px solid transparent; /* Light gray border */
   padding: 10px 20px;
 }
 
@@ -74,20 +49,7 @@
   color: #333; /* Ensure the greeting text is dark enough */
 }
 
-/* Style for the logout button */
-.header-buttons.logout {
-  background-color: #ff5c5c; /* Red color for the logout button */
-  color: white;
-  border-radius: 5px;
-  padding: 8px 16px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
 
-.header-buttons.logout:hover {
-  background-color: #ff3b3b; /* Darker red on hover */
-}
 
 /* Style for the body to prevent overlap with the fixed header */
 body {

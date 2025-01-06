@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import "../styles/pages/PlanTrip.css";
 import Header from "../components/Header";
+import LoadingTrip from "../components/LoadingTrip";
 
 const PlanTrip = () => {
   const [destination, setDestination] = useState("");
@@ -82,166 +83,166 @@ const PlanTrip = () => {
   return (
     <StyledWrapper>
       <Header />
-      <form className="form" onSubmit={handleSubmit}>
-        <p className="title">Plan Your Trip</p>
-        <p className="message">Use our tools to plan the perfect vacation for you!</p>
-        <div className="form-group">
-          <label htmlFor="destination">
-            <input
-              className="input"
-              type="text"
-              id="destination"
-              placeholder="Enter your destination"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              required
-            />
-            <span>Destination</span>
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="startDate">
-            <input
-              className="input"
-              type="date"
-              id="startDate"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-            />
-            <span>Start Date</span>
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="endDate">
-            <input
-              className="input"
-              type="date"
-              id="endDate"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-            />
-            <span>End Date</span>
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="tripLength">
-            <input
-              className="input"
-              type="number"
-              id="tripLength"
-              placeholder="Enter the length of your trip in days"
-              value={tripLength}
-              onChange={(e) => setTripLength(e.target.value)}
-              required
-            />
-            <span>Length of Trip (in days)</span>
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="budget">
-            <input
-              className="input"
-              type="number"
-              id="budget"
-              placeholder="Enter your budget"
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
-              required
-            />
-            <span>Budget</span>
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="currency">
-            <select
-              className="input"
-              id="currency"
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-              required
-            >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="NIS">NIS</option>
-            </select>
-            <span>Currency</span>
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="tripGenres">
-            <div className="dropdown">
-              <button
-                type="button"
-                className="dropdown-toggle"
-                onClick={handleGenreDropdownToggle}
+      {loading ? (
+        <LoadingTrip />
+      ) : (
+        <form className="form" onSubmit={handleSubmit}>
+          <p className="title">Plan Your Trip</p>
+          <p className="message">Use our tools to plan the perfect vacation for you!</p>
+          <div className="form-group">
+            <label htmlFor="destination">
+              <input
+                className="input"
+                type="text"
+                id="destination"
+                placeholder="Enter your destination"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                required
+              />
+              <span>Destination</span>
+            </label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="startDate">
+              <input
+                className="input"
+                type="date"
+                id="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+              />
+              <span>Start Date</span>
+            </label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="endDate">
+              <input
+                className="input"
+                type="date"
+                id="endDate"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required
+              />
+              <span>End Date</span>
+            </label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="tripLength">
+              <input
+                className="input"
+                type="number"
+                id="tripLength"
+                placeholder="Enter the length of your trip in days"
+                value={tripLength}
+                onChange={(e) => setTripLength(e.target.value)}
+                required
+              />
+              <span>Length of Trip (in days)</span>
+            </label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="budget">
+              <input
+                className="input"
+                type="number"
+                id="budget"
+                placeholder="Enter your budget"
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                required
+              />
+              <span>Budget</span>
+            </label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="currency">
+              <select
+                className="input"
+                id="currency"
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+                required
               >
-                {tripGenres.length === 0
-                  ? "Select genres"
-                  : tripGenres.join(", ")}
-              </button>
-              {showGenreDropdown && (
-                <div className="dropdown-menu">
-                  {["Sport", "Nightlife", "Restaurant", "Extreme"].map(
-                    (genre) => (
-                      <label key={genre} className="dropdown-item">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="NIS">NIS</option>
+              </select>
+              <span>Currency</span>
+            </label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="tripGenres">
+              <div className="dropdown">
+                <button
+                  type="button"
+                  className="dropdown-toggle"
+                  onClick={handleGenreDropdownToggle}
+                >
+                  {tripGenres.length === 0
+                    ? "Select genres"
+                    : tripGenres.join(", ")}
+                </button>
+                {showGenreDropdown && (
+                  <div className="dropdown-menu">
+                    {["Sport", "Nightlife", "Restaurant", "Extreme", "Ski", "Shopping", "Museums"].map(
+                      (genre) => (
+                        <label key={genre} className="dropdown-item">
+                          <input
+                            type="checkbox"
+                            checked={tripGenres.includes(genre)}
+                            onChange={() => handleGenreChange(genre)}
+                          />
+                          {genre}
+                        </label>
+                      )
+                    )}
+                  </div>
+                )}
+              </div>
+              <span>Trip Genre (Select multiple)</span>
+            </label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="travelers">
+              <div className="dropdown">
+                <button
+                  type="button"
+                  className="dropdown-toggle"
+                  onClick={() => setShowTravelersDropdown(!showTravelersDropdown)}
+                >
+                  {travelers || "Select travelers"}
+                </button>
+                {showTravelersDropdown && (
+                  <div className="dropdown-menu">
+                    {["Solo", "Couple", "Families", "Friends (Women)", "Friends (Men)",
+                      "bachelorette party(Women)", "bachelorette party(Men)"
+                    ].map((traveler) => (
+                      <label key={traveler} className="dropdown-item">
                         <input
-                          type="checkbox"
-                          checked={tripGenres.includes(genre)}
-                          onChange={() => handleGenreChange(genre)}
+                          type="radio"
+                          name="travelers"
+                          checked={travelers === traveler}
+                          onChange={() => setTravelers(traveler)}
                         />
-                        {genre}
+                        {traveler}
                       </label>
-                    )
-                  )}
-                </div>
-              )}
-            </div>
-            <span>Trip Genre (Select multiple)</span>
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="travelers">
-            <div className="dropdown">
-              <button
-                type="button"
-                className="dropdown-toggle"
-                onClick={() => setShowTravelersDropdown(!showTravelersDropdown)}
-              >
-                {travelers || "Select travelers"}
-              </button>
-              {showTravelersDropdown && (
-                <div className="dropdown-menu">
-                  {[
-                    "Solo",
-                    "Couple",
-                    "Families",
-                    "Friends (Women)",
-                    "Friends (Men)",
-                  ].map((traveler) => (
-                    <label key={traveler} className="dropdown-item">
-                      <input
-                        type="radio"
-                        name="travelers"
-                        checked={travelers === traveler}
-                        onChange={() => setTravelers(traveler)}
-                      />
-                      {traveler}
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-            <span>Travelers</span>
-          </label>
-        </div>
-        <button className="submit" type="submit" disabled={loading}>
-          {loading ? "Planning..." : "Plan Trip"}
-        </button>
-        {errorMessage && <p className="error">{errorMessage}</p>}
-      </form>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <span>Travelers</span>
+            </label>
+          </div>
+          <button className="submit" type="submit">
+            Plan Trip
+          </button>
+          {errorMessage && <p className="error">{errorMessage}</p>}
+        </form>
+      )}
     </StyledWrapper>
   );
 };

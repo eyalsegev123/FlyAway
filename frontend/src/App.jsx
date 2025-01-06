@@ -1,8 +1,7 @@
 // src/App.js
-import React, { useState } from "react";
+import React from "react";
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Sidebar from "./components/Sidebar"; // Sidebar component
 import HomePage from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import PlanTrip from "./pages/PlanTrip";
@@ -14,15 +13,13 @@ import MyWishlist from "./pages/MyWishlist";
 
 
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <AuthProvider>
       <Router>
         <div className="App">
           <Header/>
-          <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-          <div className={`main-content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+          <div className="main-content">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/AboutUs" element={<AboutUs />} />

@@ -26,6 +26,7 @@ const StyledWrapper = styled.div`
     border: 1px solid #ffffff80;
     transition: 0.5s ease;
     user-select: none;
+    color: white;
   }
 
   #btn:hover,

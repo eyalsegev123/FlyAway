@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm"; // Import LoginForm
 import RegisterForm from "../components/RegisterForm"; // Import RegisterForm
 import Modal from "../components/Modal"; // Import the new Modal component
@@ -11,6 +12,7 @@ import HelloMessage from './HelloMessage'; // Ensure correct path
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const navigate = useNavigate(); // Define navigate function
   const { user, login, logout } = useAuth(); // Use context
 
   const openLoginModal = () => setIsLoginModalOpen(true);
@@ -48,12 +50,44 @@ const Header = () => {
       {/* Logo and title */}
       <div className="header-logo">
         <img
-          src="/photos/logo.jpeg"
+          src="/photos/logo.png"
           alt="FlyAway Logo"
           className="header-logo-img"
         />
       </div>
-
+    
+      <div className="header-navbar">
+        <HeaderButton
+          className="header-buttons"
+          label="Plan your trip"
+          onClick={() => navigate("/PlanTrip")}
+        />
+        <HeaderButton
+          className="header-buttons"
+          label="About us"
+          onClick={() => navigate("/AboutUs")}
+        />
+        <HeaderButton
+          className="header-buttons"
+          label="Home"
+          onClick={() => navigate("/")}
+        />
+      </div>
+    {user &&
+      <div className="logged-in-navbar">
+        <HeaderButton
+          className="header-buttons"
+          label= "My memories"
+          onClick={() => navigate("/MyTrips")}
+        />
+        <HeaderButton 
+          className="header-buttons"
+          label="Wishlist"
+          onClick={() => navigate("/MyWishlist")}
+        />
+      </div>
+    }
+  
       {/* Conditionally render buttons */}
       <div className="header-buttons-container">
         {user ? (
@@ -65,7 +99,7 @@ const Header = () => {
               />
             </div>
             <HeaderButton
-              className="header-buttons logout"
+              className="header-buttons"
               label="Logout"
               onClick={handleLogoutClick}
             />

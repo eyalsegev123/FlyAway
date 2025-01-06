@@ -23,7 +23,7 @@
     width: 100%;
     margin: 80px auto 0; /* Adjust margin-top to be just under the header */
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #efe5e5;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -88,7 +88,7 @@
 .form-input, .form-select, .dropdown-toggle {
     width: 100%; /* Ensure input fields take full width of the form */
     padding: 15px; /* Increase padding for better spacing */
-    border: 1px solid #ccc;
+    border: 1px solid #f5f4f4;
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -102,8 +102,8 @@
 .dropdown-toggle {
     width: 100%;
     padding: 10px;
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
+    background-color: #ede6e6;
+    border: 1px solid #f8f7f7;
     border-radius: 4px;
     cursor: pointer;
     text-align: left;
@@ -113,7 +113,7 @@
     position: absolute;
     background-color: white;
     width: 100%;
-    border: 1px solid #ccc;
+    border: 1px solid white;
     border-radius: 4px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 10;
@@ -124,6 +124,8 @@
     align-items: center;
     padding: 8px;
     cursor: pointer;
+    color: black; /* Set text color to a visible color (e.g., dark gray) */
+    background-color: white; 
 }
 
 .dropdown-item input {
@@ -131,5 +133,5 @@
 }
 
 .dropdown-item:hover {
-    background-color: #f0f0f0;
+    background-color: #ece7e7;
 }
