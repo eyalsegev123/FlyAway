@@ -21,10 +21,9 @@ body, html {
 .homepage-container {
   font-family: var(--font-family);
   color: var(--primary-color);
-  display: flex;
-  flex-direction: row;
-  height: 100%; /* Allow full height for content */
-  position: relative; /* Position the content relative to the background */
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 /* Apply the background image to the body */
@@ -39,15 +38,13 @@ body {
 
 /* Main content area */
 .homepage-main {
-  display: inline-block;
-  flex: 1; /* Take up the remaining space */
-  z-index: 1; /* Ensure content is on top of background */
-  padding: 20px;
-  overflow-y: auto; /* Allows scrolling if content exceeds height */
-  transition: margin 0.3s ease; /* Smooth transition for margin */
-  margin-left: 70px; /* Default margin for open left sidebar */
-  margin-top: 60px; /* Adjust this value based on the header height */
-  margin-right: 150px; /* Adjust this value based on the right sidebar width */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 
 /* Content area */
@@ -56,5 +53,106 @@ body {
   color: var(--primary-color);
   font-size: var(--font-size-large);
   z-index: 1; /* Ensure content appears on top of background */
+}
+
+.homepage-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.homepage-title h1 {
+  font-size: 3.5rem;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, #1a1a1a, #4a4a4a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeIn 1.5s ease-in;
+}
+
+.homepage-title p {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: 300;
+  margin-top: 5px;
+  animation: slideUp 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carousel-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 30px auto 0;
+  padding: 0 20px;
+}
+
+/* Card Styles */
+.home-trip-card {
+  margin: 0 1rem;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.home-trip-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.home-trip-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1.5rem;
+  background: white;
+}
+
+.card-content h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.card-content p {
+  color: #666;
+  margin: 0;
+}
+
+/* Carousel Navigation */
+.slick-dots {
+  bottom: -40px;
+}
+
+.slick-prev, .slick-next {
+  z-index: 1;
 }
 

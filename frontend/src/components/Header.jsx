@@ -47,7 +47,6 @@ const Header = () => {
 
   return (
     <div className="header">
-      {/* Logo and title */}
       <div className="header-logo">
         <img
           src="/photos/logo.png"
@@ -55,8 +54,12 @@ const Header = () => {
           className="header-logo-img"
         />
       </div>
-    
       <div className="header-navbar">
+        <HeaderButton
+          className="header-buttons"
+          label="Home"
+          onClick={() => navigate("/")}
+        />
         <HeaderButton
           className="header-buttons"
           label="Plan your trip"
@@ -67,34 +70,29 @@ const Header = () => {
           label="About us"
           onClick={() => navigate("/AboutUs")}
         />
-        <HeaderButton
-          className="header-buttons"
-          label="Home"
-          onClick={() => navigate("/")}
-        />
+
+        {user && (
+          <>
+            <HeaderButton
+              className="header-buttons"
+              label="My memories"
+              onClick={() => navigate("/MyTrips")}
+            />
+            <HeaderButton
+              className="header-buttons"
+              label="Wishlist"
+              onClick={() => navigate("/MyWishlist")}
+            />
+          </>
+        )}
       </div>
-    {user &&
-      <div className="logged-in-navbar">
-        <HeaderButton
-          className="header-buttons"
-          label= "My memories"
-          onClick={() => navigate("/MyTrips")}
-        />
-        <HeaderButton 
-          className="header-buttons"
-          label="Wishlist"
-          onClick={() => navigate("/MyWishlist")}
-        />
-      </div>
-    }
-  
-      {/* Conditionally render buttons */}
+      
       <div className="header-buttons-container">
         {user ? (
           <div className="header-greeting-container">
             <div className="header-greeting-box">
               <HelloMessage
-                text = {`Hello ${getFirstName(user.name)} 👋`}
+                text={`Hello ${getFirstName(user.name)} 👋`}
                 tooltipText={`Great to see u again !`}
               />
             </div>
@@ -119,7 +117,6 @@ const Header = () => {
           </>
         )}
       </div>
-
       {/* Render the Login Modal */}
       <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal} title="">
         <LoginForm
@@ -128,13 +125,8 @@ const Header = () => {
           closeModal={closeLoginModal}
         />
       </Modal>
-
       {/* Render the Register Modal */}
-      <Modal
-        isOpen={isRegisterModalOpen}
-        onClose={closeRegisterModal}
-        title=""
-      >
+      <Modal isOpen={isRegisterModalOpen} onClose={closeRegisterModal} title="">
         <RegisterForm
           onRegisterSuccess={handleRegisterSuccess}
           onError={handleError}
