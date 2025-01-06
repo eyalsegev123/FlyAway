@@ -19,8 +19,8 @@
 }
 
 .header-logo-img {
-  width: 300px; /* Adjust logo size */
-  height: 80px; /* Maintain aspect ratio */
+  width: 200px; /* Adjust logo size */
+  height: 70px; /* Maintain aspect ratio */
   margin-right: 10px; /* Space between the logo and title */
 }
 
@@ -47,6 +47,22 @@
 .header-greeting-box .header-greeting {
   margin-left: 10px; /* Space between the greeting text and the box */
   color: #333; /* Ensure the greeting text is dark enough */
+}
+
+.header-navbar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 20px; /* Add spacing between buttons */
+}
+
+.logged-in-navbar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 20px; /* Add spacing between buttons */
 }
 
 
