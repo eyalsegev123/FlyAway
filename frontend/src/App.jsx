@@ -20,6 +20,10 @@ function App() {
         <div className="App">
           <Header/>
           <div className="main-content">
+            <video id="background-video" autoPlay loop muted playsInline>
+              <source src="/assets/video_background.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/AboutUs" element={<AboutUs />} />
@@ -37,3 +41,7 @@ function App() {
 }
 
 export default App;
+
+
+
+

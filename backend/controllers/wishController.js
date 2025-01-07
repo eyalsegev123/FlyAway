@@ -76,7 +76,6 @@ const addToWishlist = async (req, res) => {
 // Delete a wishlist
 const deleteFromWishlist = async (req, res) => {
   const { wish_id } = req.params;
-
   try {
     const result = await pool.query('DELETE FROM wishlist WHERE wish_id = $1 RETURNING *', [wish_id]);
     if (result.rows.length === 0) {
