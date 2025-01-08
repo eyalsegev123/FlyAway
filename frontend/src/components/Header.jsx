@@ -47,13 +47,7 @@ const Header = () => {
 
   return (
     <div className="header">
-      <div className="header-logo">
-        <img
-          src="/photos/logo.png"
-          alt="FlyAway Logo"
-          className="header-logo-img"
-        />
-      </div>
+      <div className="header-spacer"></div> {/* Add this empty div */}
       <div className="header-navbar">
         <HeaderButton
           className="header-buttons"
@@ -89,19 +83,17 @@ const Header = () => {
       
       <div className="header-buttons-container">
         {user ? (
-          <div className="header-greeting-container">
-            <div className="header-greeting-box">
-              <HelloMessage
-                text={`Hello ${getFirstName(user.name)} 👋`}
-                tooltipText={`Great to see u again !`}
-              />
-            </div>
+          <>
+            <HelloMessage
+              text={`Hello ${getFirstName(user.name)} 👋`}
+              tooltipText={`Great to see u again !`}
+            />
             <HeaderButton
               className="header-buttons"
               label="Logout"
               onClick={handleLogoutClick}
             />
-          </div>
+          </>
         ) : (
           <>
             <HeaderButton

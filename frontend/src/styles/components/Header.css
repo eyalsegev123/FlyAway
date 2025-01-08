@@ -1,7 +1,7 @@
 /* Style for the header */
 .header {
   display: flex;
-  justify-content: space-between; /* Space between logo and buttons */
+  justify-content: space-between; /* Reverted to space-between */
   align-items: center;
   padding: 5px 30px; /* Adjusted padding for a more spacious feel */
   background-color: transparent;
@@ -9,21 +9,13 @@
   top: 0; /* Always stay at the top of the viewport */
   left: 0; /* Align to the left side of the screen */
   width: 100%; /* Full width */
+  height: 100px; /* Adjusted height */
   z-index: 1000; /* Ensures it's above other content */
 }
 
-/* Style for the logo and title */
-.header-logo {
-  display: flex;
-  align-items: center; /* Vertically center logo and title */
+.header-spacer {
+  width: 200px; /* Adjust this value to match approximately the width of your buttons container */
 }
-
-.header-logo-img {
-  width: 200px; /* Adjust logo size */
-  height: 70px; /* Maintain aspect ratio */
-  margin-right: 10px; /* Space between the logo and title */
-}
-
 
 .header-buttons-container {
   display: flex;
@@ -31,30 +23,12 @@
   gap: 10px; /* Space between the buttons */
 }
 
-.header-greeting-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-/* Style for the greeting box */
-.header-greeting-box {
-  border: 1px solid transparent; /* Light gray border */
-  padding: 10px 20px;
-}
-
-.header-greeting-box .header-greeting {
-  margin-left: 10px; /* Space between the greeting text and the box */
-  color: #333; /* Ensure the greeting text is dark enough */
-}
-
 .header-navbar{
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  gap: 20px; /* Add spacing between buttons */
+  width: 100%; /* Reverted to full width */
+  gap: 20px;
 }
 
 .logged-in-navbar{
@@ -63,12 +37,4 @@
   justify-content: center;
   width: 100%;
   gap: 20px; /* Add spacing between buttons */
-}
-
-
-
-/* Style for the body to prevent overlap with the fixed header */
-body {
-  margin-top: 150px; /* Adjust this if you want to provide more space */
-  padding: 0; /* Ensure no extra padding on the body */
 }
