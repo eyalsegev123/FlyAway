@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import axios from "axios";
+import styled from "styled-components";
 
 const LoginForm = ({ onLoginSuccess, onError }) => {
   const [email, setEmail] = useState("");
@@ -88,21 +88,34 @@ const StyledWrapper = styled.div`
     color: #00bfff;
   }
 
-  .message, .signin {
+  .title::before {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    left: 0px;
+    background-color: #00bfff;
+  }
+
+  .title::after {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    left: 0px;
+    background-color: #00bfff;
+    animation: pulse 1s linear infinite;
+  }
+
+  .message {
     font-size: 14.5px;
     color: rgba(255, 255, 255, 0.7);
-  }
-
-  .signin {
-    text-align: center;
-  }
-
-  .signin a:hover {
-    text-decoration: underline royalblue;
-  }
-
-  .signin a {
-    color: #00bfff;
   }
 
   .form label {
@@ -150,6 +163,17 @@ const StyledWrapper = styled.div`
 
   .submit:hover {
     background-color: #00bfff96;
+  }
+
+  @keyframes pulse {
+    from {
+      transform: scale(0.9);
+      opacity: 1;
+    }
+    to {
+      transform: scale(1.8);
+      opacity: 0;
+    }
   }
 `;
 

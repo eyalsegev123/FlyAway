@@ -4,14 +4,13 @@ import { useAuth } from "../context/AuthContext";
 import {
   CircularProgress,
   Grid,
-  Card,
-  CardContent,
   Typography,
   Box,
   Alert,
   IconButton,
 } from "@mui/material";
-import { ArrowBack, ArrowForward, Delete } from "@mui/icons-material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import WishCard from "../components/WishCard";
 
 const MyWishList = () => {
   const [wishlist, setWishlist] = useState([]); // State to store wishlist trips
@@ -25,14 +24,16 @@ const MyWishList = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       setLoading(true);
+      setErrorMessage(""); // Reset error message
+
+      if (!user || !user.id) {
+        setLoading(false);
+        setErrorMessage("User not logged in.");
+        return;
+      }
+      const user_id = user.id;
+
       try {
-        const user_id = user.id;
-
-        if (!user_id) {
-          setErrorMessage("User not logged in.");
-          return;
-        }
-
         // Fetch wishlist items for the user
         const response = await axios.get(
           `http://localhost:5001/api/wishesRoutes/getUserWishes/${user_id}`
@@ -49,7 +50,7 @@ const MyWishList = () => {
     };
 
     fetchWishlist();
-  }, [user.id]);
+  }, [user]);
 
   // Calculate visible trips based on the current page
   const visibleTrips = wishlist.slice(
@@ -74,7 +75,7 @@ const MyWishList = () => {
   const handleDelete = async (wish_id) => {
     try {
       // Send delete request to the backend
-      const response = await axios.get(
+      const response = await axios.delete(
         `http://localhost:5001/api/wishesRoutes/deleteWish/${wish_id}`
       );
 
@@ -92,7 +93,9 @@ const MyWishList = () => {
   };
 
   return (
-    <Box sx={{ padding: "20px" }}>
+    <Box sx={{ padding: "20px", marginTop: "100px" }}>
+      {" "}
+      {/* Updated sx prop */}
       {loading ? (
         <Box
           sx={{
@@ -111,50 +114,7 @@ const MyWishList = () => {
           <Grid container spacing={3}>
             {visibleTrips.map((trip) => (
               <Grid item xs={12} sm={6} md={4} key={trip.wish_id}>
-                <Card variant="outlined" sx={{ height: "100%" }}>
-                  <CardContent>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="h6" gutterBottom>
-                        {trip.wish_name}
-                      </Typography>
-                      {/* Trash Button */}
-                      <IconButton
-                        onClick={() => handleDelete(trip.wish_id)}
-                        aria-label="Delete"
-                      >
-                        <Delete color="error" />
-                      </IconButton>
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      <strong>Destination:</strong> {trip.destination}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      <strong>Travel Dates:</strong> {trip.start_range} -{" "}
-                      {trip.end_range}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      <strong>Genre:</strong> {trip.trip_genre}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      <strong>Budget:</strong> ${trip.budget}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      <strong>Recommendation:</strong> {trip.content}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      <strong>Travelers:</strong> {trip.travellers}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      <strong>Notes:</strong> {trip.notes}
-                    </Typography>
-                  </CardContent>
-                </Card>
+                <WishCard trip={trip} onDelete={handleDelete} />
               </Grid>
             ))}
           </Grid>
@@ -175,8 +135,12 @@ const MyWishList = () => {
             >
               <ArrowBack />
             </IconButton>
-            <Typography variant="body2">
-              Page {currentPage + 1} of {Math.ceil(wishlist.length / tripsPerPage)}
+            <Typography
+              variant="body2"
+              sx={{ color: "white" }} // Replace "blue" with your desired color
+            >
+              Page {currentPage + 1} of{" "}
+              {Math.ceil(wishlist.length / tripsPerPage)}
             </Typography>
             <IconButton
               onClick={handleNext}
@@ -188,9 +152,21 @@ const MyWishList = () => {
           </Box>
         </Box>
       ) : (
-        <Typography variant="h6" align="center">
-          Your wishlist is empty.
-        </Typography>
+        <Alert
+          severity="info"
+          sx={{
+            justifyContent: "center",
+            width: "auto", // Adjust width based on content
+            maxWidth: "400px", // Limit the maximum width
+            textAlign: "center", // Center the text inside the alert
+            margin: "auto", // Center horizontally and vertically
+            display: "flex",
+            alignItems: "center",
+            height: "10vh", // Adjust height to ensure vertical centering
+          }}
+        >
+          Your WishList is Empty
+        </Alert>
       )}
     </Box>
   );

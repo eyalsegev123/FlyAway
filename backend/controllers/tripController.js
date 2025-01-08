@@ -3,13 +3,13 @@ const pool = require("../config/db"); // Database connection
 // Add a new trip
 exports.addTrip = async (req, res) => {
     const {user_id} = req.params;
-    const { tripName, destination, startDate, endDate, photos, stars, review} = req.body;
+    const { tripName, destination, startDate, endDate, album, stars, review} = req.body;
 
     try {
         const result = await pool.query(
             `INSERT INTO trips (user_id, review, stars, destination, trip_name, album, start_date, end_date) 
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-            [user_id, review, stars, destination, trip_name, album, start_date, end_date]
+            [user_id, review, stars, destination, tripName, album, startDate, endDate]
         );
         res.status(201).json(result.rows[0]); // Send the created trip
     } catch (error) {

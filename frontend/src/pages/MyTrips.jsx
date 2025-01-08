@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../styles/pages/MyTrips.css";
 import axios from "axios";
-import Header from "../components/Header";
-
+import { useAuth } from "../context/AuthContext";
+import styled from "styled-components";
 
 const MyTrips = () => {
   const [tripName, setTripName] = useState("");
@@ -15,44 +15,46 @@ const MyTrips = () => {
   const [trips, setTrips] = useState([]);
   const [showForm, setShowForm] = useState(false); // Manage form visibility
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
+  const [fetchTripsErrorMessage, setFetchTripsErrorMessage] = useState("");
+  const [submitTripErrorMessage, setSubmitTripErrorMessage] = useState("");
+  const { user } = useAuth();
+  const user_id = user?.id; // Safely access user.id
 
   // Fetch trips when the component mounts
   useEffect(() => {
+    if (!user_id) return; // Wait until user_id is available
+
     const fetchTrips = async () => {
       setLoading(true);
       try {
         // Retrieve the user_id from localStorage
-          const user_id = localStorage.getItem("user_id");
 
-          if (!user_id) {
-            setErrorMessage("User not logged in.");
-            return;
-          }
+        if (!user_id) {
+          setFetchTripsErrorMessage("User not logged in.");
+          return;
+        }
 
         const response = await axios.get(
-          `http://localhost:5001/tripsRoutes/getUserTrips/${user_id}`
+          `http://localhost:5001/api/tripsRoutes/getUserTrips/${user_id}`
         );
         if (response.status === 200) {
-          setTrips(response.data);  // Update state with the trips data
+          setTrips(response.data); // Update state with the trips data
         }
       } catch (err) {
-        setErrorMessage("An error occurred while getting the trips");
+        setFetchTripsErrorMessage("An error occurred while getting the trips");
       } finally {
         setLoading(false);
       }
     };
 
     fetchTrips();
-  }, []); 
- 
+  }, [user_id]);
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMessage("");
+    setSubmitTripErrorMessage("");
 
     try {
       const newTrip = {
@@ -67,17 +69,19 @@ const MyTrips = () => {
 
       // Send the data to the backend using axios
       const response = await axios.post(
-        `http://localhost:5001/tripsRoutes/addTrip`, // Backend endpoint to save the trip
+        `http://localhost:5001/api/tripsRoutes/addTrip/${user_id}`, // Backend endpoint to save the trip
         newTrip
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         // If the trip was added successfully, update the trips list
         setTrips([...trips, response.data.trip]);
         setShowForm(false); // Hide form after submitting
       }
     } catch (err) {
-      setErrorMessage("An error occurred while submitting the trip details.");
+      setSubmitTripErrorMessage(
+        "An error occurred while submitting the trip details."
+      );
     } finally {
       setLoading(false);
     }
@@ -93,76 +97,99 @@ const MyTrips = () => {
     setShowForm(false);
   };
 
+  if (!user) {
+    return <p>Loading user information...</p>;
+  }
+
   return (
     <div className="trips-container">
-      <Header />
+      {fetchTripsErrorMessage && (
+        <p className="error">{fetchTripsErrorMessage}</p>
+      )}
+
       <button onClick={() => setShowForm(true)} className="add-trip-button">
         +
       </button>
 
       {showForm && (
         <div className="mytrip-form">
-          <button className="mytrips-close-button" onClick={closeForm}>X</button>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={tripName}
-              onChange={(e) => setTripName(e.target.value)}
-              placeholder="Trip Name"
-              required
-            />
-            <input
-              type="text"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              placeholder="Destination"
-              required
-            />
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-            />
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-            />
-            <label>
-              Upload Your Trip Photos:
+          <button className="mytrips-close-button" onClick={closeForm}>
+            X
+          </button>
+          <StyledWrapper>
+            <form onSubmit={handleSubmit}>
+              {submitTripErrorMessage && (
+                <p className="error">{submitTripErrorMessage}</p>
+              )}
+
               <input
-                type="file"
-                onChange={(e) => setPhotos(e.target.files)}
-                multiple
+                type="text"
+                value={tripName}
+                onChange={(e) => setTripName(e.target.value)}
+                placeholder="Trip Name"
+                required
               />
-            </label>
-            <div className="stars-container">
-              <label>Rate Your Trip:   </label>
-              {Array(5)
-                .fill(0)
-                .map((_, index) => (
-                  <span
-                    key={index + 1}
-                    className={`star ${index + 1 <= stars ? "selected" : ""}`}
-                    onClick={() => handleStarClick(index + 1)}
-                  >
-                    ★
-                  </span>
-                ))}
-            </div>
-            <textarea
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
-              placeholder="Write your review about the trip"
-              rows="4"
-              required
-            ></textarea>
-            <button type="submit" disabled={loading}>
-              {loading ? "Saving..." : "Save Trip"}
-            </button>
-          </form>
+              <input
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                placeholder="Destination"
+                required
+              />
+              <label>
+                Start Date
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  required
+                />
+              </label>
+              <label>
+                End Date
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  required
+                />
+              </label>
+
+              <label>
+                Upload Your Trip Photos:
+                <input
+                  type="file"
+                  onChange={(e) => setPhotos(e.target.files)}
+                  multiple
+                />
+              </label>
+              <div className="stars-container">
+                <label>Rate Your Trip: </label>
+                {Array(5)
+                  .fill(0)
+                  .map((_, index) => (
+                    <span
+                      key={index + 1}
+                      className={`star ${index + 1 <= stars ? "selected" : ""}`}
+                      onClick={() => handleStarClick(index + 1)}
+                    >
+                      ★
+                    </span>
+                  ))}
+              </div>
+              <textarea
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+                placeholder="Write your review about the trip"
+                rows="4"
+                required
+              ></textarea>
+              <button type="submit" disabled={loading}>
+                {loading ? "Saving..." : "Save Trip"}
+              </button>
+            </form>
+            {loading && <div className="pulsing-circle"></div>}
+          </StyledWrapper>
         </div>
       )}
 
@@ -179,12 +206,132 @@ const MyTrips = () => {
           </div>
         ))}
       </div>
-
-      {errorMessage && (
-        <div className="error-message-mytrip">{errorMessage}</div>
-      )}
     </div>
   );
 };
+
+const StyledWrapper = styled.div`
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 350px;
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+  }
+
+  .pulsing-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #00bfff;
+    animation: pulse 1.5s infinite;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.4;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+  }
+
+  .title {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    color: #00bfff;
+  }
+
+  .message,
+  .signin {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .signin {
+    text-align: center;
+  }
+
+  .signin a:hover {
+    text-decoration: underline royalblue;
+  }
+
+  .signin a {
+    color: #00bfff;
+  }
+
+  .form label {
+    position: relative;
+  }
+
+  .form label .input {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+    padding: 20px 5px 5px 10px;
+    outline: 0;
+    border: 1px solid rgba(105, 105, 105, 0.397);
+    border-radius: 10px;
+  }
+
+  .form label .input + span {
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    font-size: 0.9em;
+    cursor: text;
+    transition: 0.5s;
+  }
+
+  .form label .input:focus + span {
+    top: -8px;
+    font-size: 0.7em;
+  }
+
+  .form label .input:focus {
+    border-color: #00bfff;
+    border-width: 2px;
+    background-color: #111;
+    outline: 0;
+  }
+
+  .form .btn {
+    background-color: #00bfff;
+    font-weight: 500;
+    font-size: 18px;
+    padding: 10px 10px;
+    text-align: center;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    margin-top: 20px;
+  }
+
+  .form .btn:disabled {
+    opacity: 0.6;
+  }
+`;
 
 export default MyTrips;

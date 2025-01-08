@@ -43,6 +43,44 @@ const PlanTrip = () => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
+    const startDateParts = startDate.split('/');
+    const formattedStartDate = new Date(`${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]}`);
+    const endDateParts = endDate.split('/');
+    const formattedEndDate = new Date(`${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]}`);
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    if (tripGenres.length === 0) {
+      setErrorMessage("Please select at least one genre for your trip.");
+      setLoading(false);
+      return;
+    }
+    if (!travelers) {
+      setErrorMessage("Please select the type of travelers you are going to be.");
+      setLoading(false);
+      return;
+    }
+
+    if(formattedEndDate < formattedStartDate) {
+      setErrorMessage("The end-date must be later than the start-date.");
+      setLoading(false);
+      return;
+    }
+    if(formattedStartDate < currentDate) {
+      setErrorMessage("Start date must be in the future.");
+      setLoading(false);
+      return;
+    }
+    if(budget <= 0) {
+      setErrorMessage("I believe you will need money for you trip.");
+      setLoading(false);
+      return;
+    }
+    if(tripLength <= 0) {
+      setErrorMessage("Trip length must be positive");
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -113,7 +151,7 @@ const PlanTrip = () => {
                 onChange={(e) => setStartDate(e.target.value)}
                 required
               />
-              <span>Start Date</span>
+              <span>Start Date (Can be dynamic)</span>
             </label>
           </div>
           <div className="form-group">
@@ -126,7 +164,7 @@ const PlanTrip = () => {
                 onChange={(e) => setEndDate(e.target.value)}
                 required
               />
-              <span>End Date</span>
+              <span>End Date (Can be dynamic)</span>
             </label>
           </div>
           <div className="form-group">
@@ -154,7 +192,7 @@ const PlanTrip = () => {
                 onChange={(e) => setBudget(e.target.value)}
                 required
               />
-              <span>Budget</span>
+              <span>Budget (per person)</span>
             </label>
           </div>
           <div className="form-group">
@@ -195,6 +233,7 @@ const PlanTrip = () => {
                             type="checkbox"
                             checked={tripGenres.includes(genre)}
                             onChange={() => handleGenreChange(genre)}
+                          
                           />
                           {genre}
                         </label>
@@ -213,6 +252,7 @@ const PlanTrip = () => {
                   type="button"
                   className="dropdown-toggle"
                   onClick={() => setShowTravelersDropdown(!showTravelersDropdown)}
+                  
                 >
                   {travelers || "Select travelers"}
                 </button>
@@ -244,6 +284,7 @@ const PlanTrip = () => {
         </form>
       )}
     </StyledWrapper>
+    
   );
 };
 

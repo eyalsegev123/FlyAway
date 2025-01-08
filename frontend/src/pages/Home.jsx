@@ -55,10 +55,6 @@ const HomePage = () => {
   return (
     <div className="homepage-container">
       <div className="homepage-main">
-        <div className="homepage-title">
-          <h1>Welcome to FlyAway!</h1>
-          <p>Discover your next adventure</p>
-        </div>
         <div className="carousel-container">
           <Slider {...settings}>
             {trips.map((trip) => (

@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("user_name");
         setUser(null);
     };
+    
     const login = (userName, userId) => {
         const userData = { name: userName, id: userId };
         localStorage.setItem("user_name", JSON.stringify(userData)); // Store user data as JSON

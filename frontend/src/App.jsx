@@ -10,28 +10,27 @@ import Recommendation from "./pages/Recommendation";
 import MyTrips from "./pages/MyTrips";
 import Header from "./components/Header";
 import MyWishlist from "./pages/MyWishlist";
-
+import './styles/App.css';  // Make sure this import is at the top
+import backgroundVideo from './assets/background.mp4';  // Corrected import as per your code
 
 function App() {
-
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-          <Header/>
+          <video autoPlay loop muted preload="auto" id="background-video">
+            <source src={backgroundVideo} type="video/mp4" />
+          </video>
+          <Header />
           <div className="main-content">
-            <video id="background-video" autoPlay loop muted playsInline>
-              <source src="/assets/video_background.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/AboutUs" element={<AboutUs />} />
               <Route path="/PlanTrip" element={<PlanTrip />} />
-              <Route path="/login" element={<LoginForm />} /> {/* Add this route for login */}
+              <Route path="/login" element={<LoginForm />} />
               <Route path="/Recommendation" element={<Recommendation />} />
-              <Route path ="/MyTrips" element = {<MyTrips />} />
-              <Route path ="/MyWishlist" element = {<MyWishlist />} />
+              <Route path="/MyTrips" element={<MyTrips />} />
+              <Route path="/MyWishlist" element={<MyWishlist />} />
             </Routes>
           </div>
         </div>
@@ -41,7 +40,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
