@@ -29,7 +29,7 @@ const Recommendation = () => {
     end_range: endDate,
     trip_genre: tripGenres,
     trip_length: tripLength,
-    budget
+    budget,
   } = location.state || {};
 
   const { user } = useAuth();
@@ -56,20 +56,25 @@ const Recommendation = () => {
       content: parsedResponse?.hotels || [],
       type: "hotels",
     },
-    restaurants: {
-      title: "Restaurants & Dining",
-      content: parsedResponse?.restaurants || [],
-      type: "restaurants",
-    },
     attractions: {
-      title: "Attractions & Sights",
-      content: parsedResponse?.attractions || [],
+      title: "Attractions",
+      content: parsedResponse?.attractions || {},
       type: "attractions",
     },
-    activities: {
-      title: "Activities",
-      content:
-        parsedResponse?.activities || "No activities recommendations available",
+    restaurants: {
+      title: "Restaurants & Dining",
+      content: parsedResponse?.restaurants || {},
+      type: "restaurants",
+    },
+    costs: {
+      title: "Trip Costs Evaluation",
+      content: parsedResponse?.costs || "No costs evaluation available",
+      type: "costs"
+    },
+    dates: {
+      title: "Best Dates",
+      content: parsedResponse?.dates || "No dates recommendations available",
+      type: "dates"
     },
   };
 
@@ -118,6 +123,8 @@ const Recommendation = () => {
       </div>
     );
   }
+
+ 
 
   return (
     <div className="recommendation-container" style={{
@@ -231,6 +238,8 @@ const Recommendation = () => {
       </Paper>
     </div>
   );
+  
 };
+
 
 export default Recommendation;

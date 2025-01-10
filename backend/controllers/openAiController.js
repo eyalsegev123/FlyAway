@@ -7,20 +7,22 @@ exports.askOpenAi = async (req, res) => {
       destination,
       startDate,
       endDate,
-      length,
+      tripLength,
       budget,
       currency,
-      tripGenre,
+      tripGenres,
       travelers,
+      additionalNotes,
     } = req.body;
 
-    const genreList = tripGenre && tripGenre.length > 0 ? tripGenre.join(", ") : "none";
+    const genreList = tripGenres && tripGenres.length > 0 ? tripGenres.join(", ") : "dynamic";
 
     const message = `Hello, I want to plan a vacation to ${destination}. 
-    The period of the vacation needs to be between ${startDate} to ${endDate}, 
-    and the length of the trip needs to be ${length} days. Our budget is ${budget} ${currency}. 
-    The things we like are ${genreList}. Our group is going to be constructed ${travelers}. 
-    Please plan a detailed trip while considering the whole details I gave you.`;
+        The period of the vacation needs to be between ${startDate} to ${endDate}, 
+        and the length of the trip needs to be ${tripLength} days. Our budget is ${budget} ${currency} per person. 
+        The things we like are ${genreList}. Our group is going to be constructed of ${travelers}. ${additionalNotes}.
+        Please plan a detailed trip while considering the whole details I gave you. `;
+
 
     console.log("Message sent to OpenAI:", message);
 

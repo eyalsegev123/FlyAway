@@ -17,6 +17,7 @@ const PlanTrip = () => {
   const [travelers, setTravelers] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [additionalNotes, setadditionalNotes] = useState("");
   // const [tripRecommendation, setTripRecommendation] = useState(null);
 
   const [showGenreDropdown, setShowGenreDropdown] = useState(false);
@@ -38,6 +39,7 @@ const PlanTrip = () => {
     );
   };
 
+  // Handle form submission
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -94,6 +96,7 @@ const PlanTrip = () => {
           currency,
           tripGenres,
           travelers,
+          additionalNotes
         }
       );
 
@@ -108,6 +111,7 @@ const PlanTrip = () => {
             trip_genre: tripGenres.join(", "),
             trip_length: tripLength,
             budget: budget,
+            additionalNotes: additionalNotes
           },
         });
       }
@@ -187,7 +191,7 @@ const PlanTrip = () => {
                 className="input"
                 type="number"
                 id="budget"
-                placeholder="Enter your budget"
+                placeholder="Excluding flights !!!"
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
                 required
@@ -226,7 +230,8 @@ const PlanTrip = () => {
                 </button>
                 {showGenreDropdown && (
                   <div className="dropdown-menu">
-                    {["Sport", "Nightlife", "Restaurant", "Extreme", "Ski", "Shopping", "Museums"].map(
+                    {["Sport activity", "Sport events" ,"Nightlife", "Restaurants", "Extreme", "Ski and winter sports", "Shopping", "Museums", "Culture", "Festivals", "Electric festivals", "Trance festivals", "Parties",
+                     "History", "Chill", "Markets", "Beaches", "Art", "Family roots", "Safair", "Trekking", "Climbing", "Yoga and Meditation", "Cruise", "Food tours", "Views", "Water parks","Gambling and Casino", "Religious Trip", "Organized Trip", "Appointments and Conferences" ].map(
                       (genre) => (
                         <label key={genre} className="dropdown-item">
                           <input
@@ -258,8 +263,8 @@ const PlanTrip = () => {
                 </button>
                 {showTravelersDropdown && (
                   <div className="dropdown-menu">
-                    {["Solo", "Couple", "Families", "Friends (Women)", "Friends (Men)",
-                      "bachelorette party(Women)", "bachelorette party(Men)"
+                    {["Solo (man)", "Solo (woman)", "Couple", "Couples", "Family", "Families", "Friends (Women)", "Friends (Men)",
+                    "Friends (Men and Women)", "bachelorette party(Women)", "bachelorette party(Men)","Retires", "Colleagues", 
                     ].map((traveler) => (
                       <label key={traveler} className="dropdown-item">
                         <input
@@ -277,6 +282,20 @@ const PlanTrip = () => {
               <span>Travelers</span>
             </label>
           </div>
+          <div>
+          <label>
+          <textarea
+            className="input notes-textarea"
+            value={additionalNotes}
+            onChange={(e) => setadditionalNotes(e.target.value)}
+            placeholder="Additional notes. It's recommended to define your ages/hotels locations/details which you consider important, etc..."
+            rows="4"
+            required
+          ></textarea>
+          <span>Additional Notes</span>
+        </label>
+        </div>
+
           <button className="submit" type="submit">
             Plan Trip
           </button>
@@ -371,6 +390,10 @@ const StyledWrapper = styled.div`
   .submit:hover {
     background-color: #00bfff96;
   }
+  .form-group .input.notes-textarea {
+  width: 7000px; // Use a fixed width for testing
+  max-width: 8000px;
+}
 `;
 
 export default PlanTrip;

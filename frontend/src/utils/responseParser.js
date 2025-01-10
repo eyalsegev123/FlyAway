@@ -3,23 +3,34 @@ export const parseOpenAIResponse = (response) => {
     const parsedResponse = typeof response === 'string' ? JSON.parse(response) : response;
     
     return {
-      summary: parsedResponse.Summary?.[0] || 'No summary available',
+      summary: parsedResponse.Summary,
+      
       hotels: parsedResponse.Hotels?.map(hotel => ({
         name: hotel.name,
         features: hotel.features,
         link: hotel.link
       })) || [],
-      attractions: parsedResponse.Attractions?.map(attr => ({
-        name: attr.name,
-        description: attr.description,
-        link: attr.link
-      })) || [],
-      restaurants: parsedResponse.Restaurants?.map(rest => ({
-        name: rest.name,
-        type: rest.type,
-        price_range: rest.price_range
-      })) || [],
-      costs: parsedResponse.Costs?.[0] || {}
+
+      attractions: Object.keys(parsedResponse.Attractions || {}).map(genre_category => ({
+        category: genre_category,
+        recommended_attractions: (parsedResponse.Attractions[genre_category] || []).map(attr => ({
+          name: attr.name,
+          description: attr.description
+        }))
+      })),
+      
+      restaurants: Object.keys(parsedResponse.Restaurants || {}).map(restaurant_category => ({
+        category: restaurant_category,
+        recommended_restaurants: (parsedResponse.Restaurants[restaurant_category] || []).map(rest => ({
+          name: rest.name,
+          cuisine: rest.cuisine,
+          additionalInfo: rest.additional_info
+        }))
+      })),
+
+      costs: parsedResponse.Costs,
+
+      dates: parsedResponse.Dates
     };
   } catch (error) {
     console.error('Error parsing OpenAI response:', error);

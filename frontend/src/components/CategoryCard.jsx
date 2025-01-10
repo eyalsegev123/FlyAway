@@ -27,54 +27,131 @@ const CategoryCard = ({ title, content, type }) => {
 
       case 'attractions':
         return (
-          <List>
-            {content.map((attr, index) => (
-              <React.Fragment key={attr.name}>
-                <ListItem>
-                  <ListItemText
-                    primary={
-                      <Link href={attr.link} target="_blank" rel="noopener noreferrer">
-                        {attr.name}
-                      </Link>
-                    }
-                    secondary={attr.description}
-                  />
-                </ListItem>
-                {index < content.length - 1 && <Divider />}
+          <div>
+            {content.map((category, categoryIndex) => (
+              <React.Fragment key={category.category}>
+                <Typography variant="h6" gutterBottom>
+                  {category.category.replace(/_/g, ' ')}
+                </Typography>
+                <List>
+                  {category.recommended_attractions.map((attraction, index) => (
+                    <React.Fragment key={index}>
+                      <ListItem>
+                        <ListItemText
+                          primary={attraction.name}
+                          secondary={attraction.description || "Description unavailable"}
+                        />
+                      </ListItem>
+                      {index < category.recommended_attractions.length - 1 && <Divider />}
+                    </React.Fragment>
+                  ))}
+                </List>
+                {categoryIndex < content.length - 1 && <Divider style={{ margin: '16px 0' }} />}
               </React.Fragment>
             ))}
-          </List>
+          </div>
         );
 
       case 'restaurants':
         return (
-          <List>
-            {content.map((rest, index) => (
-              <React.Fragment key={rest.name}>
-                <ListItem>
-                  <ListItemText
-                    primary={rest.name}
-                    secondary={`${rest.type} • ${rest.price_range}`}
-                  />
-                </ListItem>
-                {index < content.length - 1 && <Divider />}
+          <div>
+            {content.map((category, categoryIndex) => (
+              <React.Fragment key={category.category}>
+                <Typography variant="h6" gutterBottom>
+                  {category.category.replace(/_/g, ' ')}
+                </Typography>
+                <List>
+                  {category.recommended_restaurants.map((restaurant, index) => (
+                    <React.Fragment key={index}>
+                      <ListItem>
+                        <ListItemText
+                          primary={restaurant.name}
+                          secondary={
+                            <>
+                              <Typography component="span" display="block">
+                                {restaurant.cuisine}
+                              </Typography>
+                              {restaurant.additionalInfo && (
+                                <Typography component="span" display="block">
+                                  {restaurant.additionalInfo}
+                                </Typography>
+                              )}
+                            </>
+                          }
+                        />
+                      </ListItem>
+                      {index < category.recommended_restaurants.length - 1 && <Divider />}
+                    </React.Fragment>
+                  ))}
+                </List>
+                {categoryIndex < content.length - 1 && <Divider style={{ margin: '16px 0' }} />}
               </React.Fragment>
             ))}
-          </List>
+          </div>
         );
 
-      case 'costs':
+        case 'costs':
+          return (
+            <div>
+              {Object.entries(content).map(([category, values], categoryIndex) => (
+                <React.Fragment key={category}>
+                  <Typography
+                    variant="h6" // Adjusted the title size to be larger
+                    gutterBottom
+                    style={{ fontWeight: 'bold' }} // Make it bold if needed
+                  >
+                    {category.replace(/_/g, ' ')}
+                  </Typography>
+                  <List>
+                    {Object.entries(values).map(([key, value], index) => (
+                      <ListItem key={key} dense>
+                        <ListItemText
+                          primary={
+                            <Typography
+                              variant="body1"
+                              style={{
+                                fontWeight: 'bold', // Title slightly larger
+                                color: 'black', // Title color
+                              }}
+                            >
+                              {key.replace(/_/g, ' ')}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography
+                              variant="body2"
+                              style={{
+                                color: 'black', // Content color
+                              }}
+                            >
+                              {value}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                  {categoryIndex < Object.entries(content).length - 1 && (
+                    <Divider style={{ margin: '16px 0' }} />
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          );
+        
+
+      case 'summary':
         return (
-          <List>
-            {Object.entries(content).map(([key, value]) => (
-              <ListItem key={key}>
-                <ListItemText
-                  primary={key.replace(/_/g, ' ')}
-                  secondary={value}
-                />
-              </ListItem>
-            ))}
-          </List>
+          <Typography variant="body1" paragraph>
+            {content}
+          </Typography>
+        );
+
+      case 'dates':
+        return (
+          <Typography variant="body1" paragraph>
+            {content}
+          </Typography>
         );
 
       default:
