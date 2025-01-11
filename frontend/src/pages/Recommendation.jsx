@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import WishlistButton from "../components/WishlistButton";
 import CategoryCard from "../components/CategoryCard";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Stepper,
@@ -30,13 +31,23 @@ const Recommendation = () => {
     trip_genre: tripGenres,
     trip_length: tripLength,
     budget,
+    travelers,
   } = location.state || {};
+
+  
 
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [parsedResponse, setParsedResponse] = useState(null);
   const [wishName, setWishName] = useState('');
   const [notes, setNotes] = useState('');
+  const [summary, setSummary]  = useState('');
+  const [hotels, setHotels] = useState('');
+  const [attractions, setAttractions]  = useState('');
+  const [restaurants, setRestaurants]  = useState('');
+  const [costs, setCosts]  = useState('');
+  const [dates, setDates]  = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (tripRecommendation?.answer) {
@@ -45,7 +56,7 @@ const Recommendation = () => {
     }
   }, [tripRecommendation]);
 
-  const categories = {
+  const categories = useMemo(() => ({
     summary: {
       title: "Trip Summary",
       content: parsedResponse?.summary || "No summary available",
@@ -69,33 +80,52 @@ const Recommendation = () => {
     costs: {
       title: "Trip Costs Evaluation",
       content: parsedResponse?.costs || "No costs evaluation available",
-      type: "costs"
+      type: "costs",
     },
     dates: {
       title: "Best Dates",
       content: parsedResponse?.dates || "No dates recommendations available",
-      type: "dates"
+      type: "dates",
     },
-  };
+  }), [parsedResponse]);
+  
+
+  useEffect(() => {
+    setSummary(categories.summary?.content || "No summary available");
+    setHotels(categories.hotels?.content || []);
+    setAttractions(categories.attractions?.content || {});
+    setRestaurants(categories.restaurants?.content || {});
+    setCosts(categories.costs?.content || "No costs evaluation available");
+    setDates(categories.dates?.content || "No dates recommendations available");
+    console.log("Restaurants: /n" + restaurants + "Hotels: /n" + hotels + "Attractions: /n" + attractions);
+  }, [categories]);
+  
 
   const handleWishlistSubmit = async () => {
-    const userId = user.id;
+    const userId = user?.id;
+    console.log(user.id);
     try {
       const response = await axios.post(`http://localhost:5001/api/wishesRoutes/addToWishList`, {
-        user_id: userId,
-        destination: destination,
+        user_id: parseInt(userId, 10),
+        destination,
         start_range: startDate,
         end_range: endDate,
         trip_genre: tripGenres,
         trip_length: tripLength,
-        budget: budget,
-        content: tripRecommendation.answer, // OpenAi answer
+        budget,
+        travelers,
         wish_name: wishName,
-        notes: notes
+        notes,
+        summary, 
+        hotels,
+        attractions,
+        restaurants,
+        costs,
+        dates
       });
-
       if (response.status === 201) {
         alert('Added to your wish list!');
+        navigate("/MyWishlist");
       } else {
         throw new Error('Failed to add to wish list');
       }
@@ -124,7 +154,8 @@ const Recommendation = () => {
     );
   }
 
- 
+  console.log("(recommendation: state before return: " , {summary, hotels, attractions, restaurants, costs, dates});
+  console.log("recommendation: categories: " , categories);
 
   return (
     <div className="recommendation-container" style={{
@@ -238,8 +269,5 @@ const Recommendation = () => {
       </Paper>
     </div>
   );
-  
 };
-
-
 export default Recommendation;

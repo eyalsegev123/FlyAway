@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
-import WishCard from "../components/WishCard";
+import WishCardButton from "../components/WishCardButton";
 
 const MyWishList = () => {
   const [wishlist, setWishlist] = useState([]); // State to store wishlist trips
@@ -114,7 +114,7 @@ const MyWishList = () => {
           <Grid container spacing={3}>
             {visibleTrips.map((trip) => (
               <Grid item xs={12} sm={6} md={4} key={trip.wish_id}>
-                <WishCard trip={trip} onDelete={handleDelete} />
+                <WishCardButton trip={trip} onDelete={handleDelete} />
               </Grid>
             ))}
           </Grid>

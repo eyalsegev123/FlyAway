@@ -12,7 +12,7 @@ const getWishesByUserId = async (req, res) => {
   }
 };
 
-// Get a specific wish of a user by a name
+// When a connected user searches his wish by its name
 const getWishesByUserIdAndName = async (req, res) => {
   const { user_id, name } = req.params;
 
@@ -28,7 +28,7 @@ const getWishesByUserIdAndName = async (req, res) => {
   }
 };
 
-// Get a specific wish of a user by a destination
+// When a connected user searches his wish by its destination
 const getWishesByUserIdAndDestination = async (req, res) => {
   const { user_id, destination } = req.params;
 
@@ -46,24 +46,31 @@ const getWishesByUserIdAndDestination = async (req, res) => {
 
 // Add a new wishlist
 const addToWishlist = async (req, res) => {
+  console.log(req.body);
   const {
+    user_id,
     destination,
     start_range,
     end_range,
     trip_genre,
     trip_length,
     budget,
-    content,
-    notes,
+    travelers,
     wish_name,
-    user_id,
+    notes,
+    summary,
+    hotels,
+    attractions,
+    restaurants,
+    costs,
+    dates,
   } = req.body;
 
   try {
     const result = await pool.query(
-      `INSERT INTO wishlist (user_id, destination, start_range, end_range, trip_genre, trip_length, budget, content, notes, wish_name)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
-      [user_id, destination, start_range, end_range, trip_genre, trip_length, budget, content, notes, wish_name]
+      `INSERT INTO wishlist (user_id, destination, start_range, end_range, trip_genre, trip_length, budget, wish_name, notes, summary, hotels, attractions, restaurants, costs, dates, travelers)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`,
+      [user_id, destination, start_range, end_range, trip_genre, trip_length, budget, wish_name, notes, summary, hotels, attractions, restaurants, costs, dates, travelers]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
