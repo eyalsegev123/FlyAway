@@ -31,7 +31,6 @@ const Recommendation = () => {
     trip_genre: tripGenres,
     trip_length: tripLength,
     budget,
-    travelers,
   } = location.state || {};
 
   
@@ -41,12 +40,13 @@ const Recommendation = () => {
   const [parsedResponse, setParsedResponse] = useState(null);
   const [wishName, setWishName] = useState('');
   const [notes, setNotes] = useState('');
-  const [summary, setSummary]  = useState('');
-  const [hotels, setHotels] = useState('');
-  const [attractions, setAttractions]  = useState('');
-  const [restaurants, setRestaurants]  = useState('');
-  const [costs, setCosts]  = useState('');
-  const [dates, setDates]  = useState('');
+  // const [summary, setSummary]  = useState('');
+  // const [hotels, setHotels] = useState('');
+  // const [attractions, setAttractions]  = useState('');
+  // const [restaurants, setRestaurants]  = useState('');
+  // const [costs, setCosts]  = useState('');
+  // const [dates, setDates]  = useState('');
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -90,15 +90,15 @@ const Recommendation = () => {
   }), [parsedResponse]);
   
 
-  useEffect(() => {
-    setSummary(categories.summary?.content || "No summary available");
-    setHotels(categories.hotels?.content || []);
-    setAttractions(categories.attractions?.content || {});
-    setRestaurants(categories.restaurants?.content || {});
-    setCosts(categories.costs?.content || "No costs evaluation available");
-    setDates(categories.dates?.content || "No dates recommendations available");
-    console.log("Restaurants: /n" + restaurants + "Hotels: /n" + hotels + "Attractions: /n" + attractions);
-  }, [categories]);
+  // useEffect(() => {
+  //   setSummary(categories.summary?.content || "No summary available");
+  //   setHotels(categories.hotels?.content || []);
+  //   setAttractions(categories.attractions?.content || {});
+  //   setRestaurants(categories.restaurants?.content || {});
+  //   setCosts(categories.costs?.content || "No costs evaluation available");
+  //   setDates(categories.dates?.content || "No dates recommendations available");
+  //   console.log("Restaurants: /n" + restaurants + "Hotels: /n" + hotels + "Attractions: /n" + attractions);
+  // }, [categories]);
   
 
   const handleWishlistSubmit = async () => {
@@ -113,17 +113,11 @@ const Recommendation = () => {
         trip_genre: tripGenres,
         trip_length: tripLength,
         budget,
-        travelers,
         wish_name: wishName,
         notes,
-        summary, 
-        hotels,
-        attractions,
-        restaurants,
-        costs,
-        dates
+        tripRecommendation
       });
-      if (response.status === 201) {
+      if (response.status === 201) { //is it only 201????
         alert('Added to your wish list!');
         navigate("/MyWishlist");
       } else {
@@ -153,9 +147,6 @@ const Recommendation = () => {
       </div>
     );
   }
-
-  console.log("(recommendation: state before return: " , {summary, hotels, attractions, restaurants, costs, dates});
-  console.log("recommendation: categories: " , categories);
 
   return (
     <div className="recommendation-container" style={{

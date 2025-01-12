@@ -55,22 +55,16 @@ const addToWishlist = async (req, res) => {
     trip_genre,
     trip_length,
     budget,
-    travelers,
     wish_name,
     notes,
-    summary,
-    hotels,
-    attractions,
-    restaurants,
-    costs,
-    dates,
+    tripRecommendation
   } = req.body;
 
   try {
     const result = await pool.query(
-      `INSERT INTO wishlist (user_id, destination, start_range, end_range, trip_genre, trip_length, budget, wish_name, notes, summary, hotels, attractions, restaurants, costs, dates, travelers)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`,
-      [user_id, destination, start_range, end_range, trip_genre, trip_length, budget, wish_name, notes, summary, hotels, attractions, restaurants, costs, dates, travelers]
+      `INSERT INTO wishlist (user_id, destination, start_range, end_range, trip_genre, trip_length, budget, wish_name, notes, recommendation)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      [user_id, destination, start_range, end_range, trip_genre, trip_length, budget, wish_name, notes, tripRecommendation]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
