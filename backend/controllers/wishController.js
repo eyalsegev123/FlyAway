@@ -50,21 +50,21 @@ const addToWishlist = async (req, res) => {
   const {
     user_id,
     destination,
-    start_range,
-    end_range,
-    trip_genre,
+    start_date,
+    end_date,
+    trip_genres,
     trip_length,
     budget,
     wish_name,
     notes,
-    tripRecommendation
+    recommendation
   } = req.body;
 
   try {
     const result = await pool.query(
-      `INSERT INTO wishlist (user_id, destination, start_range, end_range, trip_genre, trip_length, budget, wish_name, notes, recommendation)
+      `INSERT INTO wishlist (user_id, destination, start_date, end_date trip_genres, trip_length, budget, wish_name, notes, recommendation)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
-      [user_id, destination, start_range, end_range, trip_genre, trip_length, budget, wish_name, notes, tripRecommendation]
+      [user_id, destination, start_date, end_date, trip_genres, trip_length, budget, wish_name, notes, recommendation]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -92,14 +92,14 @@ const deleteFromWishlist = async (req, res) => {
 // Edit a wishlist
 const editWishlist = async (req, res) => {
   const { wish_id } = req.params;
-  const { name, destination, start_range, end_range, trip_genre, trip_length } = req.body;
+  const { name, destination, start_date, end_date, trip_genres, trip_length } = req.body;
 
   try {
     const result = await pool.query(
       `UPDATE wishlist
-       SET name = $1, destination = $2, start_range = $3, end_range = $4, trip_genre = $5, trip_length = $6
+       SET name = $1, destination = $2, start_date = $3, end_date = $4, trip_genres = $5, trip_length = $6
        WHERE wish_id = $7 RETURNING *`,
-      [name, destination, start_range, end_range, trip_genre, trip_length, wish_id]
+      [name, destination, start_date, end_date, trip_genres, trip_length, wish_id]
     );
 
     if (result.rows.length === 0) {
