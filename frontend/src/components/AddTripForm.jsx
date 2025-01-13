@@ -2,36 +2,138 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
+// Form Input Components
+const FormInput = ({ label, id, ...props }) => (
+  <div className="form-group">
+    <label htmlFor={id}>
+      <input className="input" id={id} {...props} />
+      <span>{label}</span>
+    </label>
+  </div>
+);
+
+const TextInput = ({ id, label, value, onChange }) => (
+  <FormInput
+    label={label}
+    id={id}
+    type="text"
+    value={value}
+    onChange={(e) => onChange(id, e.target.value)}
+    required
+  />
+);
+
+const DateInput = ({ id, label, value, onChange }) => (
+  <FormInput
+    label={label}
+    id={id}
+    type="date"
+    value={value}
+    onChange={(e) => onChange(id, e.target.value)}
+    required
+  />
+);
+
+const FileInput = ({ onChange }) => (
+  <FormInput
+    label="Upload Photos"
+    id="album"
+    type="file"
+    onChange={(e) => onChange("album", e.target.files)}
+    multiple
+    accept="image/*"
+  />
+);
+
+const StarRating = ({ value, onChange }) => (
+  <div className="form-group">
+    <div className="stars-container">
+      <span className="rating-label">Rate Your Trip</span>
+      <div className="stars-wrapper">
+        {Array(5).fill(0).map((_, index) => (
+          <span
+            key={index + 1}
+            className={`star ${index + 1 <= value ? "selected" : ""}`}
+            onClick={() => onChange("stars", index + 1)}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const ReviewTextarea = ({ value, onChange }) => (
+  <div className="form-group">
+    <label>
+      <textarea
+        className="input textarea-input"
+        value={value}
+        onChange={(e) => onChange("review", e.target.value)}
+        placeholder="Share your experience..."
+        rows="4"
+        required
+      />
+      <span>Review</span>
+    </label>
+  </div>
+);
+
 const AddTripForm = ({ onClose, onTripAdded, userId }) => {
-  const [tripName, setTripName] = useState("");
-  const [destination, setDestination] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [photos, setPhotos] = useState(null);
-  const [stars, setStars] = useState(0);
-  const [review, setReview] = useState("");
+  const [formData, setFormData] = useState({
+    tripName: "",
+    destination: "",
+    startDate: "",
+    endDate: "",
+    album: null,
+    stars: 0,
+    review: ""
+  });
+
+  const updateFormData = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
   const [loading, setLoading] = useState(false);
   const [submitTripErrorMessage, setSubmitTripErrorMessage] = useState("");
 
+  const validateDates = () => {
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
+    return end >= start;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateDates()) {
+      setSubmitTripErrorMessage("End date must be after start date");
+      return;
+    }
+
     setLoading(true);
     setSubmitTripErrorMessage("");
 
     try {
-      const newTrip = {
-        tripName,
-        destination,
-        startDate,
-        endDate,
-        photos,
-        stars,
-        review,
-      };
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (key === 'album' && formData[key]) {
+          Array.from(formData[key]).forEach(file => {
+            formDataToSend.append('album', file);
+          });
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
 
       const response = await axios.post(
         `http://localhost:5001/api/tripsRoutes/addTrip/${userId}`,
-        newTrip
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       );
 
       if (response.status === 201) {
@@ -39,16 +141,10 @@ const AddTripForm = ({ onClose, onTripAdded, userId }) => {
         onClose();
       }
     } catch (err) {
-      setSubmitTripErrorMessage(
-        "An error occurred while submitting the trip details."
-      );
+      setSubmitTripErrorMessage("An error occurred while submitting the trip details.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleStarClick = (value) => {
-    setStars(value);
   };
 
   return (
@@ -57,88 +153,47 @@ const AddTripForm = ({ onClose, onTripAdded, userId }) => {
         <p className="title">Add New Trip</p>
         <p className="message">Share your amazing journey with us!</p>
         
-        <label>
-          <input
-            className="input"
-            type="text"
-            value={tripName}
-            onChange={(e) => setTripName(e.target.value)}
-            placeholder=""
-            required
-          />
-          <span>Trip Name</span>
-        </label>
-
-        <label>
-          <input
-            className="input"
-            type="text"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            placeholder=""
-            required
-          />
-          <span>Destination</span>
-        </label>
-
+        <TextInput 
+          id="tripName"
+          label="Trip Name"
+          value={formData.tripName}
+          onChange={updateFormData}
+        />
+        
+        <TextInput 
+          id="destination"
+          label="Destination"
+          value={formData.destination}
+          onChange={updateFormData}
+        />
+        
         <div className="flex">
-          <label>
-            <input
-              className="input"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-            />
-            <span>Start Date</span>
-          </label>
-
-          <label>
-            <input
-              className="input"
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-            />
-            <span>End Date</span>
-          </label>
-        </div>
-
-        <label>
-          <input
-            className="input"
-            type="file"
-            onChange={(e) => setPhotos(e.target.files)}
-            multiple
+          <DateInput 
+            id="startDate"
+            label="Start Date"
+            value={formData.startDate}
+            onChange={updateFormData}
           />
-          <span>Upload Photos</span>
-        </label>
-
-        <div className="stars-container">
-          <span className="rating-label">Rate Your Trip: </span>
-          {Array(5).fill(0).map((_, index) => (
-            <span
-              key={index + 1}
-              className={`star ${index + 1 <= stars ? "selected" : ""}`}
-              onClick={() => handleStarClick(index + 1)}
-            >
-              ★
-            </span>
-          ))}
+          
+          <DateInput 
+            id="endDate"
+            label="End Date"
+            value={formData.endDate}
+            onChange={updateFormData}
+          />
         </div>
-
-        <label>
-          <textarea
-            className="input"
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-            placeholder=""
-            rows="4"
-            required
-          ></textarea>
-          <span>Review</span>
-        </label>
+        
+        <FileInput onChange={updateFormData} />
+        
+        <StarRating 
+          value={formData.stars}
+          onChange={updateFormData}
+        />
+        
+        <ReviewTextarea 
+          value={formData.review}
+          onChange={updateFormData}
+        />
 
         <button className="submit" type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Trip"}
@@ -230,6 +285,7 @@ const StyledWrapper = styled.div`
     outline: 0;
     border: 1px solid rgba(105, 105, 105, 0.397);
     border-radius: 10px;
+    resize: none;
   }
 
   .form label .input + span {
@@ -322,6 +378,45 @@ const StyledWrapper = styled.div`
       transform: scale(1.8);
       opacity: 0;
     }
+  }
+
+  .form-group {
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .form-group .input {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+    padding: 20px 5px 5px 10px;
+    outline: 0;
+    border: 1px solid rgba(105, 105, 105, 0.397);
+    border-radius: 10px;
+  }
+
+  .form-group .input + span {
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    font-size: 0.9em;
+    cursor: text;
+    transition: 0.3s ease;
+  }
+
+  .textarea-input {
+    resize: none;
+    min-height: 120px;
+    padding-top: 25px !important;
+    line-height: 1.5;
+    font-family: inherit;
+  }
+
+  .stars-wrapper {
+    margin-top: 8px;
+    display: flex;
+    gap: 5px;
   }
 `;
 

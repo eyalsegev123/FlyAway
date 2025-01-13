@@ -1,3 +1,4 @@
+const { Console } = require("console");
 const pool = require("../config/db.js"); // Database connection
 const openAiService = require("../services/openAIService.js");
 
@@ -16,7 +17,8 @@ exports.askOpenAi = async (req, res) => {
     } = req.body;
 
     const genreList = tripGenres && tripGenres.length > 0 ? tripGenres.join(", ") : "dynamic";
-
+    console.log("destination:  ${destination}");
+    console.log("Additional Notes:  ${additionalNotes}")
     const message = `Hello, I want to plan a vacation to ${destination}. 
         The period of the vacation needs to be between ${startDate} to ${endDate}, 
         and the length of the trip needs to be ${tripLength} days. Our budget is ${budget} ${currency} per person. 

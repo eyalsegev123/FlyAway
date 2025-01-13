@@ -10,7 +10,7 @@ import Recommendation from "./pages/Recommendation";
 import MyTrips from "./pages/MyTrips";
 import Header from "./components/Header";
 import MyWishlist from "./pages/MyWishlist";
-import Wish from "./pages/Wish";
+
 
 import './styles/App.css';  // Make sure this import is at the top
 import backgroundVideo from './assets/background.mp4';  // Corrected import as per your code
@@ -33,7 +33,6 @@ function App() {
               <Route path="/Recommendation" element={<Recommendation />} />
               <Route path="/MyTrips" element={<MyTrips />} />
               <Route path="/MyWishlist" element={<MyWishlist />} />
-              <Route path="/Wish" element={<Wish />} />
             </Routes>
           </div>
         </div>

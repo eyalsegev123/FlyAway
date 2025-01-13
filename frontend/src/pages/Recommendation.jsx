@@ -31,6 +31,7 @@ const Recommendation = () => {
     tripGenres,
     tripLength,
     budget,
+    fromPlanTrip,
   } = location.state || {};
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -39,7 +40,16 @@ const Recommendation = () => {
   const [wishName, setWishName] = useState('');
   const [notes, setNotes] = useState('');
 
-  
+  const recommendationHeader = (title) => (
+    <Typography
+      variant="h4"
+      gutterBottom
+      align="center"
+      className="recommendation-title"
+    >
+      {title}
+    </Typography>
+  );
 
   useEffect(() => {
     if (tripRecommendation?.answer) {
@@ -89,14 +99,14 @@ const Recommendation = () => {
       const response = await axios.post(`http://localhost:5001/api/wishesRoutes/addToWishList`, {
         user_id: parseInt(userId, 10),
         destination,
-        start_date: startDate,
-        end_date: endDate,
-        trip_genres: tripGenres,
-        trip_length: tripLength,
+        startDate,
+        endDate,
+        tripGenres,
+        tripLength,
         budget,
-        wish_name: wishName,
+        wishName,
         notes,
-        recommendation: tripRecommendation
+        tripRecommendation
       });
       if (response.status === 201) { //is it only 201????
         alert('Added to your wish list!');
@@ -151,14 +161,12 @@ const Recommendation = () => {
           margin: '0 auto'
         }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
-          align="center"
-          className="recommendation-title"
-        >
-          Your Trip Recommendations
-        </Typography>
+        {fromPlanTrip ? 
+          recommendationHeader("Your Trip Recommendations")
+          :
+          recommendationHeader("Your Wish Details")
+        }
+        
 
         {/* Desktop Stepper */}
         <Box sx={{ display: { xs: "none", md: "block" } }}>
@@ -215,7 +223,7 @@ const Recommendation = () => {
         />
 
         {/* Additional Details Section */}
-        {user && (
+        {user && fromPlanTrip &&(
           <Box sx={{ mt: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Typography variant="h6" gutterBottom>
               Additional Details

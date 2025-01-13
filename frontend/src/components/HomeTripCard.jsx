@@ -29,7 +29,10 @@ const HomeTripCard = ({ trip }) => {
 
       if (response.status === 200) { //Need to handle this
         navigate("/Recommendation", {
-          state: { tripRecommendation: response.data }
+          state: { 
+            tripRecommendation: response.data ,
+            fromPlanTrip: true,
+          }
         });
       }
       
