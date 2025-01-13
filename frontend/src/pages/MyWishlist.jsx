@@ -13,11 +13,11 @@ import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import WishCardButton from "../components/WishCardButton";
 
 const MyWishList = () => {
-  const [wishlist, setWishlist] = useState([]); // State to store wishlist trips
+  const [wishlist, setWishlist] = useState([]); // State to store wishlist items
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [currentPage, setCurrentPage] = useState(0); // Tracks current page
-  const tripsPerPage = 3; // Number of trips to display per page
+  const wishesPerPage = 3; // Number of wishes to display per page
   const { user } = useAuth();
 
   // Fetch wishlist when the component mounts
@@ -31,7 +31,7 @@ const MyWishList = () => {
         setErrorMessage("User not logged in.");
         return;
       }
-      const user_id = user.id;
+      const user_id = user?.id;
 
       try {
         // Fetch wishlist items for the user
@@ -52,15 +52,15 @@ const MyWishList = () => {
     fetchWishlist();
   }, [user]);
 
-  // Calculate visible trips based on the current page
-  const visibleTrips = wishlist.slice(
-    currentPage * tripsPerPage,
-    (currentPage + 1) * tripsPerPage
+  // Calculate visible wishes based on the current page
+  const visibleWishes = wishlist.slice(
+    currentPage * wishesPerPage,
+    (currentPage + 1) * wishesPerPage
   );
 
   // Check if navigation is possible
   const canGoBack = currentPage > 0;
-  const canGoForward = (currentPage + 1) * tripsPerPage < wishlist.length;
+  const canGoForward = (currentPage + 1) * wishesPerPage < wishlist.length;
 
   // Handle page navigation
   const handleNext = () => {
@@ -112,9 +112,9 @@ const MyWishList = () => {
       ) : wishlist.length > 0 ? (
         <Box>
           <Grid container spacing={3}>
-            {visibleTrips.map((trip) => (
-              <Grid item xs={12} sm={6} md={4} key={trip.wish_id}>
-                <WishCardButton trip={trip} onDelete={handleDelete} />
+            {visibleWishes.map((wish) => (
+              <Grid item xs={12} sm={6} md={4} key={wish.wish_id}>
+                <WishCardButton wish={wish} onDelete={handleDelete} />
               </Grid>
             ))}
           </Grid>
@@ -140,7 +140,7 @@ const MyWishList = () => {
               sx={{ color: "white" }} // Replace "blue" with your desired color
             >
               Page {currentPage + 1} of{" "}
-              {Math.ceil(wishlist.length / tripsPerPage)}
+              {Math.ceil(wishlist.length / wishesPerPage)}
             </Typography>
             <IconButton
               onClick={handleNext}

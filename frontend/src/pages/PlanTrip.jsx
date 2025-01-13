@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import LoadingTrip from "../components/LoadingTrip";
 
 const PlanTrip = () => {
+  //Form Data States
   const [destination, setDestination] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -15,15 +16,17 @@ const PlanTrip = () => {
   const [currency, setCurrency] = useState("USD");
   const [tripGenres, setTripGenres] = useState([]);
   const [travelers, setTravelers] = useState("");
+  const [additionalNotes, setadditionalNotes] = useState("");
+
+  //Loading and Error States
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [additionalNotes, setadditionalNotes] = useState("");
-  // const [tripRecommendation, setTripRecommendation] = useState(null);
+  
+  const navigate = useNavigate();
 
+  //Drop Down Show States
   const [showGenreDropdown, setShowGenreDropdown] = useState(false);
   const [showTravelersDropdown, setShowTravelersDropdown] = useState(false);
-
-  const navigate = useNavigate();
 
   // Toggle genre dropdown
   const handleGenreDropdownToggle = () => {
@@ -39,7 +42,6 @@ const PlanTrip = () => {
     );
   };
 
-  // Handle form submission
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,12 +107,11 @@ const PlanTrip = () => {
           state: {
             tripRecommendation: response.data,
             destination: destination,
-            start_range: startDate,
-            end_range: endDate,
-            trip_genre: tripGenres.join(", "),
+            start_date: startDate,
+            end_date: endDate,
+            trip_genres: tripGenres.join(", "),
             trip_length: tripLength,
             budget: budget,
-            travelers: travelers,
             additionalNotes: additionalNotes
           },
         });

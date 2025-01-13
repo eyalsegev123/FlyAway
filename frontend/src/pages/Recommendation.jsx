@@ -26,28 +26,20 @@ const Recommendation = () => {
   const {
     tripRecommendation,
     destination,
-    start_range: startDate,
-    end_range: endDate,
-    trip_genre: tripGenres,
-    trip_length: tripLength,
+    startDate,
+    endDate,
+    tripGenres,
+    tripLength,
     budget,
   } = location.state || {};
-
-  
-
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [parsedResponse, setParsedResponse] = useState(null);
   const [wishName, setWishName] = useState('');
   const [notes, setNotes] = useState('');
-  // const [summary, setSummary]  = useState('');
-  // const [hotels, setHotels] = useState('');
-  // const [attractions, setAttractions]  = useState('');
-  // const [restaurants, setRestaurants]  = useState('');
-  // const [costs, setCosts]  = useState('');
-  // const [dates, setDates]  = useState('');
+
   
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (tripRecommendation?.answer) {
@@ -89,18 +81,7 @@ const Recommendation = () => {
     },
   }), [parsedResponse]);
   
-
-  // useEffect(() => {
-  //   setSummary(categories.summary?.content || "No summary available");
-  //   setHotels(categories.hotels?.content || []);
-  //   setAttractions(categories.attractions?.content || {});
-  //   setRestaurants(categories.restaurants?.content || {});
-  //   setCosts(categories.costs?.content || "No costs evaluation available");
-  //   setDates(categories.dates?.content || "No dates recommendations available");
-  //   console.log("Restaurants: /n" + restaurants + "Hotels: /n" + hotels + "Attractions: /n" + attractions);
-  // }, [categories]);
   
-
   const handleWishlistSubmit = async () => {
     const userId = user?.id;
     console.log(user.id);
@@ -108,14 +89,14 @@ const Recommendation = () => {
       const response = await axios.post(`http://localhost:5001/api/wishesRoutes/addToWishList`, {
         user_id: parseInt(userId, 10),
         destination,
-        start_range: startDate,
-        end_range: endDate,
-        trip_genre: tripGenres,
+        start_date: startDate,
+        end_date: endDate,
+        trip_genres: tripGenres,
         trip_length: tripLength,
         budget,
         wish_name: wishName,
         notes,
-        tripRecommendation
+        recommendation: tripRecommendation
       });
       if (response.status === 201) { //is it only 201????
         alert('Added to your wish list!');
@@ -129,6 +110,7 @@ const Recommendation = () => {
     }
   };
 
+  // Get the steps from the categories object
   const steps = Object.values(categories);
   const maxSteps = steps.length;
 

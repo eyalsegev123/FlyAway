@@ -7,22 +7,19 @@
   
   
 
-  const WishCardButton = ({ trip, onDelete }) => {
+  const WishCardButton = ({ wish, onDelete }) => {
     
     const navigate = useNavigate();
 
     const handleEnterWishButton = () => {
-      navigate("/Wish", {
+      navigate("/Recommendation", {
         state: {
-          summary: trip.summary,
-          hotels: trip.hotels,
-          attractions: trip.attractions,
-          restaurants: trip.restaurants,
-          costs: trip.costs,
-          dates: trip.dates,
+          tripRecommendation: wish.recommendation
         }
       });
     };
+
+  
 
 
     return (
@@ -31,17 +28,17 @@
           <button onClick ={()=> handleEnterWishButton()}>
             <div>
               <span>
-                <p>{trip.wish_name}</p>  {/* Display trip Name initially */}
+                <p>{wish.wish_name}</p>  {/* Display wish Name initially */}
               </span>
             </div>
             <div>
               <span>
-                <p>{trip.destination}</p>  {/* Display trip Destination on hover */}
+                <p>{wish.destination}</p>  {/* Display wish Destination on hover */}
               </span>
             </div>
           </button>
           <IconButton
-            onClick={() => onDelete(trip.wish_id)}
+            onClick={() => onDelete(wish.wish_id)}
             aria-label="Delete"
             className="delete-button"
           >
