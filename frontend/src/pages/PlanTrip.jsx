@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import "../styles/pages/PlanTrip.css";
-import LoadingTrip from "../components/LoadingTrip";
+import LoadingTripGlobe from "../components/LoadingTripGlobe";
 
 // Form Input Options
 const CURRENCY_OPTIONS = ["USD", "EUR", "GBP", "NIS"];
@@ -288,7 +288,7 @@ const PlanTrip = () => {
   return (
     <StyledWrapper>
       {uiState.loading ? (
-        <LoadingTrip />
+        <LoadingTripGlobe />
       ) : (
         <form className="form" onSubmit={handleSubmit}>
           <p className="title">Plan Your Trip</p>

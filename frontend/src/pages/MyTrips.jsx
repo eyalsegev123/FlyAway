@@ -4,14 +4,18 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import AddTripForm from "../components/AddTripForm";
 import Modal from "../components/Modal"; // Add Modal import
+import SearchBox from "../components/SearchBox";
 
 const MyTrips = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetchTripsErrorMessage, setFetchTripsErrorMessage] = useState("");
+  const [isAddTripModalOpen, setIsAddTripModalOpen] = useState(false);
+  // for successful trip add, edit or delete
+  const [successMessage, setSuccessMessage] = useState("");
+
   const { user } = useAuth();
   const user_id = user?.id;
-  const [isAddTripModalOpen, setIsAddTripModalOpen] = useState(false);
 
   const openAddTripModal = () => setIsAddTripModalOpen(true);
   const closeAddTripModal = () => setIsAddTripModalOpen(false);
@@ -46,6 +50,7 @@ const MyTrips = () => {
   const handleTripAdded = (newTrip) => {
     setTrips([...trips, newTrip]);
     closeAddTripModal(); // Close modal after successful addition
+    setSuccessMessage("Trip added successfully!");
   };
 
   if (!user) {
@@ -68,12 +73,18 @@ const MyTrips = () => {
         title=""
       >
         <AddTripForm
-          onClose={closeAddTripModal}
           onTripAdded={handleTripAdded}
           userId={user_id}
         />
       </Modal>
 
+      <SearchBox 
+        array={trips}
+        setArray={setTrips}
+        originalArray={trips}
+        searchKey="trip_name"
+        placeholder="Search trips..."
+      />
       <div className="trips-list">
         {trips.map((trip) => (
           <div key={trip.id} className="trip-card">

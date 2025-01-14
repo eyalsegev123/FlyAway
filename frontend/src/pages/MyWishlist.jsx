@@ -106,10 +106,12 @@ const MyWishList = () => {
       ) : wishlist.length > 0 ? (
         <Box>
           <Box sx={{ marginBottom: "20px" }}>
-            <SearchBox
-              wishlist={wishlist}
-              setWishlist={setWishlist}
-              originalWishlist={originalWishlist}
+            <SearchBox 
+              array={wishlist}
+              setArray={setWishlist}
+              originalArray={wishlist}
+              searchKey="wish_name"
+              placeholder="Search wishes..."
             />
           </Box>
           <Box sx={{ 

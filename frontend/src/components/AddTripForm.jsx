@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import dayjs from 'dayjs';
+
 
 // Form Input Components
 const FormInput = ({ label, id, ...props }) => (
@@ -73,14 +75,13 @@ const ReviewTextarea = ({ value, onChange }) => (
         onChange={(e) => onChange("review", e.target.value)}
         placeholder="Share your experience..."
         rows="4"
-        required
       />
       <span>Review</span>
     </label>
   </div>
 );
 
-const AddTripForm = ({ onClose, onTripAdded, userId }) => {
+const AddTripForm = ({ onTripAdded, userId }) => {
   const [formData, setFormData] = useState({
     tripName: "",
     destination: "",
@@ -94,20 +95,40 @@ const AddTripForm = ({ onClose, onTripAdded, userId }) => {
   const updateFormData = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
-
+  
   const [loading, setLoading] = useState(false);
   const [submitTripErrorMessage, setSubmitTripErrorMessage] = useState("");
+  const [dateErrorMessage, setdateErrorMessage] = useState("");
 
   const validateDates = () => {
-    const start = new Date(formData.startDate);
-    const end = new Date(formData.endDate);
-    return end >= start;
+    const today = dayjs().startOf('day');
+    const start = dayjs(formData.startDate);
+    const end = dayjs(formData.endDate);
+
+    // Check if the date is valid and not before today
+    if (!start.isValid() || !end.isValid()) {
+      setdateErrorMessage('Please enter valid dates');
+      return false;
+    }
+
+    if(start.isAfter(end)) {
+      setdateErrorMessage('End date must be after start date');
+      return false;
+    }
+
+    if (end.isAfter(today)) {
+      setdateErrorMessage('End date cannot be in the future');
+      return false;
+    }
+
+    setdateErrorMessage('');
+    return true;
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateDates()) {
-      setSubmitTripErrorMessage("End date must be after start date");
       return;
     }
 
@@ -126,6 +147,11 @@ const AddTripForm = ({ onClose, onTripAdded, userId }) => {
         }
       });
 
+      // Log formDataToSend contents
+      for (let [key, value] of formDataToSend.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+      
       const response = await axios.post(
         `http://localhost:5001/api/tripsRoutes/addTrip/${userId}`,
         formDataToSend,
@@ -138,7 +164,6 @@ const AddTripForm = ({ onClose, onTripAdded, userId }) => {
 
       if (response.status === 201) {
         onTripAdded(response.data.trip);
-        onClose();
       }
     } catch (err) {
       setSubmitTripErrorMessage("An error occurred while submitting the trip details.");
@@ -182,6 +207,8 @@ const AddTripForm = ({ onClose, onTripAdded, userId }) => {
             onChange={updateFormData}
           />
         </div>
+
+        {dateErrorMessage && <p className="error">{dateErrorMessage}</p>}
         
         <FileInput onChange={updateFormData} />
         

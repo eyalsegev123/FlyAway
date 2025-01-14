@@ -1,25 +1,57 @@
 const pool = require("../config/db"); // Database connection
+const upload = require ('../middleware/multer');
+const uploadFiles = upload.array('album'); // Define multer middleware outside
 
-// Add a new trip
 exports.addTrip = async (req, res) => {
-    const {user_id} = req.params;
-    const { tripName, destination, startDate, endDate, album, stars, review} = req.body;
+    const { user_id } = req.params; // Extract user_id from the request parameters
+    const { tripName, destination, startDate, endDate, stars, review } = req.body;
 
     try {
-        const result = await pool.query(
-            `INSERT INTO trips (user_id, review, stars, destination, trip_name, album, start_date, end_date) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-            [user_id, review, stars, destination, tripName, album, startDate, endDate]
+        // Step 1: Insert the trip and get the generated trip_id
+        const tripResult = await pool.query(
+            `INSERT INTO trips (user_id, review, stars, destination, trip_name, start_date, end_date) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING trip_id`,
+            [user_id, review, stars, destination, tripName, startDate, endDate]
         );
-        res.status(201).json(result.rows[0]); // Send the created trip
+
+        const trip_id = tripResult.rows[0].trip_id; // Get the generated trip_id
+        req.body.trip_id = trip_id; // Set trip_id for the middleware
+
+        console.log(`Trip created with ID: ${trip_id}`);
+
+        // Step 2: Use multer middleware to handle file uploads dynamically
+        uploadFiles(req, res, async (err) => {
+            if (err) {
+                console.error("File upload error:", err.message);
+                return res.status(400).json({ error: err.message });
+            }
+
+            console.log("Files uploaded successfully:", req.files);
+
+            // Step 3: Update the album path in the database
+            const albumPath = `s3://${process.env.S3_BUCKET_NAME}/user_${user_id}/trip_${trip_id}/`;
+            await pool.query(
+                `UPDATE trips SET album_s3location = $1 WHERE trip_id = $2`,
+                [albumPath, trip_id]
+            );
+
+            // Step 4: Respond with the updated trip details
+            const updatedTrip = await pool.query(`SELECT * FROM trips WHERE trip_id = $1`, [trip_id]);
+
+            res.status(201).json({
+                trip: updatedTrip.rows[0],
+            });
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Error adding trip:", error.message);
         res.status(500).json({ error: "Error adding trip" });
     }
 };
 
+
 // Delete a trip by ID
 exports.deleteTrip = async (req, res) => {
+    //delete in s3 also
     const { trip_id } = req.params;
 
     try {
