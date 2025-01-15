@@ -4,41 +4,79 @@ import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Delete, Edit, Close, Check } from "@mui/icons-material";
 
-const TripCa = ({ wish, onDelete, onEdit }) => {
-  const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedWishName, setEditedWishName] = useState(wish.wish_name || "");
-  const [editedWishNotes, setEditedWishNotes] = useState(wish.notes || "");
 
-  const handleEnterWishButton = () => {
-    navigate("/Recommendation", {
-      state: {
-        tripRecommendation: wish.recommendation,
-        fromPlanTrip: false,
-      },
-    });
-  };
+//to edit: trip_name, review, start_date, end_date, stars
+
+const TripCardButton = ({ trip, onDelete, onEdit }) => {
+  const navigate = useNavigate(); // to add navigation to recommendation page
+  const [isEditing, setIsEditing] = useState(false);
+  const [editFormData , setEditFormData] = useState({
+    trip_name: trip.trip_name,
+    review: trip.review,
+    start_date: trip.start_date,
+    end_date: trip.end_date,
+    stars: trip.stars
+  });
 
   const handleEditSubmit = () => {
-    onEdit(wish.wish_id, editedWishName, editedWishNotes); // Call the onEdit function with the updated details
+    onEdit(editFormData); // Call the onEdit function with the updated details
     setIsEditing(false); // Close the edit form
+  };
+
+  const handleEnterTripButton = () => {
   };
 
   const editForm = () => (
     <div className="edit-form">
       <label>
-        <span>Wish Name</span>
+        <span>Trip Name</span>
         <input
           type="text"
-          value={editedWishName}
-          onChange={(e) => setEditedWishName(e.target.value)}
+          value={editFormData.trip_name}
+          onChange={(e) =>
+            setEditFormData({ ...editFormData, trip_name: e.target.value })
+          }
         />
       </label>
       <label>
-        <span>Notes</span>
+        <span>Start Date</span>
+        <input
+          type="date"
+          value={editFormData.start_date}
+          onChange={(e) =>
+            setEditFormData({ ...editFormData, start_date: e.target.value })
+          }
+        />
+      </label>
+      <label>
+        <span>End Date</span>
+        <input
+          type="date"
+          value={editFormData.start_date}
+          onChange={(e) =>
+            setEditFormData({ ...editFormData, end_date: e.target.value })
+          }
+        />
+      </label>
+
+      <label>
+        <span>stars</span>
         <textarea
-          value={editedWishNotes}
-          onChange={(e) => setEditedWishNotes(e.target.value)}
+          value={editFormData.stars}
+          onChange={(e) =>
+            setEditFormData({ ...editFormData, stars: e.target.value })
+          }
+        />
+      </label>
+
+      {/* text area needs to be unexpandable */}
+      <label>
+        <span>review</span>
+        <textarea
+          value={editFormData.review}
+          onChange={(e) =>
+            setEditFormData({ ...editFormData, review: e.target.value })
+          }
         />
       </label>
       <div className="edit-buttons">
@@ -56,11 +94,14 @@ const TripCa = ({ wish, onDelete, onEdit }) => {
   );
 
   const content = () => (
-    <div className="book" onClick={handleEnterWishButton}>
+    <div className="book" onClick={handleEnterTripButton}>
       <div className="content">
         <div className="content-inner">
-          <p className="destination">{wish.destination}</p>
-          <p className="notes">{wish.notes || "No notes added"}</p>
+          <p className="destination">{trip.destination}</p>
+          <p className="start_date">{trip.start_date}</p>
+          <p className="end_date">{trip.end_date}</p>
+          <p className="review">{trip.review || "No review added"}</p>
+          
           <div className="action-buttons">
             <IconButton
               onClick={(e) => {
@@ -74,7 +115,7 @@ const TripCa = ({ wish, onDelete, onEdit }) => {
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
-                onDelete(wish.wish_id);
+                onDelete(trip.trip_id);
               }}
               className="delete-button"
             >
@@ -84,7 +125,7 @@ const TripCa = ({ wish, onDelete, onEdit }) => {
         </div>
       </div>
       <div className="cover">
-        <h2>{wish.wish_name}</h2>
+        <h2>{trip.trip_name}</h2>
       </div>
     </div>
   );
@@ -133,7 +174,7 @@ const StyledWrapper = styled.div`
       text-transform: capitalize;
     }
 
-    .notes {
+    .review {
       font-size: 14px;
       color: #666;
       overflow-y: auto;
@@ -219,4 +260,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default WishCardButton;
+export default TripCardButton;

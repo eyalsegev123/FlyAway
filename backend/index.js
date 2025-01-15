@@ -17,6 +17,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//Routes
 app.use("/api/usersRoutes", userRoutes);
 app.use("/api/tripsRoutes", tripRoutes);
 app.use("/api/wishesRoutes", wishRoutes);
