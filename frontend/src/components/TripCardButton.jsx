@@ -218,7 +218,6 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
           <p className="review">{trip.review || "No review added"}</p>
           
           <div className="action-buttons">
-          <>
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
@@ -228,13 +227,7 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
               style={{ color: 'white' }}
             >
               <PhotoLibraryIcon />
-            </IconButton>
-            <PhotoModal
-              isOpen={isAlbumOpen}
-              photos={albumPhotos}
-              onClose={() => setIsAlbumOpen(false)}
-            />
-          </>  
+            </IconButton> 
             
             <IconButton
               onClick={(e) => {
