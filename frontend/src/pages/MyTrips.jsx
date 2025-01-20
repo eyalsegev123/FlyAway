@@ -10,6 +10,7 @@ import {CircularProgress, Grid, Box, Alert, Snackbar} from "@mui/material"; // A
 
 const MyTrips = () => {
   const [trips, setTrips] = useState([]);
+  const [originalTrips, setOiriginalTrips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isAddTripModalOpen, setIsAddTripModalOpen] = useState(false);
   // for successful trip add, edit or delete
@@ -39,6 +40,7 @@ const MyTrips = () => {
       );
       if (response.status === 200) {
         setTrips(response.data);
+        setOiriginalTrips(response.data);
       }
     } catch (err) {
       setAlertInfo("An error occurred while getting the trips", 'error');
@@ -54,6 +56,7 @@ const MyTrips = () => {
 
   const handleTripAdded = (newTrip) => {
     setTrips([...trips, newTrip]);
+    setOiriginalTrips([...originalTrips, newTrip]);
     closeAddTripModal(); // Close modal after successful addition
     showAlert('Trip added successfully!', 'success');
   };
@@ -74,11 +77,11 @@ const MyTrips = () => {
     });
   };
 
-  const handleEdit = async (formData) => {
+  const handleEdit = async (trip_id, formData) => {
     try {
       // Send edit request to the backend
       const response = await axios.post(
-        `http://localhost:5001/api/tripsRoutes/editTrip/${formData.trip_id}`,
+        `http://localhost:5001/api/tripsRoutes/editTrip/${trip_id}`,
         formData
       );
       if (response.status === 200) {
@@ -103,6 +106,9 @@ const MyTrips = () => {
          setTrips((prevTrips) =>
            prevTrips.filter((trip) => trip.trip_id !== trip_id)
          );
+         setOiriginalTrips((prevTrips) =>
+          prevTrips.filter((trip) => trip.trip_id !== trip_id)
+        );
          showAlert('Trip deleted successfully!', 'success');
        } else {
          setAlertInfo("Failed to delete the trip.", 'error');
@@ -132,7 +138,7 @@ const MyTrips = () => {
             <SearchBox 
               array={trips}
               setArray={setTrips}
-              originalArray={trips}
+              originalArray={originalTrips}
               searchKey="trip_name"
               placeholder="Search trips..."
             />

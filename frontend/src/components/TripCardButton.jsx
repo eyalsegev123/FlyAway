@@ -1,30 +1,147 @@
 import React, { useState } from "react";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import styled from "styled-components";
 import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Delete, Edit, Close, Check } from "@mui/icons-material";
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
+import dayjs from 'dayjs';
+import axios from "axios";
 
+const formatDate = (dateString, forInput = false) => {
+  if (!dateString) return ''; // Handle empty dates
+  
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return ''; // Handle invalid dates
+  
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  return forInput ? 
+    `${year}-${month}-${day}` : // Format for input type="date"
+    `${day}-${month}-${year}`;  // Format for display
+};
 
-//to edit: trip_name, review, start_date, end_date, stars
+const PhotoModal = ({ isOpen, photos, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <h2>Trip Album</h2>
+        <div className="photos-container">
+          {photos.map((photo, index) => (
+            <img key={index} src={photo} alt={`Photo ${index + 1}`} />
+          ))}
+        </div>
+        <button onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+};
 
 const TripCardButton = ({ trip, onDelete, onEdit }) => {
   const navigate = useNavigate(); // to add navigation to recommendation page
   const [isEditing, setIsEditing] = useState(false);
+  const [isAlbumOpen, setIsAlbumOpen] = useState(false); // state to control modal visibility
+  const [albumPhotos, setAlbumPhotos] = useState([]); // state to hold photos from S3
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [reviewModal , setReviewModal] = useState([]);
+  
   const [editFormData , setEditFormData] = useState({
     trip_name: trip.trip_name,
     review: trip.review,
-    start_date: trip.start_date,
-    end_date: trip.end_date,
+    start_date: formatDate(trip.start_date, true),
+    end_date: formatDate(trip.end_date, true),
     stars: trip.stars
   });
+  
+  const trip_id = trip.trip_id;
+  
+  const [dateErrorMessage, setdateErrorMessage] = useState("");
+
+  const validateDates = () => {
+    const today = dayjs().startOf('day');
+    const start = dayjs(editFormData.start_date);
+    const end = dayjs(editFormData.end_date);
+
+    // Check if the date is valid and not before today
+    if (!start.isValid() || !end.isValid()) {
+      setdateErrorMessage('Please enter valid dates');
+      return false;
+    }
+
+    if(start.isAfter(end)) {
+      setdateErrorMessage('End date must be after start date');
+      return false;
+    }
+
+    if (end.isAfter(today)) {
+      setdateErrorMessage('End date cannot be in the future');
+      return false;
+    }
+
+    setdateErrorMessage('');
+    return true;
+  };
+
+  const fetchAlbumPhotos = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5001/api/tripsRoutes/fetchAlbum/${trip.trip_id}`);
+      setAlbumPhotos(response.data.photos); // assuming the response contains an array of photos
+      setIsAlbumOpen(true); // open the modal
+    } catch (error) {
+      console.error('Error fetching album photos', error);
+    }
+  };
+
+  const handleCloseAlbum = () => {
+    setIsAlbumOpen(false); // close the modal
+  };
 
   const handleEditSubmit = () => {
-    onEdit(editFormData); // Call the onEdit function with the updated details
+    if(!validateDates())
+      return;
+
+    // Create updatedData without modifying the dates first
+    const updatedData = {
+      ...editFormData
+    };
+
+    // If either date field is empty, use the original trip dates
+    if (!editFormData.start_date) {
+      updatedData.start_date = formatDate(trip.start_date, true);
+    }
+    if (!editFormData.end_date) {
+      updatedData.end_date = formatDate(trip.end_date, true);
+    }
+
+    onEdit(trip_id, updatedData);
     setIsEditing(false); // Close the edit form
   };
 
   const handleEnterTripButton = () => {
   };
+
+  const StarRating = ({ value, onChange }) => (
+    <div className="form-group">
+      <div className="stars-container">
+        <span className="rating-label">Rate Your Trip</span>
+        <div className="stars-wrapper">
+          {Array(5).fill(0).map((_, index) => (
+            <span
+              key={index + 1}
+              className={`star ${index + 1 <= value ? "selected" : ""}`}
+              onClick={() => onChange(index + 1)}
+            >
+              ★
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   const editForm = () => (
     <div className="edit-form">
@@ -52,20 +169,18 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
         <span>End Date</span>
         <input
           type="date"
-          value={editFormData.start_date}
+          value={editFormData.end_date}
           onChange={(e) =>
             setEditFormData({ ...editFormData, end_date: e.target.value })
           }
         />
       </label>
-
+      {dateErrorMessage && <p className="error">{dateErrorMessage}</p>}
       <label>
-        <span>stars</span>
-        <textarea
+        <StarRating
           value={editFormData.stars}
           onChange={(e) =>
-            setEditFormData({ ...editFormData, stars: e.target.value })
-          }
+            setEditFormData((prev) => ({ ...prev, stars: e }))}
         />
       </label>
 
@@ -98,11 +213,29 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
       <div className="content">
         <div className="content-inner">
           <p className="destination">{trip.destination}</p>
-          <p className="start_date">{trip.start_date}</p>
-          <p className="end_date">{trip.end_date}</p>
+          <p className="start_date">{formatDate(trip.start_date)}</p>
+          <p className="end_date">{formatDate(trip.end_date)}</p>
           <p className="review">{trip.review || "No review added"}</p>
           
           <div className="action-buttons">
+          <>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                fetchAlbumPhotos();
+              }}
+              className="album-button"
+              style={{ color: 'white' }}
+            >
+              <PhotoLibraryIcon />
+            </IconButton>
+            <PhotoModal
+              isOpen={isAlbumOpen}
+              photos={albumPhotos}
+              onClose={() => setIsAlbumOpen(false)}
+            />
+          </>  
+            
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
@@ -119,8 +252,9 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
               }}
               className="delete-button"
             >
-              <Delete color="error" />
+              <Delete color="white" />
             </IconButton>
+            
           </div>
         </div>
       </div>
@@ -134,105 +268,163 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
 };
 
 const StyledWrapper = styled.div`
-  .book {
-    position: relative;
-    border-radius: 10px;
-    width: 270px;
-    height: 300px;
-    background-color: whitesmoke;
-    -webkit-box-shadow: 1px 1px 12px #000;
-    box-shadow: 1px 1px 12px #000;
-    transform: preserve-3d;
-    perspective: 2000px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000;
-    margin: 20px;
-  }
 
-  .content {
-    padding: 20px;
-    padding-left: 40px; // Added extra padding on the left
-    text-align: left;
-    width: 100%;
-    height: 100%;
-    transform: translateX(20px); // Added to shift content right
+.book {
+  position: relative;
+  border-radius: 20px; /* Matched corner rounding */
+  width: 270px;
+  height: 300px;
+  background-color: #1a1a1a; /* Dark background for consistency */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+  transform: preserve-3d;
+  perspective: 2000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff; /* White text for readability */
+  margin: 20px;
+}
 
-    .content-inner {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
-    }
+.content {
+  padding: 20px;
+  padding-left: 40px; /* Added extra padding on the left */
+  text-align: left;
+  width: 100%;
+  height: 100%;
+  transform: translateX(20px); /* Added to shift content right */
 
-    .destination {
-      color: #21dc62;
-      font-weight: bold;
-      margin-bottom: 15px;
-      font-size: 25px;
-      text-transform: capitalize;
-    }
-
-    .review {
-      font-size: 14px;
-      color: #666;
-      overflow-y: auto;
-      max-height: 150px;
-    }
-
-    .action-buttons {
-      margin-top: auto;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-  }
-
-  .edit-form {
+  .content-inner {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .destination {
+    color: #00bfff; /* Retain specific green for destination highlight */
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 25px;
+    text-transform: capitalize;
+  }
+
+  .review {
+    font-size: 16px;
+    color: #666; /* Lighter text for contrast */
+    overflow-y: visible;
+    max-height: none;
+  }
+
+  .action-buttons {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
     gap: 10px;
-    padding: 10px;
-    width: 90%;
-    background-color: #f0f0f0;
-    border-radius: 10px;
+  }
+}
 
-    label {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
+.star {
+  cursor: pointer;
+  font-size: 20px;
+  color: #666; /* Lighter for contrast but consistent with other elements */
+  transition: color 0.2s;
+}
 
-      span {
-        font-size: 14px;
-        color: #666;
-      }
+.star.selected {
+  color: #00bfff; /* Keep highlight color for selected stars */
+}
 
-      input,
-      textarea {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 5px;
-        font-size: 14px;
-      }
 
-      textarea {
-        resize: none;
-        height: 80px;
-      }
+  .error {
+    color: #ff4444;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background-color: #1a1a1a; /* Dark background */
+  color: #fff; /* White text color */
+  border: 1px solid #333; /* Subtle border */
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+  width: 100%; /* Full width within its parent container */
+  max-width: 600px; /* Maximum width to control layout on larger screens */
+  margin: auto; /* Centering in the available space */
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    span {
+      color: rgba(255, 255, 255, 0.7); /* Lighter text for labels */
     }
 
-    .edit-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
+    input,
+    textarea {
+      background-color: #333; /* Dark background for inputs */
+      color: #fff; /* White text for inputs */
+      border: 1px solid rgba(105, 105, 105, 0.397); /* Matching border */
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 15px;
+      resize:none;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5); /* Placeholder color */
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #00bfff; /* Highlight color on focus */
+      outline: none; /* Removing default outline */
     }
   }
+
+  .rating-label {
+    font-size: 1.0em; /* Smaller font size */
+    color: rgba(255, 255, 255, 0.7); /* Example color adjustment for better visibility */
+    margin-right: 10px; /* Maintain or adjust spacing as needed */
+  }
+
+  .edit-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+/* Additional styling for specific components like buttons */
+button {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: #00bfff; /* Consistent button color */
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #00bfff96; /* Hover effect */
+  }
+
+  &:disabled {
+    background-color: #666; /* Disabled state */
+    cursor: not-allowed;
+  }
+}
+
 
   .cover {
     top: 0;
     position: absolute;
-    background: whitesmoke;
+    background:rgb(29, 29, 29);
     width: 100%;
     height: 100%;
     border-radius: 10px;
@@ -244,7 +436,7 @@ const StyledWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: darkblue;
+    color: #00bfff;
 
     h2 {
       text-align: center;
@@ -258,6 +450,8 @@ const StyledWrapper = styled.div`
     transition: all 0.5s;
     transform: rotatey(-80deg);
   }
+
+
 `;
 
 export default TripCardButton;

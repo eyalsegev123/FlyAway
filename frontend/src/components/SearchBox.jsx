@@ -9,20 +9,22 @@ const SearchBox = ({ array, setArray, originalArray, searchKey, placeholder = "S
     setSearchTerm(term);
 
     // If search is empty or only whitespace, restore original array
-    if (!term || term.trim() === '') {
+    if (!term.trim()) {
       setArray([...originalArray]); // Create new array reference to trigger re-render
       return;
+    } 
+    else {
+      const lowerTerm = term.toLowerCase();
+      // Filter array based on search term using the provided searchKey
+      const filtered = originalArray.filter(item => {
+        const searchValue = item[searchKey];
+        return searchValue && searchValue.toString().toLowerCase().includes(lowerTerm);
+      });
+
+      setArray(filtered);
     }
-
-    const lowerTerm = term.toLowerCase();
-    // Filter array based on search term using the provided searchKey
-    const filtered = originalArray.filter(item => {
-      const searchValue = item[searchKey];
-      return searchValue && searchValue.toString().toLowerCase().includes(lowerTerm);
-    });
-
-    setArray(filtered);
   };
+  
 
   return (
     <StyledWrapper>

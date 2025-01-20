@@ -11,7 +11,7 @@ import WishCardButton from "../components/WishCardButton";
 import SearchBox from "../components/SearchBox";
 const MyWishList = () => {
   const [wishlist, setWishlist] = useState([]); // State to store wishlist items
-  const [originalWishlist, setOriginalWishlist] = useState([]); // Add this state
+  const [originalWishlist, setOriginalWishlist] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { user } = useAuth();
@@ -63,6 +63,9 @@ const MyWishList = () => {
         setWishlist((prevWishlist) =>
           prevWishlist.filter((wish) => wish.wish_id !== wish_id)
         );
+        setOriginalWishlist((prevWishlist) =>
+          prevWishlist.filter((wish) => wish.wish_id !== wish_id)
+        );
       } else {
         setErrorMessage("Failed to delete the wish.");
       }
@@ -109,7 +112,7 @@ const MyWishList = () => {
             <SearchBox 
               array={wishlist}
               setArray={setWishlist}
-              originalArray={wishlist}
+              originalArray={originalWishlist}
               searchKey="wish_name"
               placeholder="Search wishes..."
             />

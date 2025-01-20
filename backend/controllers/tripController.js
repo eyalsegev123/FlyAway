@@ -99,12 +99,12 @@ const deleteTrip = async (req, res) => {
 
 const editTrip = async (req, res) => {
     const { trip_id } = req.params;
-    const { tripName, destination, startDate, endDate, stars, review } = req.body;
+    const { trip_name, start_date, end_date, stars, review } = req.body;
 
     try {
         const result = await pool.query(
-            `UPDATE trips SET trip_name = $1, destination = $2, start_date = $3, end_date = $4, stars = $5, review = $6 WHERE trip_id = $7 RETURNING *`,
-            [tripName, destination, startDate, endDate, stars, review, trip_id]
+            `UPDATE trips SET trip_name = $1, start_date = $2, end_date = $3, stars = $4, review = $5 WHERE trip_id = $6 RETURNING *`,
+            [trip_name, start_date, end_date, stars, review, trip_id]
         );
 
         if (result.rowCount === 0) {
@@ -118,10 +118,63 @@ const editTrip = async (req, res) => {
     }
 };
 
+const getAlbumLocation = async (trip_id) => {
+    try {
+        const result = await pool.query("SELECT * FROM trips WHERE trip_id = $1", [trip_id]);
+        if (result.rows.length > 0) {
+            const albumLocationInS3 = result.rows[0].album_s3location;
+            return albumLocationInS3;
+        } else {
+            throw new Error("no trip with this trip_id");
+        }
+    }
+    catch(error) {
+        console.error('Database query error:', error);
+        throw error; // Throw the original error
+    }
+};
+
+const fetchPhotosFromS3 = async (albumLocation) => {
+  const params = {
+    Bucket: process.env.S3_BUCKET_NAME, // Replace with your bucket name
+    Prefix: albumLocation // this should be the folder path in your bucket
+  };
+
+  try {
+    const s3Data = await s3.listObjectsV2(params).promise();
+    const imagePromises = s3Data.Contents.map(async file => {
+        const imageParams = {
+          Bucket: params.Bucket,
+          Key: file.Key
+        };
+        const imageData = await s3.getObject(imageParams).promise();
+        // Optionally convert the image data to base64 if needed
+        const base64Image = Buffer.from(imageData.Body).toString('base64');
+        return `data:image/jpeg;base64,${base64Image}`;
+      });
+      return await Promise.all(imagePromises);
+    } catch (error) {
+      console.error('Error fetching photos from S3:', error);
+      throw new Error('Failed to fetch photos');
+    }
+};
+
+const fetchAlbum = async (req, res) => {
+    const { trip_id } = req.params;
+    try {
+        const albumLocation = getAlbumLocation(trip_id);
+        const photoData = fetchPhotosFromS3(albumLocation);
+        res.status(200).json({ photos: photoData });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error fetching trip album location" });
+    }
+};
 
 module.exports = {
   addTrip,
   deleteTrip,
   getUserTrips, 
-  editTrip
+  editTrip,
+  fetchAlbum,
 };
