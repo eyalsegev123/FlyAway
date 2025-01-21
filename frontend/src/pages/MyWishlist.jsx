@@ -52,25 +52,31 @@ const MyWishList = () => {
 
   // Handle deleting a wish
   const handleDelete = async (wish_id) => {
-    try {
-      // Send delete request to the backend
-      const response = await axios.delete(
-        `http://localhost:5001/api/wishesRoutes/deleteWish/${wish_id}`
-      );
+    const userConfirmed = window.confirm("Are you sure you want to delete this from your wishlist?");
+    if(userConfirmed) {
+      try {
+        // Send delete request to the backend
+        const response = await axios.delete(
+          `http://localhost:5001/api/wishesRoutes/deleteWish/${wish_id}`
+        );
 
-      if (response.status === 200) {
-        // Remove the wish from the frontend state
-        setWishlist((prevWishlist) =>
-          prevWishlist.filter((wish) => wish.wish_id !== wish_id)
-        );
-        setOriginalWishlist((prevWishlist) =>
-          prevWishlist.filter((wish) => wish.wish_id !== wish_id)
-        );
-      } else {
-        setErrorMessage("Failed to delete the wish.");
+        if (response.status === 200) {
+          // Remove the wish from the frontend state
+          setWishlist((prevWishlist) =>
+            prevWishlist.filter((wish) => wish.wish_id !== wish_id)
+          );
+          setOriginalWishlist((prevWishlist) =>
+            prevWishlist.filter((wish) => wish.wish_id !== wish_id)
+          );
+        } else {
+          setErrorMessage("Failed to delete the wish.");
+        }
+      } catch (err) {
+        setErrorMessage("An error occurred while deleting the wish.");
       }
-    } catch (err) {
-      setErrorMessage("An error occurred while deleting the wish.");
+    }
+    else {
+      console.log("user cancelled the deletion");
     }
   };
 

@@ -6,13 +6,18 @@ import AddTripForm from "../components/AddTripForm";
 import Modal from "../components/Modal"; // Add Modal import
 import SearchBox from "../components/SearchBox";
 import TripCardButton from "../components/TripCardButton";
-import {CircularProgress, Grid, Box, Alert, Snackbar} from "@mui/material"; // Add Snackbar import
+import PhotoCarousel from "../components/PhotoCarousel"; // Add PhotoCarousel import
+import {CircularProgress, Grid, Box, Alert, Snackbar, Typography} from "@mui/material"; // Add Snackbar import
 
 const MyTrips = () => {
   const [trips, setTrips] = useState([]);
   const [originalTrips, setOiriginalTrips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isAddTripModalOpen, setIsAddTripModalOpen] = useState(false);
+  const [isAlbumOpen, setIsAlbumOpen] = useState(false); // state to control modal visibility
+  const [albumPhotos, setAlbumPhotos] = useState([]); // state to hold photos from S3
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [review, setReview] = useState("");
   // for successful trip add, edit or delete
   const [alertInfo, setAlertInfo] = useState({
     open: false,
@@ -77,6 +82,15 @@ const MyTrips = () => {
     });
   };
 
+  const handleCloseAlbum = () => {
+    setIsAlbumOpen(false); // close the modal
+  };
+
+  const handleCloseReview = () => {
+    setIsReviewOpen(false);
+    setReview("");
+  };
+
   const handleEdit = async (trip_id, formData) => {
     try {
       // Send edit request to the backend
@@ -94,29 +108,54 @@ const MyTrips = () => {
   };
 
 
-   const handleDelete = async (trip_id) => {
-     try {
-       // Send delete request to the backend
-       const response = await axios.delete(
-         `http://localhost:5001/api/tripsRoutes/deleteTrip/${trip_id}`
-       );
-
-       if (response.status === 200) {
-         // Remove the trip from the frontend state
-         setTrips((prevTrips) =>
-           prevTrips.filter((trip) => trip.trip_id !== trip_id)
-         );
-         setOiriginalTrips((prevTrips) =>
-          prevTrips.filter((trip) => trip.trip_id !== trip_id)
+  const handleDelete = async (trip_id) => {
+    
+    const userConfirmed = window.confirm("Are you sure you want to delete this from your trips?");
+    
+    if(userConfirmed) {
+      try {
+        // Send delete request to the backend
+        const response = await axios.delete(
+          `http://localhost:5001/api/tripsRoutes/deleteTrip/${trip_id}`
         );
-         showAlert('Trip deleted successfully!', 'success');
-       } else {
-         setAlertInfo("Failed to delete the trip.", 'error');
-       }
-     } catch (err) {
-       showAlert(err.message || 'Failed to delete trip', 'error');
-     }
+
+        if (response.status === 200) {
+          // Remove the trip from the frontend state
+          setTrips((prevTrips) =>
+            prevTrips.filter((trip) => trip.trip_id !== trip_id)
+          );
+          setOiriginalTrips((prevTrips) =>
+            prevTrips.filter((trip) => trip.trip_id !== trip_id)
+          );
+          showAlert('Trip deleted successfully!', 'success');
+        } else {
+          setAlertInfo("Failed to delete the trip.", 'error');
+        }
+      } catch (err) {
+        showAlert(err.message || 'Failed to delete trip', 'error');
+      }
+    }
+    else {
+      console.log("user cancelled the deletion");
+    }
    };
+
+
+   const fetchAlbumPhotos = async (trip) => {
+    try {
+      const response = await axios.get(`http://localhost:5001/api/tripsRoutes/fetchAlbum/${trip.trip_id}`);
+      setAlbumPhotos(response.data.photos); // assuming the response contains an array of photos
+      setIsAlbumOpen(true); // open the modal
+    } catch (error) {
+      console.error('Error fetching album photos', error);
+    }
+  };
+
+  const handleReview = async (trip) => {
+    setIsReviewOpen(true)
+    setReview(trip.review)
+  };
+  
 
   return (
     <Box sx={{ padding: "20px", marginTop: "100px" }}>
@@ -160,6 +199,8 @@ const MyTrips = () => {
                     trip={trip}
                     onDelete={handleDelete}
                     onEdit={handleEdit}
+                    onAlbumPress={fetchAlbumPhotos}
+                    onReviewPress={handleReview}
                   />
                 </Grid>
               ))}
@@ -198,6 +239,16 @@ const MyTrips = () => {
           userId={user_id}
         />
       </Modal>
+      
+      <Modal isOpen={isAlbumOpen} onClose={handleCloseAlbum} title="Trip Album" children={<PhotoCarousel photos={albumPhotos} />}>
+      </Modal>
+
+      <Modal isOpen={isReviewOpen} onClose={handleCloseReview} title={"Review"}>
+        <Typography variant="body1" sx={{color: "white"}}> 
+          {review || "No review added yet"} 
+        </Typography>
+      </Modal>
+
 
       <Snackbar 
         open={alertInfo.open} 

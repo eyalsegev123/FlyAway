@@ -28,7 +28,7 @@ const WishCardButton = ({ wish, onDelete, onEdit }) => {
   const editForm = () => (
     <div className="edit-form">
       <label>
-        <span>Wish Name</span>
+        <span>Wish Name </span>
         <input
           type="text"
           value={editedWishName}
@@ -67,7 +67,7 @@ const WishCardButton = ({ wish, onDelete, onEdit }) => {
               }}
               className="edit-button"
             >
-              <Edit />
+              <Edit color="white"/>
             </IconButton>
             <IconButton
               onClick={(e) => {
@@ -76,7 +76,7 @@ const WishCardButton = ({ wish, onDelete, onEdit }) => {
               }}
               className="delete-button"
             >
-              <Delete color="error" />
+              <Delete color="white" />
             </IconButton>
           </div>
         </div>
@@ -97,29 +97,45 @@ const WishCardButton = ({ wish, onDelete, onEdit }) => {
 const StyledWrapper = styled.div`
   .book {
     position: relative;
-    border-radius: 10px;
+    border-radius: 20px;
     width: 270px;
     height: 300px;
-    background-color: whitesmoke;
-    -webkit-box-shadow: 1px 1px 12px #000;
-    box-shadow: 1px 1px 12px #000;
+    background-color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     transform: preserve-3d;
     perspective: 2000px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000;
+    color: #fff;
     margin: 20px;
   }
 
+  button {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: #00bfff; /* Consistent button color */
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #00bfff96; /* Hover effect */
+  }
+
+  &:disabled {
+    background-color: #666; /* Disabled state */
+    cursor: not-allowed;
+  }
+}
+
   .content {
     padding: 20px;
-    padding-left: 40px; // Added extra padding on the left
     text-align: left;
     width: 100%;
     height: 100%;
-    transform: translateX(20px); // Added to shift content right
-    
+
     .content-inner {
       display: flex;
       flex-direction: column;
@@ -128,25 +144,25 @@ const StyledWrapper = styled.div`
     }
 
     .destination {
-      color: #21dc62;
       font-weight: bold;
       margin-bottom: 15px;
-      font-size: 25px;
-      text-transform: capitalize;
+      font-size: 20px;
+      color: #00bfff;
+      margin-left: 25px;
     }
 
     .notes {
-      font-size: 14px;
-      color: #666;
-      overflow-y: auto;
-      max-height: 150px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      color: white;
+      margin-left: 25px;
     }
 
     .action-buttons {
       margin-top: auto;
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 5px;
     }
   }
 
@@ -154,10 +170,15 @@ const StyledWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 10px;
-    width: 90%;
-    background-color: #f0f0f0;
-    border-radius: 10px;
+    padding: 20px;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
 
     label {
       display: flex;
@@ -165,20 +186,23 @@ const StyledWrapper = styled.div`
       gap: 5px;
 
       span {
-        font-size: 14px;
-        color: #666;
+        color: #00bfff;
+        font-weight: bold;
       }
 
       input, textarea {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 5px;
-        font-size: 14px;
+        background-color: #333;
+        color: #fff;
+        border: 1px solid rgba(105, 105, 105, 0.397);
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 15px;
+        resize: none;
       }
 
-      textarea {
-        resize: none;
-        height: 80px;
+      input:focus, textarea:focus {
+        border-color: #00bfff;
+        outline: none;
       }
     }
 
@@ -192,7 +216,7 @@ const StyledWrapper = styled.div`
   .cover {
     top: 0;
     position: absolute;
-    background: whitesmoke;
+    background:rgb(29, 29, 29);
     width: 100%;
     height: 100%;
     border-radius: 10px;
@@ -204,7 +228,7 @@ const StyledWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: darkblue;
+    color: #00bfff;
 
     h2 {
       text-align: center;

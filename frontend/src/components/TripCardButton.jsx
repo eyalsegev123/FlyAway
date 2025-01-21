@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import styled from "styled-components";
 import { IconButton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { Delete, Edit, Close, Check } from "@mui/icons-material";
+import { Delete, Edit, Close, Check , RateReview} from "@mui/icons-material";
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import dayjs from 'dayjs';
-import axios from "axios";
+import Modal from "./Modal";
 
 const formatDate = (dateString, forInput = false) => {
   if (!dateString) return ''; // Handle empty dates
@@ -23,32 +21,10 @@ const formatDate = (dateString, forInput = false) => {
     `${day}-${month}-${year}`;  // Format for display
 };
 
-const PhotoModal = ({ isOpen, photos, onClose }) => {
-  if (!isOpen) return null;
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <h2>Trip Album</h2>
-        <div className="photos-container">
-          {photos.map((photo, index) => (
-            <img key={index} src={photo} alt={`Photo ${index + 1}`} />
-          ))}
-        </div>
-        <button onClick={onClose}>Close</button>
-      </div>
-    </div>
-  );
-};
 
-const TripCardButton = ({ trip, onDelete, onEdit }) => {
-  const navigate = useNavigate(); // to add navigation to recommendation page
-  const [isEditing, setIsEditing] = useState(false);
-  const [isAlbumOpen, setIsAlbumOpen] = useState(false); // state to control modal visibility
-  const [albumPhotos, setAlbumPhotos] = useState([]); // state to hold photos from S3
-  const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [reviewModal , setReviewModal] = useState([]);
-  
+const TripCardButton = ({ trip, onDelete, onEdit , onAlbumPress, onReviewPress}) => {
+  const [isEditing, setIsEditing] = useState(false);  
   const [editFormData , setEditFormData] = useState({
     trip_name: trip.trip_name,
     review: trip.review,
@@ -56,6 +32,17 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
     end_date: formatDate(trip.end_date, true),
     stars: trip.stars
   });
+  const [originalFormData, setOriginalFormData] = useState(editFormData);
+
+  const handleOpenEdit = () => {
+    setOriginalFormData({ ...editFormData }); // Save the current state as the original
+    setIsEditing(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditFormData({ ...originalFormData }); // Reset to the original values
+    setIsEditing(false);
+  };
   
   const trip_id = trip.trip_id;
   
@@ -86,20 +73,6 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
     return true;
   };
 
-  const fetchAlbumPhotos = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5001/api/tripsRoutes/fetchAlbum/${trip.trip_id}`);
-      setAlbumPhotos(response.data.photos); // assuming the response contains an array of photos
-      setIsAlbumOpen(true); // open the modal
-    } catch (error) {
-      console.error('Error fetching album photos', error);
-    }
-  };
-
-  const handleCloseAlbum = () => {
-    setIsAlbumOpen(false); // close the modal
-  };
-
   const handleEditSubmit = () => {
     if(!validateDates())
       return;
@@ -124,6 +97,13 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
   const handleEnterTripButton = () => {
   };
 
+  const handleInputChange = (field, value) => {
+    setEditFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const StarRating = ({ value, onChange }) => (
     <div className="form-group">
       <div className="stars-container">
@@ -144,69 +124,66 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
   );
 
   const editForm = () => (
-    <div className="edit-form">
-      <label>
-        <span>Trip Name</span>
-        <input
-          type="text"
-          value={editFormData.trip_name}
-          onChange={(e) =>
-            setEditFormData({ ...editFormData, trip_name: e.target.value })
-          }
-        />
-      </label>
-      <label>
-        <span>Start Date</span>
-        <input
-          type="date"
-          value={editFormData.start_date}
-          onChange={(e) =>
-            setEditFormData({ ...editFormData, start_date: e.target.value })
-          }
-        />
-      </label>
-      <label>
-        <span>End Date</span>
-        <input
-          type="date"
-          value={editFormData.end_date}
-          onChange={(e) =>
-            setEditFormData({ ...editFormData, end_date: e.target.value })
-          }
-        />
-      </label>
-      {dateErrorMessage && <p className="error">{dateErrorMessage}</p>}
-      <label>
+    <EditFormContainer>
+      <div className="edit-form">
+        <label>
+          <span>Trip Name</span>
+          <input
+            type="text"
+            value={editFormData.trip_name}
+            onChange={(e) =>
+              handleInputChange('trip_name', e.target.value)}
+          />
+        </label>
+        <label>
+          <span>Start Date</span>
+          <input
+            type="date"
+            value={editFormData.start_date}
+            onChange={(e) =>
+              handleInputChange('start_date', e.target.value)}
+          />
+        </label>
+        <label>
+          <span>End Date</span>
+          <input
+            type="date"
+            value={editFormData.end_date}
+            onChange={(e) =>
+              handleInputChange('end_date', e.target.value)}
+          />
+        </label>
+        {dateErrorMessage && <p className="error">{dateErrorMessage}</p>}
         <StarRating
           value={editFormData.stars}
-          onChange={(e) =>
-            setEditFormData((prev) => ({ ...prev, stars: e }))}
+          onChange={handleInputChange}
         />
-      </label>
-
-      {/* text area needs to be unexpandable */}
-      <label>
-        <span>review</span>
-        <textarea
-          value={editFormData.review}
-          onChange={(e) =>
-            setEditFormData({ ...editFormData, review: e.target.value })
-          }
-        />
-      </label>
-      <div className="edit-buttons">
-        <IconButton
-          onClick={() => setIsEditing(false)}
-          className="cancel-button"
-        >
-          <Close />
-        </IconButton>
-        <IconButton onClick={handleEditSubmit} className="save-button">
-          <Check color="primary" />
-        </IconButton>
+      
+        {/* text area needs to be unexpandable */}
+        <label>
+          <span>review</span>
+          <textarea
+            value={editFormData.review}
+            onChange={(e) =>
+              handleInputChange('review', e.target.value)}
+          />
+        </label>
+        <div className="edit-buttons">
+          <IconButton
+            onClick={handleCloseEdit}
+            className="cancel-button"
+          >
+            <Close />
+          </IconButton>
+          <IconButton onClick={handleEditSubmit} className="save-button">
+            <Check color="primary" />
+          </IconButton>
+        </div>
       </div>
-    </div>
+    </EditFormContainer>
   );
+
+
 
   const content = () => (
     <div className="book" onClick={handleEnterTripButton}>
@@ -215,13 +192,22 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
           <p className="destination">{trip.destination}</p>
           <p className="start_date">{formatDate(trip.start_date)}</p>
           <p className="end_date">{formatDate(trip.end_date)}</p>
-          <p className="review">{trip.review || "No review added"}</p>
           
           <div className="action-buttons">
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
-                fetchAlbumPhotos();
+                onReviewPress(trip);
+              }}
+              className="review-button"
+              style={{ color: 'white' }}
+            >
+              <RateReview />
+            </IconButton>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                onAlbumPress(trip);
               }}
               className="album-button"
               style={{ color: 'white' }}
@@ -232,7 +218,7 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
-                setIsEditing(true);
+                handleOpenEdit();
               }}
               className="edit-button"
             >
@@ -253,12 +239,58 @@ const TripCardButton = ({ trip, onDelete, onEdit }) => {
       </div>
       <div className="cover">
         <h2>{trip.trip_name}</h2>
-      </div>
     </div>
+  </div>
   );
 
-  return <StyledWrapper>{isEditing ? editForm() : content()}</StyledWrapper>;
+  return (
+    <StyledWrapper>
+      {content()}
+      <Modal isOpen={isEditing} onClose={handleCloseEdit}>
+        {editForm()}
+      </Modal>
+    </StyledWrapper>
+  )
 };
+
+
+const EditFormContainer = styled.div`
+padding: 20px;
+width: 700px;
+
+.edit-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  textarea {
+    resize: none;
+    height: 250px;
+    font-size: 16px;
+  }
+
+  .edit-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+`;
+
 
 const StyledWrapper = styled.div`
 
@@ -312,7 +344,7 @@ const StyledWrapper = styled.div`
     margin-top: auto;
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 5px;
   }
 }
 
@@ -354,7 +386,8 @@ const StyledWrapper = styled.div`
     gap: 5px;
 
     span {
-      color: rgba(255, 255, 255, 0.7); /* Lighter text for labels */
+      color: #00bfff; /* Lighter text for labels */
+      font-weight: bold;
     }
 
     input,
@@ -382,8 +415,10 @@ const StyledWrapper = styled.div`
 
   .rating-label {
     font-size: 1.0em; /* Smaller font size */
-    color: rgba(255, 255, 255, 0.7); /* Example color adjustment for better visibility */
+    color: #00bfff; 
     margin-right: 10px; /* Maintain or adjust spacing as needed */
+    font-weight: bold;
+
   }
 
   .edit-buttons {

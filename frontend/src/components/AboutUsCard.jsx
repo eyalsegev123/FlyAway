@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const AboutUsCard = ({ title, description }) => {
+const AboutUsCard = ({ title, description, buttonLabel, onButtonClick }) => {
   return (
     <StyledWrapper>
       <div className="notification">
@@ -9,6 +9,7 @@ const AboutUsCard = ({ title, description }) => {
         <div className="notiborderglow" />
         <div className="notititle">{title}</div>
         <div className="notibody">{description}</div>
+        {buttonLabel && <button className="picture-button" onClick={onButtonClick}>{buttonLabel}</button>}
       </div>
     </StyledWrapper>
   );
@@ -20,15 +21,40 @@ const StyledWrapper = styled.div`
     flex-direction: column;
     isolation: isolate;
     position: relative;
-    width: 18rem;
-    height: 8rem;
+    width: 36rem;
+    height: 16rem;
     background: #29292c;
     border-radius: 1rem;
     overflow: hidden;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 16px;
+    font-size: 20px;
     --gradient: linear-gradient(to bottom, #2eadff, #3d83ff, #7e61ff);
     --color: #32a6ff;
+  }
+
+  .picture-button {
+    display: inline-block;  /* Ensures the button is treated as an inline-level block container */
+    padding: 8px 16px;      /* Adds space inside the button */
+    background-color: #3d83ff; /* Gives the button a primary color */
+    color: white;           /* Text color for visibility */
+    width: 200px;
+    font-size: 18px;        /* Makes the text inside the button large enough to be readable */
+    border: none;           /* Removes the default border */
+    border-radius: 4px;     /* Rounds the corners of the button */
+    z-index: 10;
+    cursor: pointer;        /* Changes the mouse cursor to a pointer to indicate it's clickable */
+    text-align: center;     /* Centers the text inside the button */
+    text-decoration: none;  /* Removes underline from text if it's an <a> element */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: adds a subtle shadow to make the button pop out */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+    margin-top: 6px; /* Add top margin to separate from the content above */
+    align-self: center;
+  }
+
+  .picture-button:hover, .picture-button:focus {
+    background-color: #0056b3; /* Darker shade when hovered or focused for better user interaction feedback */
+    transform: scale(1.05);    /* Slightly enlarges the button when hovered or focused */
+    outline: none;             /* Removes the outline to keep the design clean */
   }
 
   .notification:before {
@@ -66,7 +92,8 @@ const StyledWrapper = styled.div`
   .notititle {
     color: var(--color);
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: 1.7rem;
+    font-weight: bold;
   }
 
   .notibody {

@@ -21,7 +21,7 @@ const TRIP_GENRES = [
 const TRAVELER_TYPES = [
   "Solo (man)", "Solo (woman)", "Couple", "Couples", "Family", "Families",
   "Friends (Women)", "Friends (Men)", "Friends (Men and Women)",
-  "bachelorette party(Women)", "bachelorette party(Men)", "Retires", "Colleagues"
+  "bachelorette party(Women)", "bachelorette party(Men)", "honey moon", "Retires", "Colleagues"
 ];
 
 // Form Input Components

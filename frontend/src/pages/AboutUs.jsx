@@ -1,12 +1,25 @@
-import React from 'react';
+import React , { useState } from 'react';
 import AboutUsCard from '../components/AboutUsCard';
 import styled from 'styled-components';
+import PhotoAboutUsModal from '../components/PhotoAboutUsModal';
 
 const AboutUs = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleMeetTheTeamClick = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   const cards = [
     {
       title: "Who are we?", 
-      text: "We are three Computer Science students working on this project as part of our academic studies. FlyAway is a holiday planner powered by artificial intelligence, designed to make your trip planning effortless and personalized. Our goal is to help you discover the best vacation destinations tailored to your preferences, with intelligent recommendations and easy-to-use features."
+      text: "We are three Computer Science students working on this project as part of our academic studies. FlyAway is a holiday planner powered by artificial intelligence, designed to make your trip planning effortless and personalized. Our goal is to help you discover the best vacation destinations tailored to your preferences, with intelligent recommendations and easy-to-use features.",
+      buttonLabel: "Meet the team",
+      onButtonClick: handleMeetTheTeamClick
     },
     {
       title: "Why FlyAway?", 
@@ -21,8 +34,9 @@ const AboutUs = () => {
   return (
     <StyledContainer>
       {cards.map((card, index) => (
-        <AboutUsCard key={index} title={card.title} description={card.text} />
+        <AboutUsCard key={index} title={card.title} description={card.text} buttonLabel={card.buttonLabel} onButtonClick={card.onButtonClick} />
       ))}
+      {showModal && <PhotoAboutUsModal onClose={handleCloseModal} />}
     </StyledContainer>
   );
 }

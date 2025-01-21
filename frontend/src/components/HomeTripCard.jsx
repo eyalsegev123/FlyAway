@@ -15,10 +15,11 @@ const HomeTripCard = ({ trip }) => {
       startDate: new Date().toISOString().split('T')[0], // Today
       endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Week from today
       tripLength: "7",
-      budget: "5000",
+      budget: "Dynamic",
       currency: "USD",
-      tripGenres: ["Nightlife", "Restaurant"],
-      travelers: "Couple"
+      tripGenres: trip.tripGenres,
+      travelers: trip.travelers,
+      additionalNotes: "None additional notes"
     };
 
     try {
