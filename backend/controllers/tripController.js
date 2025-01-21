@@ -1,7 +1,8 @@
 const pool = require("../config/db");
-const { CopyObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { CopyObjectCommand, DeleteObjectCommand, ListObjectsV2Command, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { s3 } = require('../middleware/multer'); // Export s3 from your multer file
 const path = require('path');
+
 
 
 // Get all trips of a user
@@ -135,35 +136,52 @@ const getAlbumLocation = async (trip_id) => {
 };
 
 const fetchPhotosFromS3 = async (albumLocation) => {
+	console.log('Album location:', albumLocation);
   const params = {
     Bucket: process.env.S3_BUCKET_NAME, // Replace with your bucket name
     Prefix: albumLocation // this should be the folder path in your bucket
   };
 
   try {
-    const s3Data = await s3.listObjectsV2(params).promise();
-    const imagePromises = s3Data.Contents.map(async file => {
-        const imageParams = {
-          Bucket: params.Bucket,
-          Key: file.Key
-        };
-        const imageData = await s3.getObject(imageParams).promise();
-        // Optionally convert the image data to base64 if needed
-        const base64Image = Buffer.from(imageData.Body).toString('base64');
-        return `data:image/jpeg;base64,${base64Image}`;
-      });
-      return await Promise.all(imagePromises);
-    } catch (error) {
-      console.error('Error fetching photos from S3:', error);
-      throw new Error('Failed to fetch photos');
+    const listCommand = new ListObjectsV2Command(params);
+    const s3Data = await s3.send(listCommand);
+    
+    // Add null check before mapping
+    if (!s3Data.Contents || s3Data.Contents.length === 0) {
+        console.log('No photos found in the album');
+        return []; // or handle empty bucket case as needed
     }
+
+    const imagePromises = s3Data.Contents.map(async file => {
+      const getObjectCommand = new GetObjectCommand({
+        Bucket: params.Bucket,
+        Key: file.Key
+      });
+      
+      const imageData = await s3.send(getObjectCommand);
+      // Convert stream to buffer
+      const chunks = [];
+      for await (const chunk of imageData.Body) {
+        chunks.push(chunk);
+      }
+      const buffer = Buffer.concat(chunks);
+      const base64Image = buffer.toString('base64');
+      return `data:image/jpeg;base64,${base64Image}`;
+    });
+    
+    return await Promise.all(imagePromises);
+  } catch (error) {
+    console.error('Error fetching photos from S3:', error);
+    throw new Error('Failed to fetch photos');
+  }
 };
 
 const fetchAlbum = async (req, res) => {
     const { trip_id } = req.params;
     try {
-        const albumLocation = getAlbumLocation(trip_id);
-        const photoData = fetchPhotosFromS3(albumLocation);
+        const albumLocation = await getAlbumLocation(trip_id);
+        const fixedAlbumLocation = albumLocation.replace('s3://'+process.env.S3_BUCKET_NAME+'/', '');
+        const photoData = await fetchPhotosFromS3(fixedAlbumLocation);
         res.status(200).json({ photos: photoData });
     } catch (error) {
         console.error(error);
