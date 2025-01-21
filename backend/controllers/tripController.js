@@ -45,12 +45,13 @@ const addTrip = async (req, res) => {
                 const fileName = path.basename(oldKey);
                 const newKey = s3BasePath + fileName;
 
+                console.log("Moving file from: ", oldKey, "to: ", newKey);
                 await s3.send(new CopyObjectCommand({
                     Bucket: process.env.S3_BUCKET_NAME,
                     CopySource: `${process.env.S3_BUCKET_NAME}/${oldKey}`,
                     Key: newKey
                 }));
-
+                console.log("Deleting file: ", oldKey, " from tmp");
                 await s3.send(new DeleteObjectCommand({
                     Bucket: process.env.S3_BUCKET_NAME,
                     Key: oldKey
@@ -60,8 +61,10 @@ const addTrip = async (req, res) => {
             const albumPath = `s3://${process.env.S3_BUCKET_NAME}/${s3BasePath}`;
             await pool.query(
                 `UPDATE trips SET album_s3location = $1 WHERE trip_id = $2`,
-                [albumPath, trip_id]
+                [albumPath, trip_id
+                ]
             );
+            console.log("Updated folder in db");
         }
 
         // Step 3: Return the created trip
@@ -123,16 +126,19 @@ const getAlbumLocation = async (trip_id) => {
         const result = await pool.query("SELECT * FROM trips WHERE trip_id = $1", [trip_id]);
         if (result.rows.length > 0) {
             const albumLocationInS3 = result.rows[0].album_s3location;
+            if (!albumLocationInS3) {
+                throw new Error("No album location found for this trip");
+            }
             return albumLocationInS3;
         } else {
-            throw new Error("no trip with this trip_id");
+            throw new Error("No trip with this trip_id");
         }
-    }
-    catch(error) {
+    } catch (error) {
         console.error('Database query error:', error);
         throw error; // Throw the original error
     }
 };
+
 
 const fetchPhotosFromS3 = async (albumLocation) => {
   const params = {
@@ -162,8 +168,8 @@ const fetchPhotosFromS3 = async (albumLocation) => {
 const fetchAlbum = async (req, res) => {
     const { trip_id } = req.params;
     try {
-        const albumLocation = getAlbumLocation(trip_id);
-        const photoData = fetchPhotosFromS3(albumLocation);
+        const albumLocation = await getAlbumLocation(trip_id);
+        const photoData = await fetchPhotosFromS3(albumLocation);
         res.status(200).json({ photos: photoData });
     } catch (error) {
         console.error(error);
