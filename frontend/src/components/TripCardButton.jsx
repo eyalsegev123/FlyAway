@@ -113,7 +113,7 @@ const TripCardButton = ({ trip, onDelete, onEdit , onAlbumPress, onReviewPress})
             <span
               key={index + 1}
               className={`star ${index + 1 <= value ? "selected" : ""}`}
-              onClick={() => onChange(index + 1)}
+              onClick={() => onChange("stars", index + 1)}
             >
               ★
             </span>

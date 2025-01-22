@@ -255,6 +255,7 @@ const MyTrips = () => {
         autoHideDuration={3000} 
         onClose={handleCloseAlert}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{ marginTop: '100px' }}
       >
         <Alert 
           onClose={handleCloseAlert} 

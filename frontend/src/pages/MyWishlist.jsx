@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import {
-  CircularProgress,
-  Grid,
-  Box,
-  Alert,
-} from "@mui/material";
+import {CircularProgress, Grid, Box, Alert, Snackbar} from "@mui/material";
 import WishCardButton from "../components/WishCardButton";
 import SearchBox from "../components/SearchBox";
 const MyWishList = () => {
@@ -14,6 +9,11 @@ const MyWishList = () => {
   const [originalWishlist, setOriginalWishlist] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [alertInfo, setAlertInfo] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
   const { user } = useAuth();
 
   // Fetch wishlist items
@@ -49,6 +49,19 @@ const MyWishList = () => {
   useEffect(() => {
     fetchWishlist();
   }, [fetchWishlist]);
+
+  const handleCloseAlert = () => {
+    setAlertInfo({ ...alertInfo, open: false });
+  };
+
+  const showAlert = (message, severity) => {
+    setAlertInfo({
+      open: true,
+      message,
+      severity
+    });
+  };
+
 
   // Handle deleting a wish
   const handleDelete = async (wish_id) => {
@@ -89,6 +102,7 @@ const MyWishList = () => {
       );
       if (response.status === 200) {
         fetchWishlist();
+        showAlert('Wish edited successfully!', 'success');
       } else {
         setErrorMessage("Failed to edit the wish.");
       }
@@ -164,6 +178,23 @@ const MyWishList = () => {
           Your WishList is Empty
         </Alert>
       )}
+
+      <Snackbar 
+        open={alertInfo.open} 
+        autoHideDuration={3000} 
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{ marginTop: '100px' }}
+      >
+        <Alert 
+          onClose={handleCloseAlert} 
+          severity={alertInfo.severity}
+          sx={{ width: '100%' }}
+        >
+          {alertInfo.message}
+        </Alert>
+      </Snackbar>
+
     </Box>
   );
 };
