@@ -47,9 +47,9 @@ const upload = multer({
       const fileName = `${timestamp}-${file.originalname}`;
       const s3Path = `user_${user_id}/tmp/${fileName}`;
       cb(null, s3Path);
-    }
-  }),
-  limits: { fileSize: 30 * 1024 * 1024 }, // 5 MB file size limit
+        }
+      }),
+      limits: { fileSize: 30 * 1024 * 1024 }, // 30 MB file size limit
   fileFilter: fileFilter
 });
 
