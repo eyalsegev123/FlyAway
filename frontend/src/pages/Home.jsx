@@ -88,27 +88,29 @@ const HomePage = () => {
   };
 
   return (
-    <div className="homepage-container">
-      <div className="homepage-main">
-        <h1 className="carousel-title">Quick AI Recommendations</h1>
-        <div className="carousel-container">
-          <Slider {...settings}>
-            {trips.map((trip) => (
-              <HomeTripCard key={trip.id} trip={trip} />
-            ))}
-          </Slider>
+    <StyledModal>
+      <div className="homepage-container">
+        <div className="homepage-main">
+          <h1 className="carousel-title">Quick AI Recommendations</h1>
+          <div className="carousel-container">
+            <Slider {...settings}>
+              {trips.map((trip) => (
+                <HomeTripCard key={trip.id} trip={trip} />
+              ))}
+            </Slider>
+          </div>
         </div>
       </div>
-    </div>
+    </StyledModal>
    
   );
 };
 
 const StyledModal = styled.div`
+  .carousel-title {
+    color: white; /* Set the text color to white */
+  }
+`;
 
-.carousel-title {
-  color: white; /* Set the text color to white */
-};
-`
 
 export default HomePage;

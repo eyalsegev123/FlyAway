@@ -12,7 +12,7 @@ const TRIP_GENRES = [
   "Sport activity", "Sport events", "Nightlife", "Restaurants", "Extreme",
   "Ski and winter sports", "Shopping", "Museums", "Culture", "Festivals",
   "Electric festivals", "Trance festivals", "Parties", "History", "Chill",
-  "Markets", "Beaches", "Art", "Family roots", "Safair", "Trekking",
+  "Markets", "Beaches", "Art", "Family roots", "Safari", "Trekking",
   "Climbing", "Yoga and Meditation", "Cruise", "Food tours", "Views",
   "Water parks", "Gambling and Casino", "Religious Trip", "Organized Trip",
   "Appointments and Conferences"
@@ -43,7 +43,7 @@ const DestinationInput = ({ value, onChange }) => (
     label="Destination"
     id="destination"
     type="text"
-    placeholder="Enter your destination"
+    placeholder="Enter your destination, if you are dynamic write 'anywhere'"
     value={value}
     onChange={(e) => onChange('destination', e.target.value)}
     required
@@ -92,8 +92,8 @@ const CurrencySelect = ({ value, onChange }) => (
   </div>
 );
 
-const GenreDropdown = ({ genres, showDropdown, onToggle, onChange }) => (
-  <div className="form-group">
+const GenreDropdown = ({ genres, showDropdown, onToggle, onChange, className }) => (
+  <div className={`form-group ${className}`}>
     <label htmlFor="tripGenres">
       <div className="custom-dropdown">
         <span className="dropdown-label">Trip Genres</span>
@@ -116,6 +116,9 @@ const GenreDropdown = ({ genres, showDropdown, onToggle, onChange }) => (
                 <span className="checkbox-label">{genre}</span>
               </label>
             ))}
+            <button type="button" className="close-dropdown" onClick={onToggle}>
+              Done
+            </button>
           </div>
         )}
       </div>
@@ -123,8 +126,8 @@ const GenreDropdown = ({ genres, showDropdown, onToggle, onChange }) => (
   </div>
 );
 
-const TravelersDropdown = ({ value, showDropdown, onToggle, onChange }) => (
-  <div className="form-group">
+const TravelersDropdown = ({ value, showDropdown, onToggle, onChange, className }) => (
+  <div className={`form-group ${className}`}>
     <label htmlFor="travelers">
       <div className="custom-dropdown">
         <span className="dropdown-label">Travelers</span>
@@ -148,6 +151,9 @@ const TravelersDropdown = ({ value, showDropdown, onToggle, onChange }) => (
                 <span className="radio-label">{traveler}</span>
               </label>
             ))}
+            <button type="button" className="close-dropdown" onClick={onToggle}>
+              Done
+            </button>
           </div>
         )}
       </div>
@@ -155,7 +161,7 @@ const TravelersDropdown = ({ value, showDropdown, onToggle, onChange }) => (
   </div>
 );
 
-const NotesTextarea = ({ value, onChange }) => (
+const NotesTextarea = ({ value, onChange, className }) => (
   <FormInput
     label="Additional Notes"
     id="additionalNotes"
@@ -164,7 +170,7 @@ const NotesTextarea = ({ value, onChange }) => (
     value={value}
     onChange={(e) => onChange('additionalNotes', e.target.value)}
     rows="4"
-    required
+    className ={className}
   />
 );
 
@@ -291,11 +297,32 @@ const PlanTrip = () => {
         <LoadingTripGlobe />
       ) : (
         <form className="form" onSubmit={handleSubmit}>
-          <p className="title">Plan Your Trip</p>
+          <p className="title" >Plan Your Trip</p>
           <p className="message">Use our tools to plan the perfect vacation for you!</p>
           
           <DestinationInput 
             value={formData.destination} 
+            onChange={updateFormData} 
+          />
+
+          <NumberInput 
+            id="tripLength"
+            label="Length of Trip (in days)"
+            placeholder="Enter the length of your trip in days"
+            value={formData.tripLength}
+            onChange={updateFormData}
+          />
+
+          <NumberInput 
+            id="budget"
+            label="Budget (per person)"
+            placeholder="Excluding flights !!!"
+            value={formData.budget}
+            onChange={updateFormData}
+          />
+
+          <CurrencySelect 
+            value={formData.currency} 
             onChange={updateFormData} 
           />
           
@@ -311,34 +338,14 @@ const PlanTrip = () => {
             label="End Date (Can be dynamic)"
             value={formData.endDate}
             onChange={updateFormData}
-          />
-          
-          <NumberInput 
-            id="tripLength"
-            label="Length of Trip (in days)"
-            placeholder="Enter the length of your trip in days"
-            value={formData.tripLength}
-            onChange={updateFormData}
-          />
-          
-          <NumberInput 
-            id="budget"
-            label="Budget (per person)"
-            placeholder="Excluding flights !!!"
-            value={formData.budget}
-            onChange={updateFormData}
-          />
-          
-          <CurrencySelect 
-            value={formData.currency} 
-            onChange={updateFormData} 
-          />
+          />  
           
           <GenreDropdown 
             genres={formData.tripGenres}
             showDropdown={uiState.showGenreDropdown}
             onToggle={handleGenreDropdownToggle}
             onChange={handleGenreChange}
+            className="form-group full-width"  // Ensure this will be 1 column in the form
           />
           
           <TravelersDropdown 
@@ -346,14 +353,16 @@ const PlanTrip = () => {
             showDropdown={uiState.showTravelersDropdown}
             onToggle={() => updateUiState('showTravelersDropdown', !uiState.showTravelersDropdown)}
             onChange={updateFormData}
+            className="form-group full-width"  // Ensure this will be 1 column in the form
           />
           
           <NotesTextarea 
             value={formData.additionalNotes} 
             onChange={updateFormData} 
+            className="textarea-input form-group full-width"  // Ensure this will be 1 column in the form
           />
 
-          <button className="submit" type="submit">
+          <button className="submit form-group full-width" type="submit">
             Plan Trip
           </button>
           {uiState.errorMessage && <p className="error">{uiState.errorMessage}</p>}
@@ -371,14 +380,13 @@ const StyledWrapper = styled.div`
   background-color: transparent; /* Optional: background color for the page */
 
   .form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 600px; /* Increased maximum width */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 1000px; /* Increased maximum width */
     width: 100%; /* Ensure the form takes full width up to the max-width */
     padding: 20px;
     border-radius: 20px;
-    position: relative;
     background-color: #1a1a1a;
     color: #fff;
     border: 1px solid #333;
@@ -402,6 +410,10 @@ const StyledWrapper = styled.div`
 
   .form-group {
     position: relative;
+  }
+
+  .form-group.full-width {
+    grid-column: 1 / -1; /* Makes the element take up two columns */
   }
 
   .form-group .input {
@@ -482,7 +494,20 @@ const StyledWrapper = styled.div`
     max-height: 200px;
     overflow-y: auto;
     z-index: 1000;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
+    gap: 8px; /* Adds space between the columns and rows */
   }
+
+  .close-dropdown {
+    padding: 8px 8px;
+    background-color: #00bfff; /* Matching the dropdown background color */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    grid-column: span 3; /* Makes the button span all three columns */
+  }
+
 
   .custom-dropdown-item {
     display: flex;

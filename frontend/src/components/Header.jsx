@@ -35,6 +35,8 @@ const Header = () => {
 
   const handleLogoutClick = () => {
     logout(); // Use context to logout user
+    navigate("/");
+
   };
 
   const handleError = (message) => {
