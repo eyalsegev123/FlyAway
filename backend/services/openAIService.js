@@ -73,6 +73,24 @@ class OpenAiService {
     return response.json();
   }
 
+  async cancelRun(threadId, runId) {
+    const url = `https://api.openai.com/v1/threads/${threadId}/runs/${runId}/cancel`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: this.headers,
+    });
+
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      throw new Error(
+        `Failed to cancel run: ${JSON.stringify(errorDetails)}`
+      );
+    }
+
+    return response.json();
+  }
+
   async listMessages(threadId) {
     const url = `https://api.openai.com/v1/threads/${threadId}/messages`;
 
@@ -103,6 +121,30 @@ class OpenAiService {
       const errorDetails = await response.json();
       throw new Error(
         `Failed to delete thread: ${JSON.stringify(errorDetails)}`
+      );
+    }
+
+    return response.json();
+  }
+
+  async createMessage(threadId, message) {
+    const url = `https://api.openai.com/v1/threads/${threadId}/messages`;
+
+    const body = { 
+      role: "user",
+      content: message
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      throw new Error(
+        `Failed to create message: ${JSON.stringify(errorDetails)}`
       );
     }
 

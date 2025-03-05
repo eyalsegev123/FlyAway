@@ -5,6 +5,8 @@ import WishlistButton from "../components/WishlistButton";
 import CategoryCard from "../components/CategoryCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import MessageBox from "../components/MessageBox";
+import styled from "styled-components";
 import {
   Stepper,
   Step,
@@ -19,6 +21,47 @@ import {
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { parseOpenAIResponse } from "../utils/responseParser";
+
+// Styled components
+const RecommendationContainer = styled.div`
+  display: flex;
+  justify-content: center; /* Keep this to center horizontally */
+  padding: 20px;
+  margin: 160px auto 0; /* Top margin of 160px, auto left/right */
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1400px; /* Constrains maximum width */
+  margin-left: auto; /* Ensures symmetrical left margin */
+  margin-right: auto; /* Ensures symmetrical right margin */
+
+  @media (max-width: 768px) {
+    margin-top: 120px;
+    padding: 15px;
+  }
+`;
+
+const StyledPaper = styled(Paper)`
+  width: 100%;
+  max-width: 1200px;
+  box-sizing: border-box;
+  padding: 24px;
+  margin: 0 auto; /* Ensures the paper is centered within container */
+  display: flex;
+  flex-direction: column;
+`;
+
+const RecommendationTitle = styled(Typography)`
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+`;
+
+const AdditionalDetailsContainer = styled(Box)`
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const Recommendation = () => {
   const theme = useTheme();
@@ -37,18 +80,21 @@ const Recommendation = () => {
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [parsedResponse, setParsedResponse] = useState(null);
-  const [wishName, setWishName] = useState('');
-  const [notes, setNotes] = useState('');
+  const [wishName, setWishName] = useState("");
+  const [notes, setNotes] = useState("");
 
+  // Message box state
+  const [messageBox, setMessageBox] = useState({
+    isVisible: false,
+    message: "",
+    type: "success",
+  });
+
+  // Function to create recommendation header using styled component
   const recommendationHeader = (title) => (
-    <Typography
-      variant="h4"
-      gutterBottom
-      align="center"
-      className="recommendation-title"
-    >
+    <RecommendationTitle variant="h4" gutterBottom>
       {title}
-    </Typography>
+    </RecommendationTitle>
   );
 
   useEffect(() => {
@@ -58,65 +104,93 @@ const Recommendation = () => {
     }
   }, [tripRecommendation]);
 
-  const categories = useMemo(() => ({
-    summary: {
-      title: "Trip Summary",
-      content: parsedResponse?.summary || "No summary available",
-      type: "summary",
-    },
-    hotels: {
-      title: "Recommended Hotels",
-      content: parsedResponse?.hotels || [],
-      type: "hotels",
-    },
-    attractions: {
-      title: "Attractions",
-      content: parsedResponse?.attractions || {},
-      type: "attractions",
-    },
-    restaurants: {
-      title: "Restaurants & Dining",
-      content: parsedResponse?.restaurants || {},
-      type: "restaurants",
-    },
-    costs: {
-      title: "Trip Costs Evaluation",
-      content: parsedResponse?.costs || "No costs evaluation available",
-      type: "costs",
-    },
-    dates: {
-      title: "Best Dates",
-      content: parsedResponse?.dates || "No dates recommendations available",
-      type: "dates",
-    },
-  }), [parsedResponse]);
-  
-  
+  // Your existing categories memo
+  const categories = useMemo(
+    () => ({
+      // Your existing categories code
+      summary: {
+        title: "Trip Summary",
+        content: parsedResponse?.summary || "No summary available",
+        type: "summary",
+      },
+      hotels: {
+        title: "Recommended Hotels",
+        content: parsedResponse?.hotels || [],
+        type: "hotels",
+      },
+      attractions: {
+        title: "Attractions",
+        content: parsedResponse?.attractions || {},
+        type: "attractions",
+      },
+      restaurants: {
+        title: "Restaurants & Dining",
+        content: parsedResponse?.restaurants || {},
+        type: "restaurants",
+      },
+      costs: {
+        title: "Trip Costs Evaluation",
+        content: parsedResponse?.costs || "No costs evaluation available",
+        type: "costs",
+      },
+      dates: {
+        title: "Best Dates",
+        content: parsedResponse?.dates || "No dates recommendations available",
+        type: "dates",
+      },
+    }),
+    [parsedResponse]
+  );
+
+  // Your existing functions
+  const showMessage = (message, type = "success") => {
+    setMessageBox({
+      isVisible: true,
+      message,
+      type,
+    });
+  };
+
+  const closeMessage = () => {
+    setMessageBox({
+      isVisible: false,
+      message: "",
+      type: "success",
+    });
+  };
+
   const handleWishlistSubmit = async () => {
+    // Your existing wishlist submit code
     const userId = user?.id;
-    console.log(user.id);
     try {
-      const response = await axios.post(`http://localhost:5001/api/wishesRoutes/addToWishList`, {
-        user_id: parseInt(userId, 10),
-        destination,
-        startDate,
-        endDate,
-        tripGenres,
-        tripLength,
-        budget,
-        wishName,
-        notes,
-        tripRecommendation
-      });
-      if (response.status === 201) { //is it only 201????
-        alert('Added to your wish list!');
-        navigate("/MyWishlist");
+      const response = await axios.post(
+        `http://localhost:5001/api/wishesRoutes/addToWishList`,
+        {
+          user_id: parseInt(userId, 10),
+          destination,
+          startDate,
+          endDate,
+          tripGenres,
+          tripLength,
+          budget,
+          wishName,
+          notes,
+          tripRecommendation,
+        }
+      );
+      if (response.status === 201) {
+        showMessage("Added to your wish list!");
+        setTimeout(() => {
+          navigate("/MyWishlist");
+        }, 2000);
+        return true;
       } else {
-        throw new Error('Failed to add to wish list');
+        throw new Error("Failed to add to wish list");
       }
     } catch (error) {
-      console.error('An error occurred while adding to your wish list:', error);
-      alert('An error occurred while adding to your wish list.');
+      console.error("An error occurred while adding to your wish list:", error);
+      showMessage("An error occurred while adding to your wish list.", "error");
+      return false;
     }
   };
 
@@ -134,41 +208,19 @@ const Recommendation = () => {
 
   if (!tripRecommendation) {
     return (
-      <div className="recommendation-container">
+      <RecommendationContainer>
         <p>No recommendations found.</p>
-      </div>
+      </RecommendationContainer>
     );
   }
 
   return (
-    <div className="recommendation-container" style={{
-      padding: '20px',
-      marginLeft: '140px', // account for sidebar width
-      marginTop: '160px',   // account for header height
-      boxSizing: 'border-box',
-      minHeight: 'calc(100vh - 64px)',
-      display: 'flex',
-      justifyContent: 'center'
-    }}>
-      <Paper 
-        elevation={3} 
-        className="recommendation-paper"
-        sx={{ 
-          width: '100%',
-          maxWidth: '1200px', // limit maximum width
-          boxSizing: 'border-box',
-          padding: '24px',
-          margin: '0 auto'
-        }}
-      >
-        {fromPlanTrip ? 
-          recommendationHeader("Your Trip Recommendations")
-          :
-          recommendationHeader("Your Wish Details")
-        }
-        
+    <RecommendationContainer>
+      <StyledPaper elevation={3}>
+        {fromPlanTrip
+          ? recommendationHeader("Your Trip Recommendations")
+          : recommendationHeader("Your Wish Details")}
 
-        {/* Desktop Stepper */}
         <Box sx={{ display: { xs: "none", md: "block" } }}>
           <Stepper activeStep={activeStep} alternativeLabel>
             {steps.map((step, index) => (
@@ -179,14 +231,6 @@ const Recommendation = () => {
           </Stepper>
         </Box>
 
-        {/* Content Card */}
-        <CategoryCard
-          title={steps[activeStep].title}
-          content={steps[activeStep].content}
-          type={steps[activeStep].type}
-        />
-
-        {/* Mobile Stepper */}
         <MobileStepper
           variant="dots"
           steps={maxSteps}
@@ -222,9 +266,14 @@ const Recommendation = () => {
           }
         />
 
-        {/* Additional Details Section */}
-        {user && fromPlanTrip &&(
-          <Box sx={{ mt: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <CategoryCard
+          title={steps[activeStep].title}
+          content={steps[activeStep].content}
+          type={steps[activeStep].type}
+        />
+
+        {user && fromPlanTrip && (
+          <AdditionalDetailsContainer>
             <Typography variant="h6" gutterBottom>
               Additional Details
             </Typography>
@@ -233,7 +282,7 @@ const Recommendation = () => {
               variant="outlined"
               value={wishName}
               onChange={(e) => setWishName(e.target.value)}
-              sx={{ mb: 1, width: '90%' }}
+              sx={{ mb: 1, width: "90%" }}
             />
             <TextField
               label="Notes"
@@ -242,13 +291,23 @@ const Recommendation = () => {
               rows={4}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              sx={{ mb: 2, width: '90%' }}
+              sx={{ mb: 2, width: "90%" }}
             />
-            <WishlistButton onAddToWishlist={handleWishlistSubmit}>Add to Wishlist</WishlistButton>
-          </Box>
+            <WishlistButton onAddToWishlist={handleWishlistSubmit}>
+              Add to Wishlist
+            </WishlistButton>
+          </AdditionalDetailsContainer>
         )}
-      </Paper>
-    </div>
+
+        <MessageBox
+          isVisible={messageBox.isVisible}
+          message={messageBox.message}
+          type={messageBox.type}
+          onClose={closeMessage}
+        />
+      </StyledPaper>
+    </RecommendationContainer>
   );
 };
+
 export default Recommendation;

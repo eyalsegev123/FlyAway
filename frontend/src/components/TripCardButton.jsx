@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { IconButton } from "@mui/material";
-import { Delete, Edit, Close, Check , RateReview} from "@mui/icons-material";
+import { Delete, Edit, Check , RateReview} from "@mui/icons-material";
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import dayjs from 'dayjs';
 import Modal from "./Modal";
@@ -169,12 +169,6 @@ const TripCardButton = ({ trip, onDelete, onEdit , onAlbumPress, onReviewPress})
           />
         </label>
         <div className="edit-buttons">
-          <IconButton
-            onClick={handleCloseEdit}
-            className="cancel-button"
-          >
-            <Close />
-          </IconButton>
           <IconButton onClick={handleEditSubmit} className="save-button">
             <Check color="primary" />
           </IconButton>

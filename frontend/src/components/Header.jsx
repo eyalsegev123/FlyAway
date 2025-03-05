@@ -7,11 +7,16 @@ import { useAuth } from "../context/AuthContext"; // Import Auth context
 import "../styles/components/Header.css"; // Import CSS for styling
 import HeaderButton from './HeaderButton'; // Import HeaderButton component
 import HelloMessage from './HelloMessage'; // Ensure correct path
+import WelcomeMessage from "./WelcomeMessage";
 
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [welcomeMessage, setWelcomeMessage] = useState({
+    visible: false,
+    userName: "",
+  });
   const navigate = useNavigate(); // Define navigate function
   const { user, login, logout } = useAuth(); // Use context
 
@@ -22,15 +27,30 @@ const Header = () => {
   const closeRegisterModal = () => setIsRegisterModalOpen(false);
 
   const handleLoginSuccess = (data) => {
-    alert(data.message); // Display message
-    login(data.user.name, data.user.id); // Use context to login user
     closeLoginModal();
+    login(data.user.name, data.user.id);
+    // Show welcome message instead of alert
+    setWelcomeMessage({
+      visible: true,
+      userName: data.user.name,
+    });
   };
 
   const handleRegisterSuccess = (data) => {
-    alert(data.message); // Display message
-    login(data.user.name, data.user.id); // Use context to login user
     closeRegisterModal();
+    login(data.user.name, data.user.id);
+    // Show welcome message instead of alert
+    setWelcomeMessage({
+      visible: true,
+      userName: data.user.name,
+    });
+  };
+
+  const closeWelcomeMessage = () => {
+    setWelcomeMessage({
+      visible: false,
+      userName: "",
+    });
   };
 
   const handleLogoutClick = () => {
@@ -82,7 +102,6 @@ const Header = () => {
           </>
         )}
       </div>
-      
       <div className="header-buttons-container">
         {user ? (
           <>
@@ -127,6 +146,13 @@ const Header = () => {
           closeModal={closeRegisterModal}
         />
       </Modal>
+
+      {/* Add the welcome message component */}
+      <WelcomeMessage
+        userName={welcomeMessage.userName}
+        isVisible={welcomeMessage.visible}
+        onClose={closeWelcomeMessage}
+      />
     </div>
   );
 };

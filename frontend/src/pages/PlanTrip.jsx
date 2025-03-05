@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from 'styled-components';
 import "../styles/pages/PlanTrip.css";
 import LoadingTripGlobe from "../components/LoadingTripGlobe";
@@ -197,6 +197,29 @@ const PlanTrip = () => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Reference to the AbortController
+  const abortControllerRef = useRef(null);
+  // Reference to store the thread ID
+  const threadIdRef = useRef(null);
+
+  // Cleanup function to abort any pending request when component unmounts or route changes
+  useEffect(() => {
+    return () => {
+      // If there's an active request when the component unmounts, abort it
+      if (abortControllerRef.current) {
+        console.log("Aborting OpenAI request due to navigation");
+        abortControllerRef.current.abort();
+        
+        // If we have a thread ID, also clean it up on the server
+        if (threadIdRef.current) {
+          axios.delete(`http://localhost:5001/api/openAiRoutes/cancelRequest/${threadIdRef.current}`)
+            .catch(err => console.error("Failed to cancel request on server:", err));
+        }
+      }
+    };
+  }, [location.pathname]); // Re-run when path changes
 
   // Update form data helper
   const updateFormData = (field, value) => {
@@ -223,10 +246,8 @@ const PlanTrip = () => {
 
   // Form validation
   const validateForm = () => {
-    const startDateParts = formData.startDate.split('/');
-    const formattedStartDate = new Date(`${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]}`);
-    const endDateParts = formData.endDate.split('/');
-    const formattedEndDate = new Date(`${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]}`);
+    const startDateObj = new Date(formData.startDate);
+    const endDateObj = new Date(formData.endDate);
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
 
@@ -236,10 +257,10 @@ const PlanTrip = () => {
     if (!formData.travelers) {
       return "Please select the type of travelers you are going to be.";
     }
-    if (formattedEndDate < formattedStartDate) {
+    if (endDateObj < startDateObj) {
       return "The end-date must be later than the start-date.";
     }
-    if (formattedStartDate < currentDate) {
+    if (startDateObj < currentDate) {
       return "Start date must be in the future.";
     }
     if (formData.budget <= 0) {
@@ -265,12 +286,32 @@ const PlanTrip = () => {
     }
 
     try {
+      // Create a new AbortController for this request
+      abortControllerRef.current = new AbortController();
+      const signal = abortControllerRef.current.signal;
+      
+      // Setup a timeout to check for thread ID
+      const checkThreadIdInterval = setInterval(async () => {
+        if (threadIdRef.current) {
+          clearInterval(checkThreadIdInterval);
+        }
+      }, 500);
+      
+      // Initiate the request with the signal
       const response = await axios.post(
         `http://localhost:5001/api/openAiRoutes/planTrip`,
-        formData
+        formData,
+        { signal }
       );
 
+      // Clear the interval if it's still running
+      clearInterval(checkThreadIdInterval);
+
       if (response.status === 200) {
+        // Clear the refs once request is done
+        abortControllerRef.current = null;
+        threadIdRef.current = null;
+        
         navigate("/Recommendation", {
           state: {
             tripRecommendation: response.data,
@@ -285,11 +326,21 @@ const PlanTrip = () => {
         });
       }
     } catch (err) {
-      updateUiState('errorMessage', "An error occurred while submitting the trip details.");
+      // Only show error if it's not an abort error
+      if (!axios.isCancel(err)) {
+        updateUiState('errorMessage', "An error occurred while submitting the trip details.");
+        console.error("Error submitting trip details:", err);
+      } else {
+        console.log("Request was cancelled");
+      }
     } finally {
-      updateUiState('loading', false);
+      // Only update loading state if component is still mounted
+      // and the request wasn't aborted
+      if (!abortControllerRef.current?.signal.aborted) {
+        updateUiState('loading', false);
+      }
     }
-  };
+};
 
   return (
     <StyledWrapper>
@@ -345,7 +396,7 @@ const PlanTrip = () => {
             showDropdown={uiState.showGenreDropdown}
             onToggle={handleGenreDropdownToggle}
             onChange={handleGenreChange}
-            className="form-group full-width"  // Ensure this will be 1 column in the form
+            className="form-group full-width"
           />
           
           <TravelersDropdown 
@@ -353,13 +404,13 @@ const PlanTrip = () => {
             showDropdown={uiState.showTravelersDropdown}
             onToggle={() => updateUiState('showTravelersDropdown', !uiState.showTravelersDropdown)}
             onChange={updateFormData}
-            className="form-group full-width"  // Ensure this will be 1 column in the form
+            className="form-group full-width"
           />
           
           <NotesTextarea 
             value={formData.additionalNotes} 
             onChange={updateFormData} 
-            className="textarea-input form-group full-width"  // Ensure this will be 1 column in the form
+            className="textarea-input form-group full-width"
           />
 
           <button className="submit form-group full-width" type="submit">
@@ -372,7 +423,7 @@ const PlanTrip = () => {
   );
 };
 
-const StyledWrapper = styled.div`
+export const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

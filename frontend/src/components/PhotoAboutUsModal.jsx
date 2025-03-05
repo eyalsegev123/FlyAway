@@ -6,7 +6,7 @@ const PhotoAboutUsModal = ({ onClose }) => {
   return (
     <StyledModal>
       <div className="modal-content">
-        <img src={TeamPhoto} alt="Team Photo" />
+        <img src={TeamPhoto} alt="" />
         <button onClick={onClose}>Close</button>
       </div>
     </StyledModal>

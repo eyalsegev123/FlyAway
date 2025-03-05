@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const SearchBox = ({ array, setArray, originalArray, searchKey, placeholder = "Search..." }) => {
+const SearchBox = ({setArray, originalArray, searchKey, placeholder = "Search..." }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (event) => {

@@ -1,20 +1,27 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import {CircularProgress, Grid, Box, Alert, Snackbar} from "@mui/material";
+import { CircularProgress, Grid, Box, Alert, Snackbar } from "@mui/material";
 import WishCardButton from "../components/WishCardButton";
 import SearchBox from "../components/SearchBox";
+import ConfirmationDialog from "../components/ConfimrationDialog";
+
 const MyWishList = () => {
   const [wishlist, setWishlist] = useState([]); // State to store wishlist items
-  const [originalWishlist, setOriginalWishlist] = useState([]); 
+  const [originalWishlist, setOriginalWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { user } = useAuth();
   const [alertInfo, setAlertInfo] = useState({
     open: false,
-    message: '',
-    severity: 'success'
+    message: "",
+    severity: "success",
   });
-  const { user } = useAuth();
+  const [deleteConfirmation, setDeleteConfirmation] = useState({
+    isVisible: false,
+    wishId: null,
+    wishName: "",
+  });
 
   // Fetch wishlist items
   const fetchWishlist = useCallback(async () => {
@@ -58,39 +65,61 @@ const MyWishList = () => {
     setAlertInfo({
       open: true,
       message,
-      severity
+      severity,
     });
   };
 
-
-  // Handle deleting a wish
+  // Modified handleDelete function to show confirmation dialog
   const handleDelete = async (wish_id) => {
-    const userConfirmed = window.confirm("Are you sure you want to delete this from your wishlist?");
-    if(userConfirmed) {
-      try {
-        // Send delete request to the backend
-        const response = await axios.delete(
-          `http://localhost:5001/api/wishesRoutes/deleteWish/${wish_id}`
-        );
+    // Find the wish name for the confirmation message
+    const wishToDelete = wishlist.find((wish) => wish.wish_id === wish_id);
 
-        if (response.status === 200) {
-          // Remove the wish from the frontend state
-          setWishlist((prevWishlist) =>
-            prevWishlist.filter((wish) => wish.wish_id !== wish_id)
-          );
-          setOriginalWishlist((prevWishlist) =>
-            prevWishlist.filter((wish) => wish.wish_id !== wish_id)
-          );
-        } else {
-          setErrorMessage("Failed to delete the wish.");
-        }
-      } catch (err) {
-        setErrorMessage("An error occurred while deleting the wish.");
+    // Show the confirmation dialog
+    setDeleteConfirmation({
+      isVisible: true,
+      wishId: wish_id,
+      wishName: wishToDelete ? wishToDelete.wish_name : "this wish",
+    });
+  };
+
+  // Add these new functions to handle confirmation result
+  const confirmDelete = async () => {
+    try {
+      // Send delete request to the backend
+      const response = await axios.delete(
+        `http://localhost:5001/api/wishesRoutes/deleteWish/${deleteConfirmation.wishId}`
+      );
+
+      if (response.status === 200) {
+        // Remove the wish from the frontend state
+        setWishlist((prevWishlist) =>
+          prevWishlist.filter(
+            (wish) => wish.wish_id !== deleteConfirmation.wishId
+          )
+        );
+        setOriginalWishlist((prevWishlist) =>
+          prevWishlist.filter(
+            (wish) => wish.wish_id !== deleteConfirmation.wishId
+          )
+        );
+        showAlert("Wish removed successfully!", "success");
+      } else {
+        showAlert("Failed to delete the wish.", "error");
       }
+    } catch (err) {
+      showAlert(err.message || "Failed to delete wish", "error");
+    } finally {
+      // Close the confirmation dialog
+      cancelDelete();
     }
-    else {
-      console.log("user cancelled the deletion");
-    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmation({
+      isVisible: false,
+      wishId: null,
+      wishName: "",
+    });
   };
 
   const handleEdit = async (wish_id, wish_name, wish_notes) => {
@@ -102,12 +131,14 @@ const MyWishList = () => {
       );
       if (response.status === 200) {
         fetchWishlist();
-        showAlert('Wish edited successfully!', 'success');
+        showAlert("Wish edited successfully!", "success");
       } else {
         setErrorMessage("Failed to edit the wish.");
       }
     } catch (err) {
-      setErrorMessage(`An error occurred while editing the wish: ${err.message}`);
+      setErrorMessage(
+        `An error occurred while editing the wish: ${err.message}`
+      );
     }
   };
 
@@ -129,7 +160,7 @@ const MyWishList = () => {
       ) : wishlist.length > 0 ? (
         <Box>
           <Box sx={{ marginBottom: "20px" }}>
-            <SearchBox 
+            <SearchBox
               array={wishlist}
               setArray={setWishlist}
               originalArray={originalWishlist}
@@ -137,15 +168,17 @@ const MyWishList = () => {
               placeholder="Search wishes..."
             />
           </Box>
-          <Box sx={{ 
-            maxHeight: "80vh", 
-            overflowY: "auto",
-            '&::-webkit-scrollbar': {
-              display: 'none'
-            },
-            '-ms-overflow-style': 'none',  // IE and Edge
-            'scrollbarWidth': 'none',  // Firefox
-          }}>
+          <Box
+            sx={{
+              maxHeight: "80vh",
+              overflowY: "auto",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              "-ms-overflow-style": "none", // IE and Edge
+              scrollbarWidth: "none", // Firefox
+            }}
+          >
             <Grid container spacing={3}>
               {wishlist.map((wish) => (
                 <Grid item xs={12} sm={6} md={3} key={wish.wish_id}>
@@ -160,7 +193,6 @@ const MyWishList = () => {
             </Grid>
           </Box>
         </Box>
-        
       ) : (
         <Alert
           severity="info"
@@ -179,22 +211,30 @@ const MyWishList = () => {
         </Alert>
       )}
 
-      <Snackbar 
-        open={alertInfo.open} 
-        autoHideDuration={3000} 
+      {/* Add the confirmation dialog component */}
+      <ConfirmationDialog
+        isVisible={deleteConfirmation.isVisible}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+        tripName={deleteConfirmation.wishName}
+        itemType="wish"
+      />
+
+      <Snackbar
+        open={alertInfo.open}
+        autoHideDuration={3000}
         onClose={handleCloseAlert}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{ marginTop: '100px' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{ marginTop: "100px" }}
       >
-        <Alert 
-          onClose={handleCloseAlert} 
+        <Alert
+          onClose={handleCloseAlert}
           severity={alertInfo.severity}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {alertInfo.message}
         </Alert>
       </Snackbar>
-
     </Box>
   );
 };
