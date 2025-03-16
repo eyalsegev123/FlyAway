@@ -23,7 +23,7 @@ const MyTrips = () => {
   const [loading, setLoading] = useState(false);
   const [isAddTripModalOpen, setIsAddTripModalOpen] = useState(false);
   const [isAlbumOpen, setIsAlbumOpen] = useState(false); // state to control modal visibility
-  const [albumPhotos, setAlbumPhotos] = useState([]); // state to hold photos from S3
+  const [albumPhotosURLs, setAlbumPhotosURLs] = useState([]); // state to hold photos from S3
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [review, setReview] = useState("");
   // for successful trip add, edit or delete
@@ -72,15 +72,11 @@ const MyTrips = () => {
   }, [fetchTrips]);
 
   const handleTripAdded = (newTrip) => {
-    setTrips([...trips, newTrip]);
-    setOriginalTrips([...originalTrips, newTrip]);
+    setTrips([ newTrip, ...trips]);
+    setOriginalTrips([newTrip, ...originalTrips]);
     closeAddTripModal(); // Close modal after successful addition
     showAlert("Trip added successfully!", "success");
   };
-
-  if (!user) {
-    return <Alert> Loading user information...</Alert>;
-  }
 
   const handleCloseAlert = () => {
     setAlertInfo({ ...alertInfo, open: false });
@@ -131,7 +127,6 @@ const MyTrips = () => {
     });
   };
 
-  // Add these new functions
   const confirmDelete = async () => {
     try {
       // Send delete request to the backend
@@ -167,12 +162,12 @@ const MyTrips = () => {
     });
   };
 
-  const fetchAlbumPhotos = async (trip) => {
+  const fetchAlbumPhotosURLs = async (trip) => {
     try {
       const response = await axios.get(
         `http://localhost:5001/api/tripsRoutes/fetchAlbum/${trip.trip_id}`
       );
-      setAlbumPhotos(response.data.photos); // assuming the response contains an array of photos
+      setAlbumPhotosURLs(response.data.photos); // assuming the response contains an array of photos
       setIsAlbumOpen(true); // open the modal
     } catch (error) {
       console.error("Error fetching album photos", error);
@@ -183,6 +178,10 @@ const MyTrips = () => {
     setIsReviewOpen(true);
     setReview(trip.review);
   };
+
+  if (!user) {
+    return <Alert> Loading user information...</Alert>;
+  }
 
   return (
     <Box sx={{ padding: "20px", marginTop: "100px" }}>
@@ -197,8 +196,9 @@ const MyTrips = () => {
         >
           <CircularProgress />
         </Box>
-      ) : trips.length > 0 ? (
+      ) : (
         <Box>
+          {/* SearchBox moved outside conditional rendering to always be visible when not loading */}
           <Box sx={{ marginBottom: "20px" }}>
             <SearchBox
               array={trips}
@@ -208,49 +208,69 @@ const MyTrips = () => {
               placeholder="Search trips..."
             />
           </Box>
-          <Box
-            sx={{
-              maxHeight: "80vh",
-              overflowY: "auto",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-              "-ms-overflow-style": "none", // IE and Edge
-              scrollbarWidth: "none", // Firefox
-            }}
-          >
-            <Grid container spacing={3}>
-              {trips.map((trip) => (
-                <Grid item xs={12} sm={6} md={3} key={trip.trip_id}>
-                  {/* Set width to 3 columns (1/4 of the row for 4 items per row) */}
-                  <TripCardButton
-                    trip={trip}
-                    onDelete={handleDelete}
-                    onEdit={handleEdit}
-                    onAlbumPress={fetchAlbumPhotos}
-                    onReviewPress={handleReview}
-                  />
+          
+          {originalTrips.length > 0 ? (
+            <Box
+              sx={{
+                maxHeight: "80vh",
+                overflowY: "auto",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                "-ms-overflow-style": "none", // IE and Edge
+                scrollbarWidth: "none", // Firefox
+              }}
+            >
+              {trips.length > 0 ? (
+                <Grid container spacing={3}>
+                  {trips.map((trip) => (
+                    <Grid item xs={12} sm={6} md={3} key={trip.trip_id}>
+                      <TripCardButton
+                        trip={trip}
+                        onDelete={handleDelete}
+                        onEdit={handleEdit}
+                        onAlbumPress={fetchAlbumPhotosURLs}
+                        onReviewPress={handleReview}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          </Box>
+              ) : (
+                <Alert
+                  severity="info"
+                  sx={{
+                    justifyContent: "center",
+                    width: "auto",
+                    maxWidth: "400px",
+                    textAlign: "center",
+                    margin: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                    height: "10vh",
+                  }}
+                >
+                  No trips match your search
+                </Alert>
+              )}
+            </Box>
+          ) : (
+            <Alert
+              severity="info"
+              sx={{
+                justifyContent: "center",
+                width: "auto",
+                maxWidth: "400px",
+                textAlign: "center",
+                margin: "auto",
+                display: "flex",
+                alignItems: "center",
+                height: "10vh",
+              }}
+            >
+              Your trip list is Empty
+            </Alert>
+          )}
         </Box>
-      ) : (
-        <Alert
-          severity="info"
-          sx={{
-            justifyContent: "center",
-            width: "auto",
-            maxWidth: "400px",
-            textAlign: "center",
-            margin: "auto",
-            display: "flex",
-            alignItems: "center",
-            height: "10vh",
-          }}
-        >
-          Your trip list is Empty
-        </Alert>
       )}
       <button onClick={openAddTripModal} className="add-trip-button">
         +
@@ -264,7 +284,7 @@ const MyTrips = () => {
         isOpen={isAlbumOpen}
         onClose={handleCloseAlbum}
         title="Trip Album"
-        children={<PhotoCarousel photos={albumPhotos} />}
+        children={<PhotoCarousel photos={albumPhotosURLs} />}
       ></Modal>
 
       <Modal isOpen={isReviewOpen} onClose={handleCloseReview} title={"Review"}>

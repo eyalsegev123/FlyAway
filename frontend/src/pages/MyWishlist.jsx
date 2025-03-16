@@ -157,7 +157,7 @@ const MyWishList = () => {
         </Box>
       ) : errorMessage ? (
         <Alert severity="error">{errorMessage}</Alert>
-      ) : wishlist.length > 0 ? (
+      ) : (
         <Box>
           <Box sx={{ marginBottom: "20px" }}>
             <SearchBox
@@ -168,47 +168,68 @@ const MyWishList = () => {
               placeholder="Search wishes..."
             />
           </Box>
-          <Box
-            sx={{
-              maxHeight: "80vh",
-              overflowY: "auto",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-              "-ms-overflow-style": "none", // IE and Edge
-              scrollbarWidth: "none", // Firefox
-            }}
-          >
-            <Grid container spacing={3}>
-              {wishlist.map((wish) => (
-                <Grid item xs={12} sm={6} md={3} key={wish.wish_id}>
-                  {/* Set width to 3 columns (1/4 of the row for 4 items per row) */}
-                  <WishCardButton
-                    wish={wish}
-                    onDelete={handleDelete}
-                    onEdit={handleEdit}
-                  />
+
+          {originalWishlist.length > 0 ? (
+            <Box
+              sx={{
+                maxHeight: "80vh",
+                overflowY: "auto",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                "-ms-overflow-style": "none", // IE and Edge
+                scrollbarWidth: "none", // Firefox
+              }}
+            >
+              {wishlist.length > 0 ? (
+                <Grid container spacing={3}>
+                  {wishlist.map((wish) => (
+                    <Grid item xs={12} sm={6} md={3} key={wish.wish_id}>
+                      {/* Set width to 3 columns (1/4 of the row for 4 items per row) */}
+                      <WishCardButton
+                        wish={wish}
+                        onDelete={handleDelete}
+                        onEdit={handleEdit}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          </Box>
+              ) : (
+                <Alert
+                  severity="info"
+                  sx={{
+                    justifyContent: "center",
+                    width: "auto",
+                    maxWidth: "400px",
+                    textAlign: "center",
+                    margin: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                    height: "10vh",
+                  }}
+                >
+                  No wishes match your search
+                </Alert>
+              )}
+            </Box>
+          ) : (
+            <Alert
+              severity="info"
+              sx={{
+                justifyContent: "center",
+                width: "auto",
+                maxWidth: "400px",
+                textAlign: "center",
+                margin: "auto",
+                display: "flex",
+                alignItems: "center",
+                height: "10vh",
+              }}
+            >
+              Your WishList is Empty
+            </Alert>
+          )}
         </Box>
-      ) : (
-        <Alert
-          severity="info"
-          sx={{
-            justifyContent: "center",
-            width: "auto",
-            maxWidth: "400px",
-            textAlign: "center",
-            margin: "auto",
-            display: "flex",
-            alignItems: "center",
-            height: "10vh",
-          }}
-        >
-          Your WishList is Empty
-        </Alert>
       )}
 
       {/* Add the confirmation dialog component */}

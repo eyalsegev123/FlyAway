@@ -1,7 +1,8 @@
 const pool = require("../config/db");
-const { CopyObjectCommand, DeleteObjectCommand, ListObjectsV2Command, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { CopyObjectCommand, DeleteObjectCommand, DeleteObjectsCommand, ListObjectsV2Command, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { s3 } = require('../middleware/multer'); // Export s3 from your multer file
 const path = require('path');
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 
 
@@ -81,25 +82,96 @@ const addTrip = async (req, res) => {
 };
 
 
-
-// Delete a trip by ID
 const deleteTrip = async (req, res) => {
-    //delete in s3 also
     const { trip_id } = req.params;
 
     try {
+        // Step 1: Get the album location from the database
+        let albumLocation;
+        try {
+            albumLocation = await getAlbumLocation(trip_id);
+            // Fix the album location format for S3 operations
+            albumLocation = albumLocation.replace('s3://'+process.env.S3_BUCKET_NAME+'/', '');
+        } catch (error) {
+            console.log("No album found or error getting album location:", error.message);
+            // Continue with trip deletion even if we couldn't get the album
+            albumLocation = null;
+        }
+
+        // Step 2: If we have an album location, delete all objects in that location
+        if (albumLocation) {
+            try {
+                await deleteS3Album(albumLocation);
+                console.log(`Successfully deleted all photos in ${albumLocation}`);
+            } catch (s3Error) {
+                console.error("Error deleting S3 album:", s3Error);
+                // Continue with trip deletion even if S3 deletion fails
+            }
+        }
+
+        // Step 3: Delete the trip from the database
         const result = await pool.query("DELETE FROM trips WHERE trip_id = $1 RETURNING *", [trip_id]);
 
         if (result.rowCount === 0) {
             return res.status(404).json({ error: "Trip not found" });
         }
 
-        res.status(200).json({ message: "Trip deleted successfully", trip: result.rows[0] });
+        res.status(200).json({ 
+            message: "Trip deleted successfully", 
+            trip: result.rows[0],
+            albumDeleted: albumLocation ? true : false 
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Error deleting trip:", error);
         res.status(500).json({ error: "Error deleting trip" });
     }
 };
+
+// Helper function to delete all objects in an S3 location
+const deleteS3Album = async (albumLocation) => {
+    // List all objects with the album prefix
+    const listParams = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Prefix: albumLocation
+    };
+
+    try {
+        const listCommand = new ListObjectsV2Command(listParams);
+        const listedObjects = await s3.send(listCommand);
+
+        // If no objects found, return early
+        if (!listedObjects.Contents || listedObjects.Contents.length === 0) {
+            console.log("No objects found to delete");
+            return;
+        }
+
+        // Prepare the objects for deletion
+        const deleteParams = {
+            Bucket: process.env.S3_BUCKET_NAME,
+            Delete: {
+                Objects: listedObjects.Contents.map(object => ({ Key: object.Key })),
+                Quiet: false
+            }
+        };
+
+        // Delete the objects
+        const deleteCommand = new DeleteObjectsCommand(deleteParams);
+        const deleteResult = await s3.send(deleteCommand);
+        
+        console.log(`Successfully deleted ${deleteResult.Deleted.length} objects from S3`);
+
+        // Check if we need to handle pagination (if there are more objects)
+        if (listedObjects.IsTruncated) {
+            console.log("More objects to delete, handling pagination...");
+            // Recursively delete remaining objects
+            await deleteS3Album(albumLocation);
+        }
+    } catch (error) {
+        console.error("Error in deleteS3Album:", error);
+        throw error;
+    }
+};
+
 
 const editTrip = async (req, res) => {
     const { trip_id } = req.params;
@@ -144,7 +216,7 @@ const getAlbumLocation = async (trip_id) => {
 const fetchPhotosFromS3 = async (albumLocation) => {
 	console.log('Album location:', albumLocation);
   const params = {
-    Bucket: process.env.S3_BUCKET_NAME, // Replace with your bucket name
+    Bucket: process.env.S3_BUCKET_NAME, 
     Prefix: albumLocation // this should be the folder path in your bucket
   };
 
@@ -158,28 +230,40 @@ const fetchPhotosFromS3 = async (albumLocation) => {
         return []; // or handle empty bucket case as needed
     }
 
-    const imagePromises = s3Data.Contents.map(async file => {
-      const getObjectCommand = new GetObjectCommand({
-        Bucket: params.Bucket,
-        Key: file.Key
+    const photoPromises = s3Data.Contents.map(async file => {
+        // Skip folder objects (they end with '/')
+        if (file.Key.endsWith('/')) {
+          return null;
+        }
+  
+        try {
+          const getObjectCommand = new GetObjectCommand({
+            Bucket: params.Bucket,
+            Key: file.Key
+          });
+          
+          // Generate a pre-signed URL (valid for 1 hour)
+          const presignedUrl = await getSignedUrl(s3, getObjectCommand, { expiresIn: 3600 });
+          
+          return {
+            url: presignedUrl,
+            key: file.Key,
+            // Extract just the filename from the full path
+            filename: file.Key.split('/').pop()
+          };
+        } catch (err) {
+          console.error(`Error generating signed URL for ${file.Key}:`, err);
+          return null;
+        }
       });
       
-      const imageData = await s3.send(getObjectCommand);
-      // Convert stream to buffer
-      const chunks = [];
-      for await (const chunk of imageData.Body) {
-        chunks.push(chunk);
-      }
-      const buffer = Buffer.concat(chunks);
-      const base64Image = buffer.toString('base64');
-      return `data:image/jpeg;base64,${base64Image}`;
-    });
-    
-    return await Promise.all(imagePromises);
-  } catch (error) {
-    console.error('Error fetching photos from S3:', error);
-    throw new Error('Failed to fetch photos');
-  }
+      // Filter out any null values from folder objects or errors
+      const photos = (await Promise.all(photoPromises)).filter(photo => photo !== null);
+      return photos;
+    } catch (error) {
+      console.error('Error fetching photos from S3:', error);
+      throw new Error('Failed to fetch photos');
+    }
 };
 
 const fetchAlbum = async (req, res) => {
@@ -187,8 +271,8 @@ const fetchAlbum = async (req, res) => {
     try {
         const albumLocation = await getAlbumLocation(trip_id);
         const fixedAlbumLocation = albumLocation.replace('s3://'+process.env.S3_BUCKET_NAME+'/', '');
-        const photoData = await fetchPhotosFromS3(fixedAlbumLocation);
-        res.status(200).json({ photos: photoData });
+        const photos = await fetchPhotosFromS3(fixedAlbumLocation);
+        res.status(200).json({ photos });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error fetching trip album location" });

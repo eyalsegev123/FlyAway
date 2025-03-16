@@ -12,7 +12,7 @@ const SearchBox = ({setArray, originalArray, searchKey, placeholder = "Search...
     if (!term.trim()) {
       setArray([...originalArray]); // Create new array reference to trigger re-render
       return;
-    } 
+    }
     else {
       const lowerTerm = term.toLowerCase();
       // Filter array based on search term using the provided searchKey

@@ -23,8 +23,8 @@ const PhotoCarousel = ({ photos }) => {
         justifyContent: 'center'
       }}>
         <img
-          src={photos[currentIndex]}
-          alt={`Trip moment ${currentIndex + 1}`}
+          src={photos[currentIndex].url}
+          alt={photos[currentIndex].filename}
           style={{
             maxHeight: '100%',
             maxWidth: '100%',
