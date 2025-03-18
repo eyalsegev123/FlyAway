@@ -19,7 +19,8 @@ const ModalOverlay = styled.div`
 const ModalContent = styled.div`
   z-index: 1002;
   position: relative;
-  max-width: 80vw;  // Prevent overflow on small screens
+  max-width: 900px;  // Prevent overflow on small screens
+  width: 100%;
   min-width: fit-content;  // Adjust to content
 `;
 

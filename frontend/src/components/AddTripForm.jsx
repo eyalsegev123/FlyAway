@@ -233,13 +233,21 @@ const AddTripForm = ({ onTripAdded, userId }) => {
 };
 
 const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0px;
+
   .form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-width: 350px;
-    padding: 20px;
-    border-radius: 20px;
+    gap: 1px;
+    width: 100%;
+    max-width: 700px;
+    padding: 10px;
+    margin: 0;
+    border-radius: 10px;
     position: relative;
     background-color: #1a1a1a;
     color: #fff;

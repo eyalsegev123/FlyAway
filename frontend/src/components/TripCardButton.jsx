@@ -249,32 +249,71 @@ const TripCardButton = ({ trip, onDelete, onEdit , onAlbumPress, onReviewPress})
 
 
 const EditFormContainer = styled.div`
-padding: 20px;
-width: 700px;
-
-.edit-form {
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  width: 100%; 
+  padding: 0; 
+
+  .edit-form {
+    width: 100%;
+    max-width: 800px; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px; 
+    border-radius: 10px;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+  }
 
   label {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    color: #00bfff;
+    font-weight: bold;
   }
 
   input, textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid rgba(105, 105, 105, 0.4);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 15px;
+    resize: none;
   }
 
-  textarea {
-    resize: none;
-    height: 250px;
-    font-size: 16px;
+  .error {
+    color: #ff4444;
+    text-align: center;
+  }
+
+  .stars-container {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #333;
+    border-radius: 10px;
+    border: 1px solid rgba(105, 105, 105, 0.4);
+  }
+
+  .rating-label {
+    font-size: 0.9em;
+    color: #00bfff;
+    font-weight: bold;
+  }
+
+  .star {
+    cursor: pointer;
+    font-size: 20px;
+    color: #666;
+    transition: color 0.2s;
+  }
+
+  .star.selected {
+    color: #00bfff;
   }
 
   .edit-buttons {
@@ -282,8 +321,8 @@ width: 700px;
     justify-content: flex-end;
     gap: 10px;
   }
-}
 `;
+
 
 
 const StyledWrapper = styled.div`

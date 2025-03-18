@@ -43,7 +43,7 @@ const DestinationInput = ({ value, onChange }) => (
     label="Destination"
     id="destination"
     type="text"
-    placeholder="Enter your destination, if you are dynamic write 'anywhere'"
+    placeholder="Enter your destinations, if you are dynamic write 'anywhere'"
     value={value}
     onChange={(e) => onChange('destination', e.target.value)}
     required
@@ -162,17 +162,21 @@ const TravelersDropdown = ({ value, showDropdown, onToggle, onChange, className 
 );
 
 const NotesTextarea = ({ value, onChange, className }) => (
-  <FormInput
-    label="Additional Notes"
-    id="additionalNotes"
-    isTextarea
-    placeholder="Ages, preferred hotel locations, or any other important details..."
-    value={value}
-    onChange={(e) => onChange('additionalNotes', e.target.value)}
-    rows="4"
-    className ={className}
-  />
+  <div className={`form-group full-width ${className}`}>
+    <label htmlFor="additionalNotes" className="notes-label">
+      Additional Notes
+    </label>
+    <textarea
+      id="additionalNotes"
+      placeholder="Ages, preferred hotel locations, or any other important details..."
+      className="input notes-textarea"
+      value={value}
+      onChange={(e) => onChange('additionalNotes', e.target.value)}
+      rows="4"
+    />
+  </div>
 );
+
 
 const PlanTrip = () => {
   // Form Data States
@@ -427,8 +431,10 @@ export const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Full viewport height */
-  background-color: transparent; /* Optional: background color for the page */
+  min-height: 100vh; 
+  width: 100%;        /* Ensures wrapper fills available width */
+  max-width: none;    /* Remove max-width constraint if exists */
+  background-color: transparent;
 
   .form {
     display: grid;
@@ -607,17 +613,26 @@ export const StyledWrapper = styled.div`
     color: rgba(255, 255, 255, 0.5);
   }
 
+  .notes-label {
+    display: block;
+    margin-bottom: 7px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.5em;
+    font-weight: 600;
+  }
+
+
   .textarea-input {
     resize: none;
     min-height: 120px;
-    padding-top: 25px !important;
+    padding-top: 5px !important;
     line-height: 1.5;
     font-family: inherit;
   }
 
   .textarea-input::placeholder {
     opacity: 0.7;
-    font-size: 0.9em;
+    font-size: 1.5em;
   }
 `;
 
