@@ -145,11 +145,19 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
 };
 
 const StyledWrapper = styled.div`
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   .form {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 350px;
+    width: 500px;
     padding: 20px;
     border-radius: 20px;
     position: relative;

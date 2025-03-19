@@ -10,6 +10,7 @@ import Recommendation from "./pages/Recommendation";
 import MyTrips from "./pages/MyTrips";
 import Header from "./components/Header";
 import MyWishlist from "./pages/MyWishlist";
+import Profile from "./pages/Profile";
 
 
 import './styles/App.css';  // Make sure this import is at the top
@@ -33,6 +34,7 @@ function App() {
               <Route path="/Recommendation" element={<Recommendation />} />
               <Route path="/MyTrips" element={<MyTrips />} />
               <Route path="/MyWishlist" element={<MyWishlist />} />
+              <Route path="/Profile" element={<Profile />} />
             </Routes>
           </div>
         </div>

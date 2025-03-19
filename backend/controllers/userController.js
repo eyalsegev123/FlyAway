@@ -77,40 +77,42 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getUser = async (req , res) => {
+  const user_id = req.params.user_id;
+  if (!user_id ) {
+    return res.status(400).json({ error: "You must provide a user_id in the URL" });
+  }
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [user_id]);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Internal server error: Error getting wishes' });
+  }
+};
+
 // Update user details (user_id is now in req.params)
 const updateUser = async (req, res) => {
-  const user_id = req.params.user_id; // Get the user_id from the URL params
-  const { name, email, password } = req.body;
+  const user_id = req.params.user_id;
+  const { name, mail, password, birthday } = req.body;
 
-  // Validate that at least one field (name, email, or password) is provided
-  if (!user_id || (!name && !email && !password)) {
-    return res.status(400).json({ error: "You must provide a user_id in the URL and at least one field to update (name, email, or password)" });
+  // Validate all fields provided
+  if (!user_id || !name || !mail || !password || !birthday) {
+    return res.status(400).json({ error: "All user fields (name, mail, password, birthday) must be provided." });
   }
 
   try {
-    // Construct the SQL query for updating user details
-    const fieldsToUpdate = [];
-    const values = [];
-
-    if (name) {
-      fieldsToUpdate.push("name = $1");
-      values.push(name);
-    }
-    if (email) {
-      fieldsToUpdate.push("email = $2");
-      values.push(email);
-    }
-    if (password) {
-      fieldsToUpdate.push("password = $3");
-      values.push(password);
-    }
-
-    // Make sure the correct number of parameters are passed
-    const setClause = fieldsToUpdate.join(", ");
-    values.push(user_id); // Add user_id at the end for WHERE clause
+    // Hash the password before updating
+    const hashedPassword = password.startsWith('$2b$') ? password : await bcrypt.hash(password, 10);
 
     // Execute the update query
-    const query = `UPDATE users SET ${setClause} WHERE user_id = $${values.length} RETURNING *`;
+    const query = `
+      UPDATE users
+      SET name = $1, mail = $2, password = $3, birthday = $4
+      WHERE user_id = $5 RETURNING *
+    `;
+    
+    const values = [name, mail, hashedPassword, birthday, user_id];
     const result = await pool.query(query, values);
 
     if (result.rowCount === 0) {
@@ -118,15 +120,25 @@ const updateUser = async (req, res) => {
     }
 
     const updatedUser = result.rows[0];
+
     res.status(200).json({
       message: "User updated successfully",
-      user: { user_id: updatedUser.user_id, name: updatedUser.name, email: updatedUser.email },
+      user: {
+        user_id: updatedUser.user_id,
+        name: updatedUser.name,
+        mail: updatedUser.mail,
+        birthday: updatedUser.birthday,
+      },
     });
   } catch (error) {
     console.error("Error updating user:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+
+
 
 // Delete user
 const deleteUser = async (req, res) => {
@@ -156,4 +168,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, updateUser, deleteUser};
+module.exports = { registerUser, loginUser, updateUser, deleteUser, getUser};

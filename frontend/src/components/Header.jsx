@@ -99,6 +99,11 @@ const Header = () => {
               label="Wishlist"
               onClick={() => navigate("/MyWishlist")}
             />
+            <HeaderButton
+              className="header-buttons"
+              label="My Profile"
+              onClick={() => navigate("/Profile")}
+            />
           </>
         )}
       </div>

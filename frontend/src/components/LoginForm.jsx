@@ -64,12 +64,20 @@ const LoginForm = ({ onLoginSuccess, onError }) => {
 };
 
 const StyledWrapper = styled.div`
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   .form {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 350px;
-    padding: 20px;
+    width: 450px;
+    padding: 10px;
     border-radius: 20px;
     position: relative;
     background-color: #1a1a1a;

@@ -4,6 +4,7 @@
     loginUser,
     updateUser,
     deleteUser,
+    getUser,
   } = require("../controllers/userController");
   const router = express.Router();
 
@@ -18,5 +19,7 @@
 
   // Endpoint: Delete user
   router.delete("/delete/:user_id", deleteUser);
+
+  router.get("/user_profile/:user_id" , getUser);
 
   module.exports = router;
