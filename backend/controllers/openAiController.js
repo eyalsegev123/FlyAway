@@ -24,9 +24,10 @@ exports.askOpenAi = async (req, res) => {
     console.log(`Additional Notes: ${additionalNotes}`);
     const message = `Hello, I want to plan a vacation to ${destination}. 
         The period of the vacation needs to be between ${startDate} to ${endDate}, 
-        and the length of the trip needs to be ${tripLength} days. Our budget is ${budget} ${currency} per person. 
-        The things we like are ${genreList}. Our group is going to be constructed of ${travelers}. ${additionalNotes}.
-        Please plan a detailed trip while considering the whole details I gave you. `;
+        and the length of the trip should be ${tripLength} days. Our budget is ${budget} ${currency} per person, excluding flights. 
+        The types of activities we enjoy are ${genreList}. Our group is going to be constructed of ${travelers}. ${additionalNotes}.
+        Please plan a detailed trip while considering the whole details I gave you.
+        If for any reason this plan is not fully possible or the trip genres dont fit the destination, please suggest adjustments or alternatives. `;
 
     console.log("Message sent to OpenAI:", message);
 
