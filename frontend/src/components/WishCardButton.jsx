@@ -100,8 +100,8 @@ const StyledWrapper = styled.div`
     border-radius: 20px;
     width: 270px;
     height: 300px;
-    background-color: #1a1a1a;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: rgb(65, 63, 63);
+    box-shadow: 0 0 10px rgb(250, 250, 250);
     transform: preserve-3d;
     perspective: 2000px;
     display: flex;
@@ -216,7 +216,7 @@ const StyledWrapper = styled.div`
   .cover {
     top: 0;
     position: absolute;
-    background:rgb(29, 29, 29);
+    background:rgb(65, 63, 63);
     width: 100%;
     height: 100%;
     border-radius: 10px;

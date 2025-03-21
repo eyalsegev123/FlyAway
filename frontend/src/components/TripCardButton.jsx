@@ -332,8 +332,8 @@ const StyledWrapper = styled.div`
   border-radius: 20px; /* Matched corner rounding */
   width: 270px;
   height: 300px;
-  background-color: #1a1a1a; /* Dark background for consistency */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+  background-color: rgb(65, 63, 63); /* Dark background for consistency */
+  box-shadow: 0 0 10px rgb(241, 237, 237); /* Soft shadow for depth */
   transform: preserve-3d;
   perspective: 2000px;
   display: flex;
@@ -485,7 +485,7 @@ button {
   .cover {
     top: 0;
     position: absolute;
-    background:rgb(29, 29, 29);
+    background:rgb(65, 63, 63);
     width: 100%;
     height: 100%;
     border-radius: 10px;
