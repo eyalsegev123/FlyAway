@@ -1,5 +1,14 @@
 import React from 'react';
-import { Typography, Card, CardContent, Link, List, ListItem, ListItemText, Divider } from '@mui/material';
+import {
+  Typography,
+  Card,
+  CardContent,
+  Link,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+} from '@mui/material';
 
 const CategoryCard = ({ title, content, type }) => {
   const renderContent = () => {
@@ -12,11 +21,17 @@ const CategoryCard = ({ title, content, type }) => {
                 <ListItem>
                   <ListItemText
                     primary={
-                      <Link href={hotel.link} target="_blank" rel="noopener noreferrer">
-                        {hotel.name}
-                      </Link>
+                      <Typography variant="h6" fontWeight="bold" color="textPrimary">
+                        <Link href={hotel.link} target="_blank" rel="noopener noreferrer" underline="hover">
+                          {hotel.name}
+                        </Link>
+                      </Typography>
                     }
-                    secondary={hotel.features}
+                    secondary={
+                      <Typography variant="h6" color="textPrimary">
+                        {hotel.features}
+                      </Typography>
+                    }
                   />
                 </ListItem>
                 {index < content.length - 1 && <Divider />}
@@ -30,7 +45,7 @@ const CategoryCard = ({ title, content, type }) => {
           <div>
             {content.map((category, categoryIndex) => (
               <React.Fragment key={category.category}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h5" fontWeight="bold" gutterBottom>
                   {category.category.replace(/_/g, ' ')}
                 </Typography>
                 <List>
@@ -38,8 +53,16 @@ const CategoryCard = ({ title, content, type }) => {
                     <React.Fragment key={index}>
                       <ListItem>
                         <ListItemText
-                          primary={attraction.name}
-                          secondary={attraction.description || "Description unavailable"}
+                          primary={
+                            <Typography variant="h6" fontWeight="bold" color="textPrimary">
+                              {attraction.name}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography variant="h6" color="textPrimary">
+                              {attraction.description || 'Description unavailable'}
+                            </Typography>
+                          }
                         />
                       </ListItem>
                       {index < category.recommended_attractions.length - 1 && <Divider />}
@@ -57,7 +80,7 @@ const CategoryCard = ({ title, content, type }) => {
           <div>
             {content.map((category, categoryIndex) => (
               <React.Fragment key={category.category}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h5" fontWeight="bold" gutterBottom>
                   {category.category.replace(/_/g, ' ')}
                 </Typography>
                 <List>
@@ -65,14 +88,18 @@ const CategoryCard = ({ title, content, type }) => {
                     <React.Fragment key={index}>
                       <ListItem>
                         <ListItemText
-                          primary={restaurant.name}
+                          primary={
+                            <Typography variant="h6" fontWeight="bold" color="textPrimary">
+                              {restaurant.name}
+                            </Typography>
+                          }
                           secondary={
                             <>
-                              <Typography component="span" display="block">
+                              <Typography variant="h6" display="block" color="textPrimary">
                                 {restaurant.cuisine}
                               </Typography>
                               {restaurant.additionalInfo && (
-                                <Typography component="span" display="block">
+                                <Typography variant="h6" display="block" color="textPrimary">
                                   {restaurant.additionalInfo}
                                 </Typography>
                               )}
@@ -90,73 +117,45 @@ const CategoryCard = ({ title, content, type }) => {
           </div>
         );
 
-        case 'costs':
-          return (
-            <div>
-              {Object.entries(content).map(([category, values], categoryIndex) => (
-                <React.Fragment key={category}>
-                  <Typography
-                    variant="h6" // Adjusted the title size to be larger
-                    gutterBottom
-                    style={{ fontWeight: 'bold' }} // Make it bold if needed
-                  >
-                    {category.replace(/_/g, ' ')}
-                  </Typography>
-                  <List>
-                    {Object.entries(values).map(([key, value], index) => (
-                      <ListItem key={key} dense>
-                        <ListItemText
-                          primary={
-                            <Typography
-                              variant="body1"
-                              style={{
-                                fontWeight: 'bold', // Title slightly larger
-                                color: 'black', // Title color
-                              }}
-                            >
-                              {key.replace(/_/g, ' ')}
-                            </Typography>
-                          }
-                          secondary={
-                            <Typography
-                              variant="body2"
-                              style={{
-                                color: 'black', // Content color
-                              }}
-                            >
-                              {value}
-                            </Typography>
-                          }
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                  {categoryIndex < Object.entries(content).length - 1 && (
-                    <Divider style={{ margin: '16px 0' }} />
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-          );
-        
+      case 'costs':
+        return (
+          <div>
+            {Object.entries(content).map(([category, values], categoryIndex) => (
+              <React.Fragment key={category}>
+                <Typography variant="h5" fontWeight="bold" gutterBottom>
+                  {category.replace(/_/g, ' ')}
+                </Typography>
+                <List>
+                  {Object.entries(values).map(([key, value]) => (
+                    <ListItem key={key}>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6" fontWeight="bold" color="textPrimary">
+                            {key.replace(/_/g, ' ')}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="h6" color="textPrimary">
+                            {value}
+                          </Typography>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+                {categoryIndex < Object.entries(content).length - 1 && (
+                  <Divider style={{ margin: '16px 0' }} />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        );
 
       case 'summary':
-        return (
-          <Typography variant="body1" paragraph>
-            {content}
-          </Typography>
-        );
-
       case 'dates':
-        return (
-          <Typography variant="body1" paragraph>
-            {content}
-          </Typography>
-        );
-
       default:
         return (
-          <Typography variant="body1" paragraph>
+          <Typography variant="h6" color="textPrimary" paragraph>
             {content}
           </Typography>
         );
@@ -166,7 +165,7 @@ const CategoryCard = ({ title, content, type }) => {
   return (
     <Card className="content-card">
       <CardContent>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h4" fontWeight="bold" gutterBottom color="textPrimary">
           {title}
         </Typography>
         {renderContent()}

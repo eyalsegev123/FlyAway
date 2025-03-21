@@ -17,10 +17,14 @@ import {
   Box,
   TextField,
   MobileStepper,
+  ButtonGroup,
 } from "@mui/material";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { parseOpenAIResponse } from "../utils/responseParser";
+import LoadingTripGlobe from "../components/LoadingTripGlobe";
+import { StyledWrapper } from "./PlanTrip";
+
 
 // Styled components
 const RecommendationContainer = styled.div`
@@ -63,6 +67,15 @@ const AdditionalDetailsContainer = styled(Box)`
   align-items: center;
 `;
 
+const FeedbackSection = styled(Box)`
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+`;
+
 const Recommendation = () => {
   const theme = useTheme();
   const location = useLocation();
@@ -82,6 +95,11 @@ const Recommendation = () => {
   const [parsedResponse, setParsedResponse] = useState(null);
   const [wishName, setWishName] = useState("");
   const [notes, setNotes] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [showFeedbackSection, setShowFeedbackSection] = useState(true);
+  const [loading, setLoading] = useState(false);
+
 
   // Message box state
   const [messageBox, setMessageBox] = useState({
@@ -194,6 +212,66 @@ const Recommendation = () => {
     }
   };
 
+  const handleFeedbackSubmit = async (threadId) => {
+    console.log("THREAD ID: " , threadId);
+    if (!feedback.trim()) {
+      showMessage("Please provide some feedback before submitting.", "error");
+      return;
+    }
+    
+    setLoading(true); 
+    setShowFeedbackForm(false);
+    try {
+      const response = await axios.post(
+        `http://localhost:5001/api/openAiRoutes/improveRecommendation/${threadId}`,
+        { message: feedback }
+      );
+  
+      if (response.status === 200) {
+        showMessage("Recommendation updated based on your feedback!");
+        setFeedback("");
+        setParsedResponse(parseOpenAIResponse(response.data.answer)); // Update recommendation content
+      } else {
+        throw new Error("Failed to submit feedback");
+      }
+    } catch (error) {
+      console.error("Feedback submission error:", error);
+      showMessage("An error occurred while submitting feedback.", "error");
+    } finally {
+      setLoading(false); // End loading
+    }
+  };
+
+  const handleNoFeedbackSubmit = async (threadId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5001/api/openAiRoutes/deleteThread/${threadId}`, {
+      });
+  
+      if (response.status === 200) {
+        console.log(response.data);
+      } else {
+        throw new Error("Failed to delete thread");
+      }
+    } catch (error) {
+      console.error("thread deletion error:", error);
+      showMessage("An error occurred", "error" );
+    }
+  };
+
+  // Handlers for feedback buttons
+  const handleYesClick = () => {
+    setShowFeedbackForm(true);
+  };
+
+  const handleNoClick = () => {
+    // Call the thread deletion function if there's a thread ID
+    if (tripRecommendation && tripRecommendation.threadId) {
+      handleNoFeedbackSubmit(tripRecommendation.threadId);
+    }
+    setShowFeedbackSection(false);
+    showMessage("Thank you for your feedback!");
+  };
+
   // Get the steps from the categories object
   const steps = Object.values(categories);
   const maxSteps = steps.length;
@@ -212,6 +290,10 @@ const Recommendation = () => {
         <p>No recommendations found.</p>
       </RecommendationContainer>
     );
+  }
+
+  if (loading || !parsedResponse) {
+    return <LoadingTripGlobe />;
   }
 
   return (
@@ -296,6 +378,62 @@ const Recommendation = () => {
             <WishlistButton onAddToWishlist={handleWishlistSubmit}>
               Add to Wishlist
             </WishlistButton>
+            {/* Feedback section with Yes/No buttons */}
+            {showFeedbackSection && (
+              <FeedbackSection>
+              <Typography variant="h6" gutterBottom>
+                Would you like to improve the recommendation?
+              </Typography>
+              
+              {!showFeedbackForm ? (
+                <ButtonGroup variant="contained" sx={{ mb: 2 }}>
+                  <Button 
+                    color="primary" 
+                    onClick={handleYesClick}
+                    sx={{ minWidth: "100px" }}
+                  >
+                    Yes
+                  </Button>
+                  <Button 
+                    color="primary" 
+                    onClick={handleNoClick}
+                    sx={{ minWidth: "100px" }}
+                  >
+                    No
+                  </Button>
+                </ButtonGroup>
+              ) : (
+                <>
+                  <TextField
+                    variant="outlined"
+                    multiline
+                    rows={4}
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Please tell us what you'd like to improve or add"
+                    sx={{ mb: 2, width: "90%" }}
+                    autoFocus
+                  />
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button 
+                      variant="contained" 
+                      color="primary" 
+                      onClick={() => handleFeedbackSubmit(tripRecommendation.threadId)}
+                    >
+                      Submit Feedback
+                    </Button>
+                    <Button 
+                      variant="outlined" 
+                      onClick={() => setShowFeedbackForm(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </>
+              )}
+            </FeedbackSection>
+            )}
+          
           </AdditionalDetailsContainer>
         )}
 
@@ -305,6 +443,7 @@ const Recommendation = () => {
           type={messageBox.type}
           onClose={closeMessage}
         />
+
       </StyledPaper>
     </RecommendationContainer>
   );
