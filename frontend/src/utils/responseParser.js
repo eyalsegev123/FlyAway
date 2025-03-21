@@ -30,7 +30,19 @@ export const parseOpenAIResponse = (response) => {
 
       costs: parsedResponse.Costs,
 
-      dates: parsedResponse.Dates
+      dates: parsedResponse.Dates,
+
+      schedule: Array.isArray(parsedResponse.Schedule)
+        ? parsedResponse.Schedule.map((dayObj, index) => {
+            const [dayKey, schedule] = Object.entries(dayObj)[0];
+            return {
+              day: dayKey,
+              morning: schedule.morning,
+              noon: schedule.noon,
+              evening: schedule.evening
+            };
+          })
+        : [] ,
     };
   } catch (error) {
     console.error('Error parsing OpenAI response:', error);

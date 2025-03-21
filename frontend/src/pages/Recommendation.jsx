@@ -23,8 +23,6 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { parseOpenAIResponse } from "../utils/responseParser";
 import LoadingTripGlobe from "../components/LoadingTripGlobe";
-import { StyledWrapper } from "./PlanTrip";
-
 
 // Styled components
 const RecommendationContainer = styled.div`
@@ -156,6 +154,11 @@ const Recommendation = () => {
         content: parsedResponse?.dates || "No dates recommendations available",
         type: "dates",
       },
+      schedule: {
+        title: "Schedule",
+        content: parsedResponse?.schedule || "No schedule available",
+        type: "schedule",
+      },
     }),
     [parsedResponse]
   );
@@ -213,14 +216,12 @@ const Recommendation = () => {
   };
 
   const handleFeedbackSubmit = async (threadId) => {
-    console.log("THREAD ID: " , threadId);
     if (!feedback.trim()) {
       showMessage("Please provide some feedback before submitting.", "error");
       return;
     }
     
     setLoading(true); 
-    setShowFeedbackForm(false);
     try {
       const response = await axios.post(
         `http://localhost:5001/api/openAiRoutes/improveRecommendation/${threadId}`,
@@ -230,7 +231,7 @@ const Recommendation = () => {
       if (response.status === 200) {
         showMessage("Recommendation updated based on your feedback!");
         setFeedback("");
-        setParsedResponse(parseOpenAIResponse(response.data.answer)); // Update recommendation content
+        setParsedResponse(parseOpenAIResponse(response.data.answer)); 
       } else {
         throw new Error("Failed to submit feedback");
       }
@@ -238,7 +239,8 @@ const Recommendation = () => {
       console.error("Feedback submission error:", error);
       showMessage("An error occurred while submitting feedback.", "error");
     } finally {
-      setLoading(false); // End loading
+      setLoading(false); 
+      setShowFeedbackForm(false);
     }
   };
 
@@ -293,7 +295,11 @@ const Recommendation = () => {
   }
 
   if (loading || !parsedResponse) {
-    return <LoadingTripGlobe />;
+    return (
+      <RecommendationContainer style={{ justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <LoadingTripGlobe />
+      </RecommendationContainer>
+    );    
   }
 
   return (

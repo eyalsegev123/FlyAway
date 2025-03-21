@@ -116,6 +116,34 @@ const CategoryCard = ({ title, content, type }) => {
             ))}
           </div>
         );
+      
+      case 'schedule':
+        return (
+          <List>
+            {content.map((daySchedule, index) => (
+              <React.Fragment key={index}>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h5" fontWeight="bold" color="textPrimary" gutterBottom>
+                        {daySchedule.day.charAt(0).toUpperCase() + daySchedule.day.slice(1)}
+                      </Typography>
+                    }
+                    secondary={
+                      <>
+                        <Typography variant="h6" color="textPrimary"><strong>Morning:</strong> {daySchedule.morning}</Typography>
+                        <Typography variant="h6" color="textPrimary"><strong>Noon:</strong> {daySchedule.noon}</Typography>
+                        <Typography variant="h6" color="textPrimary"><strong>Evening:</strong> {daySchedule.evening}</Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
+                {index < content.length - 1 && <Divider />}
+              </React.Fragment>
+            ))}
+          </List>
+        );
+        
 
       case 'costs':
         return (
