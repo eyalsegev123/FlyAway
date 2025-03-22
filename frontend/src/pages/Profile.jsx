@@ -49,8 +49,8 @@ const ProfilePage = () => {
   };
 
   const displayBirthday = userData.birthday
-    ?  new Date(userData.birthday).toISOString().substring(0, 10)
-    : '';
+  ? new Date(userData.birthday).toLocaleDateString('en-CA') // Format as YYYY-MM-DD
+  : '';
 
   return (
     <ProfileContainer>
@@ -79,7 +79,7 @@ const ProfilePage = () => {
       <input
         type="password"
         name="password"
-        value={userData.password}
+        value={""}
         onChange={handleChange}
         disabled={!isEditing}
         placeholder="Enter new password or leave as is"
