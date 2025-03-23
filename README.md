@@ -1,21 +1,29 @@
 # FlyAway - AI-Powered Holiday Planning Platform
 
 ## Overview
+
 FlyAway is an intelligent holiday planning platform that leverages Artificial Intelligence to create personalized travel recommendations. Designed to make trip planning effortless, the application helps users discover vacation destinations tailored to their preferences and provides smart, curated travel plans.
 
 The platform uses advanced natural language processing through OpenAI's technology to understand user preferences and generate personalized travel suggestions. By analyzing factors such as budget constraints, preferred activities, climate preferences, and travel duration, FlyAway creates tailored itineraries that match each user's unique requirements.
 
+Additionally, FlyAway leverages user-generated travel reviews from our database to provide more authentic and experience-based recommendations. These real traveler insights are incorporated into the AI recommendation process, ensuring suggestions reflect genuine experiences rather than purely algorithmic selections.
+
 Our recommendation engine considers various factors including:
+
 - Seasonal appropriateness of destinations
 - Budget optimization strategies
 - Activity matching based on user interests
 - Accommodation suggestions that align with preferences
 - Local attractions and hidden gems not typically found in standard travel guides
+- User reviews and ratings from past travelers
+- Detailed daily scheduling for the first week of travel
 
 The application follows a user-centered design approach, providing an intuitive interface that guides travelers through the planning process from inspiration to finalized itinerary.
 
 ## Purpose
+
 The main purpose of FlyAway is to:
+
 - **Simplify the holiday planning process** using AI technology to reduce the overwhelming number of choices travelers face
 - **Provide personalized travel recommendations** based on user preferences, ensuring travelers discover destinations that truly match their interests
 - **Offer an intuitive platform** for discovering and organizing trip ideas with minimal friction in the user experience
@@ -27,6 +35,7 @@ The main purpose of FlyAway is to:
 - **Facilitate budget-conscious travel** through smart recommendations that optimize for cost-effectiveness
 
 ## Tech Stack
+
 - **Frontend**: React.js
 - **Backend**: Node.js, Express.js
 - **Database**: SQL (via connection pool)
@@ -40,74 +49,82 @@ The main purpose of FlyAway is to:
 ## Project Components
 
 ### Frontend
+
 - **Pages**:
+
   - **Home**: Landing page featuring an introduction to the platform's capabilities, testimonials, and quick-start options for new visitors. Includes animated elements showcasing the recommendation process.
-  
+
   - **AboutUs**: Information about the development team and project philosophy. Contains cards with information about the team members, mission statement, and terms of usage. Includes an interactive modal that showcases the developers with additional details.
-  
+
   - **PlanTrip**: Interactive interface for creating new travel plans with a multi-step form that collects user preferences including budget, duration, activities, climate preferences, and travel style. Implements a conversational flow to make preference collection engaging.
-  
-  - **Recommendation**: Displays AI-generated travel suggestions with detailed information about destinations, including photos, cost breakdowns, activity suggestions, and accommodation options. Features a step-by-step presentation of recommendations with the ability to refine results.
-  
+
+  - **Recommendation**: Displays AI-generated travel suggestions with detailed information about destinations, including photos, cost breakdowns, activity suggestions, and accommodation options. Features a step-by-step presentation of recommendations with the ability to refine results. Includes a comprehensive day-by-day schedule for the first week of travel to provide immediate planning guidance. Recommendations incorporate insights from user reviews to provide authentic travel suggestions.
+
   - **MyTrips**: User's personal dashboard for saved trip plans with ability to view, edit, and delete trips. Includes photo galleries for each trip, review capabilities, and sorting/filtering options. Implements a responsive grid layout for various screen sizes.
-  
+
   - **MyWishlist**: Collection of destinations and trip ideas saved by the user for future reference. Features categorization options, priority settings, and integration with the recommendation engine for similar destination suggestions.
-  
+
   - **Profile**: User profile management interface allowing personal information updates, preference settings, and account security options. Includes travel style questionnaire that informs the recommendation engine.
-  
+
   - **Login**: Authentication interface with secure login and registration capabilities. Features password recovery, remember me functionality, and social login options.
 
 - **Components**:
+
   - **Header**: Navigation component with responsive design, user authentication status display, and dynamic menu options based on login state. Includes welcome message animation for newly logged-in users.
-  
+
   - **LoginForm**: User authentication form with validation, error handling, and secure credential processing. Implements Remember Me functionality and integration with the authentication context.
-  
+
   - **AboutUsCard**: Information cards for the About page with styled presentation of team information and platform details. Includes interactive elements for additional information display.
-  
+
   - **PhotoAboutUsModal**: Modal component displaying team information with photos, roles, and background information about each developer. Features animation effects for a polished user experience.
-  
+
   - **WishlistButton**: Interactive component for adding/removing destinations from the user's wishlist with optimistic UI updates and visual feedback.
-  
+
   - **CategoryCard**: Reusable card component for displaying categorized information with consistent styling across the application.
-  
+
   - **MessageBox**: Feedback component for displaying system messages, alerts, and notifications to users with appropriate styling based on message type.
-  
+
   - **LoadingTripGlobe**: Animated loading indicator designed as a spinning globe for use during API calls and data processing operations.
-  
+
   - **SearchBox**: Reusable search component with filters and sorting options for use across the application.
-  
+
   - **TripCardButton**: Interactive card component for trip display with expandable details and action buttons.
-  
+
   - **PhotoCarousel**: Image display component for showcasing destination and trip photos with navigation controls.
-  
+
   - **ConfirmationDialog**: Reusable dialog component for confirming user actions before proceeding.
-  
+
   - **WelcomeMessage**: Animated greeting component displayed after successful login.
-  
+
   - **HeaderButton**: Consistent styled button component for the application header.
 
 ### Backend
+
 - **API Routes**:
-  - **/api/usersRoutes**: 
+
+  - **/api/usersRoutes**:
+
     - User creation, authentication, and profile management endpoints
     - Password reset and email verification functionality
     - User preference storage and retrieval
     - Session management and token validation
-  
-  - **/api/tripsRoutes**: 
+
+  - **/api/tripsRoutes**:
+
     - Trip creation with multiple destination support
     - Trip retrieval, updating, and deletion operations
     - Trip photo storage and management
     - Trip sharing capabilities between users
     - Trip categorization and tagging system
-  
-  - **/api/wishesRoutes**: 
+
+  - **/api/wishesRoutes**:
+
     - Wishlist item creation and management
     - Priority and category assignment for wishlist items
     - Wishlist retrieval with filtering and sorting options
     - Automated suggestions based on existing wishlist items
-  
-  - **/api/openAiRoutes**: 
+
+  - **/api/openAiRoutes**:
     - AI interaction for generating personalized travel recommendations
     - Prompt engineering and response parsing
     - Context management for multi-turn conversations
@@ -127,6 +144,7 @@ The main purpose of FlyAway is to:
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v14 or higher)
 - npm (v6 or higher)
 - SQL Database (MySQL/PostgreSQL)
@@ -135,18 +153,21 @@ The main purpose of FlyAway is to:
 ### Installation
 
 1. Clone the repository
+
    ```bash
    git clone https://github.com/yourusername/flyaway.git
    cd flyaway
    ```
 
 2. Install dependencies for backend
+
    ```bash
    cd backend
    npm install
    ```
 
 3. Install dependencies for frontend
+
    ```bash
    cd frontend
    npm install
@@ -166,12 +187,14 @@ The main purpose of FlyAway is to:
 ### Running the Application
 
 1. Start the backend server
+
    ```bash
    cd backend
    npm start
    ```
 
 2. Start the frontend development server
+
    ```bash
    cd frontend
    npm start
@@ -180,8 +203,10 @@ The main purpose of FlyAway is to:
 3. Open your browser and navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Features
+
 - AI-powered travel recommendations based on user preferences
 - Personalized trip planning with customizable itineraries
+- Detailed day-by-day schedule planning for the first week to jumpstart trip organization
 - User wishlist management for future travel ideas
 - Secure authentication system with JWT implementation
 - Responsive design for optimal experience on all devices
@@ -190,8 +215,10 @@ The main purpose of FlyAway is to:
 - Budget estimation and management tools
 - Travel tips and local insights for destinations
 - Social sharing capabilities
+- Incorporation of real user reviews in recommendation process
 
 ## Contributing
+
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
@@ -201,9 +228,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 5. Open a Pull Request
 
 ## License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgements
+
 - OpenAI for powering our recommendation engine
 - The React team for the frontend framework
 - All contributors who have helped shape this project
