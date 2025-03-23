@@ -1,7 +1,7 @@
 # FlyAway - AI-Powered Holiday Planning Platform
 
 ## Overview
-FlyAway is an intelligent holiday planning platform that leverages artificial intelligence to create personalized travel recommendations. Designed to make trip planning effortless, the application helps users discover vacation destinations tailored to their preferences and provides smart, curated travel plans.
+FlyAway is an intelligent holiday planning platform that leverages Artificial Intelligence to create personalized travel recommendations. Designed to make trip planning effortless, the application helps users discover vacation destinations tailored to their preferences and provides smart, curated travel plans.
 
 The platform uses advanced natural language processing through OpenAI's technology to understand user preferences and generate personalized travel suggestions. By analyzing factors such as budget constraints, preferred activities, climate preferences, and travel duration, FlyAway creates tailored itineraries that match each user's unique requirements.
 

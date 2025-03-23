@@ -9,7 +9,7 @@ import ConfirmationDialog from "../components/ConfimrationDialog";
 const MyWishList = () => {
   const [wishlist, setWishlist] = useState([]); // State to store wishlist items
   const [originalWishlist, setOriginalWishlist] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const { user } = useAuth();
   const [alertInfo, setAlertInfo] = useState({

@@ -20,7 +20,7 @@ import {
 const MyTrips = () => {
   const [trips, setTrips] = useState([]);
   const [originalTrips, setOriginalTrips] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isAddTripModalOpen, setIsAddTripModalOpen] = useState(false);
   const [isAlbumOpen, setIsAlbumOpen] = useState(false); // state to control modal visibility
   const [albumPhotosURLs, setAlbumPhotosURLs] = useState([]); // state to hold photos from S3
