@@ -81,7 +81,6 @@ const addTrip = async (req, res) => {
     }
 };
 
-
 const deleteTrip = async (req, res) => {
     const { trip_id } = req.params;
 

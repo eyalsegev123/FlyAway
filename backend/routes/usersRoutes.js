@@ -3,7 +3,6 @@
     registerUser,
     loginUser,
     updateUser,
-    deleteUser,
     getUser,
   } = require("../controllers/userController");
   const router = express.Router();
@@ -16,9 +15,6 @@
 
   // Endpoint: Update user information
   router.put("/update/:user_id", updateUser);
-
-  // Endpoint: Delete user
-  router.delete("/delete/:user_id", deleteUser);
 
   router.get("/user_profile/:user_id" , getUser);
 

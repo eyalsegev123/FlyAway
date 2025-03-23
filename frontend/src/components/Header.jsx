@@ -4,11 +4,10 @@ import LoginForm from "../components/LoginForm"; // Import LoginForm
 import RegisterForm from "../components/RegisterForm"; // Import RegisterForm
 import Modal from "../components/Modal"; // Import the new Modal component
 import { useAuth } from "../context/AuthContext"; // Import Auth context
-import "../styles/components/Header.css"; // Import CSS for styling
-import HeaderButton from './HeaderButton'; // Import HeaderButton component
-import HelloMessage from './HelloMessage'; // Ensure correct path
+import HeaderButton from "./HeaderButton"; // Import HeaderButton component
+import HelloMessage from "./HelloMessage"; // Ensure correct path
 import WelcomeMessage from "./WelcomeMessage";
-
+import styled from "styled-components";
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -56,7 +55,6 @@ const Header = () => {
   const handleLogoutClick = () => {
     logout(); // Use context to logout user
     navigate("/");
-
   };
 
   const handleError = (message) => {
@@ -68,74 +66,51 @@ const Header = () => {
   };
 
   return (
-    <div className="header">
-      <div className="header-spacer"></div> {/* Add this empty div */}
-      <div className="header-navbar">
+    <HeaderContainer>
+      <HeaderSpacer />
+      <Navbar>
+        <HeaderButton label="Home" onClick={() => navigate("/")} />
         <HeaderButton
-          className="header-buttons"
-          label="Home"
-          onClick={() => navigate("/")}
-        />
-        <HeaderButton
-          className="header-buttons"
           label="Plan your trip"
           onClick={() => navigate("/PlanTrip")}
         />
-        <HeaderButton
-          className="header-buttons"
-          label="About us"
-          onClick={() => navigate("/AboutUs")}
-        />
+        <HeaderButton label="About us" onClick={() => navigate("/AboutUs")} />
 
         {user && (
           <>
             <HeaderButton
-              className="header-buttons"
               label="My memories"
               onClick={() => navigate("/MyTrips")}
             />
             <HeaderButton
-              className="header-buttons"
               label="Wishlist"
               onClick={() => navigate("/MyWishlist")}
             />
             <HeaderButton
-              className="header-buttons"
               label="My Profile"
               onClick={() => navigate("/Profile")}
             />
           </>
         )}
-      </div>
-      <div className="header-buttons-container">
+      </Navbar>
+      <ButtonsContainer>
         {user ? (
           <>
             <HelloMessage
               text={`Hello ${getFirstName(user.name)} 👋`}
               tooltipText={`Great to see u again !`}
             />
-            <HeaderButton
-              className="header-buttons"
-              label="Logout"
-              onClick={handleLogoutClick}
-            />
+            <HeaderButton label="Logout" onClick={handleLogoutClick} />
           </>
         ) : (
           <>
-            <HeaderButton
-              className="header-buttons"
-              label="Register"
-              onClick={openRegisterModal}
-            />
-            <HeaderButton
-              className="header-buttons"
-              label="Login"
-              onClick={openLoginModal}
-            />
+            <HeaderButton label="Register" onClick={openRegisterModal} />
+            <HeaderButton label="Login" onClick={openLoginModal} />
           </>
         )}
-      </div>
-      {/* Render the Login Modal */}
+      </ButtonsContainer>
+
+      {/* Modals remain the same */}
       <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal} title="">
         <LoginForm
           onLoginSuccess={handleLoginSuccess}
@@ -143,7 +118,7 @@ const Header = () => {
           closeModal={closeLoginModal}
         />
       </Modal>
-      {/* Render the Register Modal */}
+
       <Modal isOpen={isRegisterModalOpen} onClose={closeRegisterModal} title="">
         <RegisterForm
           onRegisterSuccess={handleRegisterSuccess}
@@ -152,14 +127,46 @@ const Header = () => {
         />
       </Modal>
 
-      {/* Add the welcome message component */}
       <WelcomeMessage
         userName={welcomeMessage.userName}
         isVisible={welcomeMessage.visible}
         onClose={closeWelcomeMessage}
       />
-    </div>
+    </HeaderContainer>
   );
 };
+
+// styled components for Header
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 30px;
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  z-index: 1000;
+`;
+
+const HeaderSpacer = styled.div`
+  width: 200px;
+`;
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const Navbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+`;
 
 export default Header;

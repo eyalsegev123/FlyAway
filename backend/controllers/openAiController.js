@@ -5,6 +5,7 @@ const openAiService = require("../services/openAIService.js");
 // Keep track of active threads and their associated run IDs
 const activeThreads = new Map();
 
+//Helper function to handle the OpenAI thread
 const handleOpenAiThread = async (threadId, res) => {
   // Step 1: Create a run
   const runResponse = await openAiService.createRun(threadId);
@@ -74,7 +75,7 @@ const handleOpenAiThread = async (threadId, res) => {
   }
 };
 
-exports.askOpenAi = async (req, res) => {
+const askOpenAi = async (req, res) => {
   try {
     const {
       destination,
@@ -158,7 +159,7 @@ exports.askOpenAi = async (req, res) => {
 };
 
 // Add a new endpoint to handle cancellation requests
-exports.cancelRequest = async (req, res) => {
+const cancelRequest = async (req, res) => {
   const { threadId } = req.params;
   
   if (!threadId) {
@@ -192,7 +193,7 @@ exports.cancelRequest = async (req, res) => {
   }
 };
 
-exports.improveRecommendation = async (req, res) => {
+const improveRecommendation = async (req, res) => {
   const { threadId } = req.params;
   const { message } = req.body;
 
@@ -216,7 +217,7 @@ exports.improveRecommendation = async (req, res) => {
   }
 };
 
-exports.deleteThread = async (req, res) => {
+const deleteThread = async (req, res) => {
 
   const { threadId } = req.params;
  
@@ -239,6 +240,7 @@ exports.deleteThread = async (req, res) => {
 
 };
 
+//Helper function to set a deletion timer for a thread
 const setDeletionTimer = (threadId, timeoutMs = 15 * 60 * 1000) => {
   const threadInfo = activeThreads.get(threadId);
   
@@ -286,5 +288,12 @@ process.on('SIGINT', async () => {
   activeThreads.clear();
   process.exit(0);
 });
+
+module.exports = {
+  askOpenAi,
+  improveRecommendation,
+  cancelRequest,
+  deleteThread
+}
 
 

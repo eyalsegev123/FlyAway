@@ -22,16 +22,19 @@ const StyledModal = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
-  
+
   .modal-content {
     background: white;
     padding: 10px;
     border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1002;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow: auto; // Handle larger content overflow
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 
     img {
       width: 100%; // Responsive width
@@ -48,7 +51,7 @@ const StyledModal = styled.div`
       cursor: pointer;
       font-size: 0.7rem; // Adjust font size if necessary
     }
-    
+
     button:hover {
       background-color: #2596be;
     }
