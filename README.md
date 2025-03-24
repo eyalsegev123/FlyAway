@@ -217,12 +217,14 @@ FlyAway uses a relational database to manage data efficiently across three prima
     );
     ```
 
-  Finalizing Setup
-    Ensure your backend .env file includes the correct database connection settings as mentioned beneath.
-    Consider pre-populating your database with sample data for development and testing purposes.
+    Finalizing Setup
+      Ensure your backend .env file includes the correct database connection settings as mentioned beneath.
+      Consider pre-populating your database with sample data for development and testing purposes.
+
 
 2. Setting Up and train the AI assistant through openAI assitant API.
    Documentation: https://platform.openai.com/docs/assistants/overview
+
 
 3. Clone the repository
 
@@ -231,6 +233,7 @@ FlyAway uses a relational database to manage data efficiently across three prima
    cd flyaway
    ```
 
+
 4. Install dependencies for backend
 
    ```bash
@@ -238,12 +241,14 @@ FlyAway uses a relational database to manage data efficiently across three prima
    npm install
    ```
 
+
 5. Install dependencies for frontend
 
    ```bash
    cd frontend
    npm install
    ```
+
 
 6. Create a `.env` file in the FlyAway directory in 'backend' folder with the following variables:
    ```bash
@@ -269,6 +274,7 @@ FlyAway uses a relational database to manage data efficiently across three prima
     S3_BUCKET_NAME= you bucket name
    ```
 
+
 7. Create a `.env` file in the FlyAway directory in 'frontend' folder with the following variables:
   ```bash
     #FRONTEND PORT
@@ -276,6 +282,7 @@ FlyAway uses a relational database to manage data efficiently across three prima
 
     REACT_APP_API_URL= your local host or any other deployed port 
   ```
+
 
 ### Running the Application
 
