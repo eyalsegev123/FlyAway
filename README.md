@@ -117,6 +117,42 @@ The main purpose of FlyAway is to simplify holiday planning through AI technolog
   - Error handling middleware for consistent API responses
   - Request validation using schema validation
 
+### Database Structure
+
+FlyAway uses a relational database to manage data efficiently across three primary tables: Users, Trips, and Wishlist. Below are the details for each table:
+
+**Users Table**:
+  user_id (PK): A unique identifier for each user.
+  name: The name of the user.
+  mail: The email address of the user.
+  password: Hashed password for user authentication.
+  birthday: User's date of birth.
+  created_at: Timestamp of when the user account was created.
+
+**Trips Table**:
+  trip_id (PK): Unique identifier for each trip.
+  user_id (FK): References user_id from the Users table.
+  review: Textual review of the trip by the user.
+  stars: Rating given to the trip.
+  destination: Main destination of the trip.
+  trip_name: Name of the trip.
+  start_date: Start date of the trip.
+  end_date: End date of the trip.
+  album_s3location: URL or location of the trip's photo album on S3.
+
+**Wishlist Table**:
+  wish_id (PK): Unique identifier for each wishlist entry.
+  user_id (FK): References user_id from the Users table.
+  destination: Destination the user wishes to visit.
+  trip_length: Planned length of the trip in days.
+  budget: Estimated budget for the trip.
+  wish_name: Name of the wishlist item.
+  notes: Additional notes about the wish.
+  trip_genres: Genres or themes of the trip (e.g., adventure, relaxation).
+  start_date: Intended start date of the trip.
+  end_date: Intended end date of the trip.
+  recommendation: AI-generated recommendation details.
+
 ## Getting Started
 
 ### Prerequisites
@@ -124,52 +160,121 @@ The main purpose of FlyAway is to simplify holiday planning through AI technolog
 - Node.js (v14 or higher)
 - npm (v6 or higher)
 - SQL Database (MySQL/PostgreSQL)
-- OpenAI API key
+- OpenAI Assistant API key
 
 ### Installation
 
-1. Clone the repository
+1. Setting Up the Database
+
+    Open your PostgreSQL command line client (e.g., psql).
+    Create the FlyAway database:
+    
+    ```bash
+      CREATE DATABASE flyaway;
+    ```
+  
+    Execute the following commands to create the necessary tables:
+
+    ```bash
+    CREATE TABLE users (
+        user_id SERIAL PRIMARY KEY,
+        name VARCHAR(255),
+        mail VARCHAR(255) UNIQUE,
+        password VARCHAR(255),
+        birthday DATE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ```
+
+    ```bash
+    CREATE TABLE trips (
+        trip_id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(user_id),
+        review TEXT,
+        stars INTEGER,
+        destination VARCHAR(255),
+        trip_name VARCHAR(255),
+        start_date DATE,
+        end_date DATE,
+        album_s3location TEXT
+    );
+    ```
+
+    ```bash
+    CREATE TABLE wishlist (
+        wish_id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(user_id),
+        destination VARCHAR(255),
+        trip_length INTEGER,
+        budget DECIMAL,
+        wish_name VARCHAR(255),
+        notes TEXT,
+        trip_genres VARCHAR(255),
+        start_date DATE,
+        end_date DATE,
+        recommendation TEXT
+    );
+    ```
+
+  Finalizing Setup
+    Ensure your backend .env file includes the correct database connection settings as mentioned beneath.
+    Consider pre-populating your database with sample data for development and testing purposes.
+
+2. Setting Up and train the AI assistant through openAI assitant API.
+   Documentation: https://platform.openai.com/docs/assistants/overview
+
+3. Clone the repository
 
    ```bash
    git clone https://github.com/yourusername/flyaway.git
    cd flyaway
    ```
 
-2. Install dependencies for backend
+4. Install dependencies for backend
 
    ```bash
    cd backend
    npm install
    ```
 
-3. Install dependencies for frontend
+5. Install dependencies for frontend
 
    ```bash
    cd frontend
    npm install
    ```
 
-4. Create a `.env` file in the FlyAway directory with the following variables:
+6. Create a `.env` file in the FlyAway directory in 'backend' folder with the following variables:
+   ```bash
+    #BACKEND PORT
+    BACK_PORT= your backend port
+
+    #POSTGRES - DB
+    PGUSER= your postgres user
+    PGHOST=localhost
+    PGDATABASE= FlyAway or any name you want for your db
+    PGPASSWORD= your password for postgress
+    PGPORT= your db port
+
+    #OPEN-AI
+    OPEN_AI_KEY= API key for your subscription in open AI.
+    OPEN_AI_ASSISTANT_ID= The id of the specified assistant trained to this project.
+
+    #AWS CONFIGURATION
+    AWS_ACCESS_KEY_ID= XXX
+    AWS_SECRET_ACCESS_KEY= XXX
+    AWS_SESSION_TOKEN= XXX
+    AWS_REGION=us-east-1 or any other
+    S3_BUCKET_NAME= you bucket name
    ```
-    FRONT_PORT=3000 //Optional change as you wish
-    BACK_PORT=5001 //Optional change as you wish
-    REACT_APP_BACK_PORT= 5001
 
-    PGUSER= <Enter your PG User>
-    PGHOST= <Enter your PG Host>
-    PGDATABASE= <Enter your PG Database>
-    PGPASSWORD= <Enter your PG Password>
-    PGPORT= <Enter your PG Port>
+7. Create a `.env` file in the FlyAway directory in 'frontend' folder with the following variables:
+  ```bash
+    #FRONTEND PORT
+    REACT_APP_BACK_PORT= local host or any other deployed port
 
-    OPEN_AI_KEY= <Your OpenAI API key>
-    OPEN_AI_ASSISTANT_ID= <Assistant ID from OpenAI playground>
-
-    AWS_ACCESS_KEY_ID= <Enter your Access Key Id>
-    AWS_SECRET_ACCESS_KEY= <Enter your Secret Access Key>
-    AWS_SESSION_TOKEN= <Enter your AWS Session Token>
-    AWS_REGION= <Enter your AWS Region>
-    S3_BUCKET_NAME = <Your S3 Bucket Name>
-   ```
+    REACT_APP_API_URL= your local host or any other deployed port 
+  ```
 
 ### Running the Application
 
@@ -187,5 +292,7 @@ The main purpose of FlyAway is to simplify holiday planning through AI technolog
    npm start
    ```
 
-3. Open your browser and navigate to [http://localhost:3000](http://localhost:3000)
+3. Open the browser and navigate to [http://localhost:3000](http://localhost:3000) or the deployed url if you have one.
+
+4. Enjoy FlyAway.
 
