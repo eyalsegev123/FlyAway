@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useAuth } from '../context/AuthContext';
+import apiService from "../utils/api";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState({ name: '', mail: '', password: '', birthday: '' });
@@ -17,7 +18,7 @@ const ProfilePage = () => {
       return;
     }
 
-    axios.get(`http://localhost:5001/api/usersRoutes/user_profile/${userId}`)
+    apiService.getUserProfile(userId)
       .then(response => {
         if (response.data.length > 0) {
           setUserData(response.data[0]);
@@ -37,7 +38,7 @@ const ProfilePage = () => {
   };
 
   const handleSave = () => {
-    axios.put(`http://localhost:5001/api/usersRoutes/update/${userId}`, userData)
+    apiService.updateUser(userId, userData)
       .then(() => {
         setMessage('Profile updated successfully!');
         setIsEditing(false);
