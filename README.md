@@ -122,36 +122,36 @@ The main purpose of FlyAway is to simplify holiday planning through AI technolog
 FlyAway uses a relational database to manage data efficiently across three primary tables: Users, Trips, and Wishlist. Below are the details for each table:
 
 **Users Table**:
-  user_id (PK): A unique identifier for each user.
-  name: The name of the user.
-  mail: The email address of the user.
-  password: Hashed password for user authentication.
-  birthday: User's date of birth.
-  created_at: Timestamp of when the user account was created.
+  - user_id (PK): A unique identifier for each user.
+  - name: The name of the user.
+  - mail: The email address of the user.
+  - password: Hashed password for user authentication.
+  - birthday: User's date of birth.
+  - created_at: Timestamp of when the user account was created.
 
 **Trips Table**:
-  trip_id (PK): Unique identifier for each trip.
-  user_id (FK): References user_id from the Users table.
-  review: Textual review of the trip by the user.
-  stars: Rating given to the trip.
-  destination: Main destination of the trip.
-  trip_name: Name of the trip.
-  start_date: Start date of the trip.
-  end_date: End date of the trip.
-  album_s3location: URL or location of the trip's photo album on S3.
+  - trip_id (PK): Unique identifier for each trip.
+  - user_id (FK): References user_id from the Users table.
+  - review: Textual review of the trip by the user.
+  - stars: Rating given to the trip.
+  - destination: Main destination of the trip.
+  - trip_name: Name of the trip.
+  - start_date: Start date of the trip.
+  - end_date: End date of the trip.
+  - album_s3location: URL or location of the trip's photo album on S3.
 
 **Wishlist Table**:
-  wish_id (PK): Unique identifier for each wishlist entry.
-  user_id (FK): References user_id from the Users table.
-  destination: Destination the user wishes to visit.
-  trip_length: Planned length of the trip in days.
-  budget: Estimated budget for the trip.
-  wish_name: Name of the wishlist item.
-  notes: Additional notes about the wish.
-  trip_genres: Genres or themes of the trip (e.g., adventure, relaxation).
-  start_date: Intended start date of the trip.
-  end_date: Intended end date of the trip.
-  recommendation: AI-generated recommendation details.
+  - wish_id (PK): Unique identifier for each wishlist entry.
+  - user_id (FK): References user_id from the Users table.
+  - destination: Destination the user wishes to visit.
+  - trip_length: Planned length of the trip in days.
+  - budget: Estimated budget for the trip.
+  - wish_name: Name of the wishlist item.
+  - notes: Additional notes about the wish.
+  - trip_genres: Genres or themes of the trip (e.g., adventure, relaxation).
+  - start_date: Intended start date of the trip.
+  - end_date: Intended end date of the trip.
+  - recommendation: AI-generated recommendation details.
 
 ## Getting Started
 
