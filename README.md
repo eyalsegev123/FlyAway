@@ -177,43 +177,46 @@ FlyAway uses a relational database to manage data efficiently across three prima
 
     ```bash
     CREATE TABLE users (
-        user_id SERIAL PRIMARY KEY,
-        name VARCHAR(255),
-        mail VARCHAR(255) UNIQUE,
-        password VARCHAR(255),
-        birthday DATE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id SERIAL PRIMARY KEY,
+    name character varying(255),
+    mail character varying(255) UNIQUE,
+    password character varying(255),
+    birthday DATE,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
+
     ```
 
     ```bash
     CREATE TABLE trips (
-        trip_id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(user_id),
-        review TEXT,
-        stars INTEGER,
-        destination VARCHAR(255),
-        trip_name VARCHAR(255),
-        start_date DATE,
-        end_date DATE,
-        album_s3location TEXT
-    );
+    trip_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    review TEXT,
+    stars INTEGER,
+    destination character varying(255),
+    trip_name character varying(255),
+    start_date DATE,
+    end_date DATE,
+    album_s3location TEXT
+  );
+
     ```
 
     ```bash
     CREATE TABLE wishlist (
-        wish_id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(user_id),
-        destination VARCHAR(255),
-        trip_length INTEGER,
-        budget DECIMAL,
-        wish_name VARCHAR(255),
-        notes TEXT,
-        trip_genres VARCHAR(255),
-        start_date DATE,
-        end_date DATE,
-        recommendation TEXT
-    );
+    wish_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    destination character varying(255),
+    trip_length INTEGER,
+    budget DECIMAL,
+    wish_name character varying(255),
+    notes TEXT,
+    trip_genres character varying(255),
+    start_date DATE,
+    end_date DATE,
+    recommendation JSON
+  );
+
     ```
 
   Finalizing Setup
