@@ -13,6 +13,7 @@ import thailandImage from '../assets/thailand.jpg'
 import styled from 'styled-components';
 import LoadingTripGlobe from "../components/LoadingTripGlobe";
 import axios from "axios";
+import apiService from "../utils/api";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const HomePage = () => {
@@ -34,8 +35,7 @@ const HomePage = () => {
         
         // If we have a thread ID, also clean it up on the server
         if (threadIdRef.current) {
-          axios.delete(`http://localhost:5001/api/openAiRoutes/cancelRequest/${threadIdRef.current}`)
-            .catch(err => console.error("Failed to cancel request on server:", err));
+          apiService.cancelRequest(threadIdRef.current).catch(err => console.error("Failed to cancel request on server:", err));
         }
       }
     };
@@ -144,11 +144,7 @@ const HomePage = () => {
       }, 500);
       
       // Make the request
-      const response = await axios.post(
-        'http://localhost:5001/api/openAiRoutes/planTrip',
-        predefinedTripDetails,
-        { signal }
-      );
+      const response = await apiService.planTrip(predefinedTripDetails, { signal });
       
       // Clear the interval if it's still running
       clearInterval(checkThreadIdInterval);

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "../styles/pages/MyTrips.css";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import AddTripForm from "../components/AddTripForm";
 import Modal from "../components/Modal"; // Add Modal import
@@ -8,6 +7,7 @@ import SearchBox from "../components/SearchBox";
 import TripCardButton from "../components/TripCardButton";
 import PhotoCarousel from "../components/PhotoCarousel"; // Add PhotoCarousel import
 import ConfirmationDialog from "../components/ConfimrationDialog";
+import apiService from "../utils/api";
 import {
   CircularProgress,
   Grid,
@@ -53,9 +53,7 @@ const MyTrips = () => {
     }
     const user_id = user?.id;
     try {
-      const response = await axios.get(
-        `http://localhost:5001/api/tripsRoutes/getUserTrips/${user_id}`
-      );
+      const response = await apiService.getTrips(user_id);
       if (response.status === 200) {
         setTrips(response.data);
         setOriginalTrips(response.data);
@@ -102,10 +100,7 @@ const MyTrips = () => {
   const handleEdit = async (trip_id, formData) => {
     try {
       // Send edit request to the backend
-      const response = await axios.post(
-        `http://localhost:5001/api/tripsRoutes/editTrip/${trip_id}`,
-        formData
-      );
+      const response = await apiService.editTrip(trip_id, formData);
       if (response.status === 200) {
         fetchTrips();
         showAlert("Trip edited successfully!", "success");
@@ -130,9 +125,7 @@ const MyTrips = () => {
   const confirmDelete = async () => {
     try {
       // Send delete request to the backend
-      const response = await axios.delete(
-        `http://localhost:5001/api/tripsRoutes/deleteTrip/${deleteConfirmation.tripId}`
-      );
+      const response = await apiService.deleteTrip(deleteConfirmation.tripId);
 
       if (response.status === 200) {
         // Remove the trip from the frontend state
@@ -164,9 +157,7 @@ const MyTrips = () => {
 
   const fetchAlbumPhotosURLs = async (trip) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5001/api/tripsRoutes/fetchAlbum/${trip.trip_id}`
-      );
+      const response = await apiService.fetchAlbum(trip.trip_id);
       setAlbumPhotosURLs(response.data.photos); // assuming the response contains an array of photos
       setIsAlbumOpen(true); // open the modal
     } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import apiService from '../utils/api';
 
 const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
   const [name, setName] = useState("");
@@ -49,15 +49,13 @@ const RegisterForm = ({ onRegisterSuccess, onError, closeModal }) => {
 
     console.log("Attempting to register user...");
     try {
-      const response = await axios.post(
-        `http://localhost:5001/api/usersRoutes/register`, // Correct API URL
-        {
-          name,
-          email,
-          password,
-          birthday: birthday
-        }
-      );
+
+      const response = await apiService.register({
+        name,
+        email,
+        password,
+        birthday
+      });
 
       if (response.status === 201) {
         console.log(response);

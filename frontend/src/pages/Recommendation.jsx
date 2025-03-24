@@ -4,9 +4,9 @@ import { useAuth } from "../context/AuthContext";
 import WishlistButton from "../components/WishlistButton";
 import CategoryCard from "../components/CategoryCard";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import MessageBox from "../components/MessageBox";
 import styled from "styled-components";
+import apiService from "../utils/api";
 import {
   Stepper,
   Step,
@@ -184,21 +184,19 @@ const Recommendation = () => {
     // Your existing wishlist submit code
     const userId = user?.id;
     try {
-      const response = await axios.post(
-        `http://localhost:5001/api/wishesRoutes/addToWishList`,
-        {
-          user_id: parseInt(userId, 10),
-          destination,
-          startDate,
-          endDate,
-          tripGenres,
-          tripLength,
-          budget,
-          wishName,
-          notes,
-          tripRecommendation,
-        }
-      );
+      const response = await apiService.addToWishlist({
+        user_id: parseInt(userId, 10),
+        destination,
+        startDate,
+        endDate,
+        tripGenres,
+        tripLength,
+        budget,
+        wishName,
+        notes,
+        tripRecommendation,
+      });
+      
       if (response.status === 201) {
         showMessage("Added to your wish list!");
         setTimeout(() => {
@@ -223,10 +221,7 @@ const Recommendation = () => {
     
     setLoading(true); 
     try {
-      const response = await axios.post(
-        `http://localhost:5001/api/openAiRoutes/improveRecommendation/${threadId}`,
-        { message: feedback }
-      );
+      const response = await apiService.improveTripRecommendation(threadId, feedback);
   
       if (response.status === 200) {
         showMessage("Recommendation updated based on your feedback!");
@@ -246,8 +241,7 @@ const Recommendation = () => {
 
   const handleNoFeedbackSubmit = async (threadId) => {
     try {
-      const response = await axios.delete(`http://localhost:5001/api/openAiRoutes/deleteThread/${threadId}`, {
-      });
+      const response = await apiService.deleteThread(threadId);
   
       if (response.status === 200) {
         console.log(response.data);

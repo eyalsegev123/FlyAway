@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import styled from "styled-components";
+import apiService from '../utils/api';
 
 const LoginForm = ({ onLoginSuccess, onError }) => {
   const [email, setEmail] = useState("");
@@ -12,10 +12,8 @@ const LoginForm = ({ onLoginSuccess, onError }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `http://localhost:5001/api/usersRoutes/login`,
-        { email, password }
-      );
+      console.log(process.env.REACT_APP_API_URL);
+      const response = await apiService.login({ email, password });
 
       if (response.status === 200) {
         localStorage.setItem("user_id", response.data.user.user_id);

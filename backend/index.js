@@ -8,8 +8,8 @@ const wishRoutes = require('./routes/wishesRoutes');
 const openAiRoutes = require('./routes/openAiRoutes');
 const pool = require('./config/db');
 
-// Configure dotenv to look for .env file in root directory
-dotenv.config({ path: path.join(__dirname, '../.env') });
+// Configure dotenv to look for .env file in backend directory
+dotenv.config();
 
 const app = express();
 

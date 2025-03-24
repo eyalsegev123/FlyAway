@@ -3,7 +3,7 @@ const multerS3 = require('multer-s3');
 const { S3Client, ListBucketsCommand } = require('@aws-sdk/client-s3');
 const { fromEnv } = require("@aws-sdk/credential-providers");
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+require('dotenv').config();
 
 // Configure AWS SDK v3
 const s3 = new S3Client({
