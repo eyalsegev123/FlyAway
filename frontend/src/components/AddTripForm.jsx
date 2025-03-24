@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import dayjs from 'dayjs';
+import apiService from "../utils/api";
 
 
 // Form Input Components
@@ -152,8 +152,9 @@ const AddTripForm = ({ onTripAdded, userId }) => {
         console.log(`${key}: ${value}`);
       }
       
-      const response = await axios.post(
-        `http://localhost:5001/api/tripsRoutes/addTrip/${userId}`,
+
+      const response = await apiService.addTrip(
+        userId,
         formDataToSend,
         {
           headers: {

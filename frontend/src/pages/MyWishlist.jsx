@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { CircularProgress, Grid, Box, Alert, Snackbar } from "@mui/material";
 import WishCardButton from "../components/WishCardButton";
 import SearchBox from "../components/SearchBox";
 import ConfirmationDialog from "../components/ConfimrationDialog";
+import apiService from "../utils/api";
 
 const MyWishList = () => {
   const [wishlist, setWishlist] = useState([]); // State to store wishlist items
@@ -37,9 +37,7 @@ const MyWishList = () => {
 
     try {
       // Fetch wishlist items for the user
-      const response = await axios.get(
-        `http://localhost:5001/api/wishesRoutes/getUserWishes/${user_id}`
-      );
+      const response = await apiService.getUserWishes(user_id);
 
       if (response.status === 200) {
         setWishlist(response.data); // Set the wishlist state
@@ -86,9 +84,7 @@ const MyWishList = () => {
   const confirmDelete = async () => {
     try {
       // Send delete request to the backend
-      const response = await axios.delete(
-        `http://localhost:5001/api/wishesRoutes/deleteWish/${deleteConfirmation.wishId}`
-      );
+      const response = await apiService.deleteWish(deleteConfirmation.wishId);
 
       if (response.status === 200) {
         // Remove the wish from the frontend state
@@ -125,10 +121,7 @@ const MyWishList = () => {
   const handleEdit = async (wish_id, wish_name, wish_notes) => {
     try {
       // Send edit request to the backend
-      const response = await axios.post(
-        `http://localhost:5001/api/wishesRoutes/editWish/${wish_id}`,
-        { wish_name, wish_notes }
-      );
+      const response = await apiService.editWish(wish_id, { wish_name, wish_notes });
       if (response.status === 200) {
         fetchWishlist();
         showAlert("Wish edited successfully!", "success");

@@ -63,8 +63,7 @@ const addTrip = async (req, res) => {
             const albumPath = `s3://${process.env.S3_BUCKET_NAME}/${s3BasePath}`;
             await pool.query(
                 `UPDATE trips SET album_s3location = $1 WHERE trip_id = $2`,
-                [albumPath, trip_id
-                ]
+                [albumPath, trip_id]
             );
             console.log("Updated folder in db");
         }

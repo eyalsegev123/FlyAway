@@ -2,7 +2,7 @@
 
 ## Overview
 
-FlyAway is an intelligent holiday planning platform that leverages Artificial Intelligence to create personalized travel recommendations. Designed to make trip planning effortless, the application helps users discover vacation destinations tailored to their preferences and provides smart, curated travel plans.
+FlyAway is an intelligent holiday planning platform that leverages Artificial Intelligence to create personalized travel recommendations. Designed to make trip planning effortless, the application helps users discover vacation destinations tailored to their preferences and provides smart, accurated travel plans.
 
 The platform uses advanced natural language processing through OpenAI's technology to understand user preferences and generate personalized travel suggestions. By analyzing factors such as budget constraints, preferred activities, climate preferences, and travel duration, FlyAway creates tailored itineraries that match each user's unique requirements.
 
@@ -14,33 +14,24 @@ Our recommendation engine considers various factors including:
 - Budget optimization strategies
 - Activity matching based on user interests
 - Accommodation suggestions that align with preferences
-- Local attractions and hidden gems not typically found in standard travel guides
 - User reviews and ratings from past travelers
 - Detailed daily scheduling for the first week of travel
 
 The application follows a user-centered design approach, providing an intuitive interface that guides travelers through the planning process from inspiration to finalized itinerary.
+The design allows the end-user to improve the AI recommendation according to his notes from time to time, ensuring satisfaction.
 
 ## Purpose
 
-The main purpose of FlyAway is to simplify holiday planning through AI technology while providing personalized travel recommendations based on user preferences. By offering an intuitive platform that consolidates information from multiple sources, FlyAway aims to save travelers time and effort while ensuring they discover destinations that truly match their interests.
-
-Additional goals include:
-
-- **Democratize travel planning expertise** by making intelligent recommendations available to everyone regardless of their travel experience
-- **Reduce decision fatigue** by presenting curated options rather than overwhelming users with endless possibilities
-- **Enhance travel experiences** by suggesting destinations that align with personal preferences but might not be on a traveler's radar
-- **Support spontaneous travel** by enabling quick planning with minimal input
-- **Facilitate budget-conscious travel** through smart recommendations that optimize for cost-effectiveness
+The main purpose of FlyAway is to simplify holiday planning through AI technology while providing personalized travel recommendations based on user preferences. By offering an intuitive platform that supplies information from multiple sources, FlyAway aims to save travelers time and effort while ensuring they discover destinations that truly match their interests.
 
 ## Features
 
 - AI-powered travel recommendations based on user preferences
 - Personalized trip planning with customizable itineraries
 - Detailed day-by-day schedule planning for the first week to jumpstart trip organization
-- User wishlist management for future travel ideas
-- Photo management for trip memories
+- User wishlist management for future travel ideas, including the AI recommendation
+- Past trips management for memories, includind photos and reviews
 - Budget estimation recommendations
-- Travel tips and local insights for destinations
 - Incorporation of real user reviews in recommendation process
 
 ## Tech Stack
@@ -51,7 +42,7 @@ Additional goals include:
 - **Authentication**: Custom auth system with bcrypt password hashing and localStorage persistence
 - **Styling**: Styled Components
 - **Routing**: React Router
-- **AI Integration**: OpenAI API
+- **AI Integration**: OpenAI Assistant API
 - **State Management**: React Context API
 - **HTTP Client**: Axios
 
@@ -61,15 +52,15 @@ Additional goals include:
 
 - **Pages**:
 
-  - **Home**: Landing page featuring an introduction to the platform's capabilities, testimonials, and quick-start options for new visitors. 
+  - **Home**: Landing page featuring an introduction to the platform's capabilities and quick-start options for new visitors. 
 
   - **AboutUs**: Highlights the development team and project philosophy. Features team member cards, a mission statement, and terms of usage.
 
-  - **PlanTrip**: Interactive interface for creating new travel plans with a multi-step form that collects user preferences including budget, duration, activities, climate preferences, and travel style. Implements a conversational flow to make preference collection engaging.
+  - **PlanTrip**: Interactive interface for creating new travel plans with a multi-step form that collects user preferences including budget, duration, activities, climate preferences, and travel style. Implements a conversational flow to make preference collection engaging. Submition of the form nevigates the user to 'Reccomendation' page.
 
   - **Recommendation**: Displays AI-generated travel suggestions with detailed information about destinations including cost breakdowns, activity suggestions, and accommodation options. Features a step-by-step presentation of recommendations with the ability to refine results. Includes a comprehensive day-by-day schedule for the first week of travel to provide immediate planning guidance. Recommendations incorporate insights from user reviews to provide authentic travel suggestions.
 
-  - **MyTrips**: User's personal dashboard for saved trip plans with ability to view, edit, and delete trips. Includes photo galleries for each trip, review capabilities, and filtering options. Implements a responsive grid layout.
+  - **MyTrips**: User's personal dashboard for passed trips with the ability to view, edit, and delete trips. Includes photo galleries for each trip, review capabilities, and filtering options. Implements a responsive grid layout.
 
   - **MyWishlist**: A collection of destinations and trip ideas saved by the user for future reference. Allows users to revisit and review the recommendations provided during their planning process.
 
@@ -77,7 +68,7 @@ Additional goals include:
 
 - **Main Components**:
 
-  - **Header**: Navigation component with responsive design, user authentication status display, and dynamic menu options based on login state. Includes welcome message animation for newly logged-in users. Enables Login/Logout and Register functions.
+  - **Header**: Navigation component with responsive design, user authentication status display, and dynamic menu options based on login state. Includes welcome message animation for logged-in users. Enables Login/Logout and Register functions.
 
   - **LoginForm** and **RegisterForm** manage user authentication with input validation, password confirmation, and real-time error feedback for invalid inputs.
 

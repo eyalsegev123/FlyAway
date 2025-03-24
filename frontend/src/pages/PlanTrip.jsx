@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import apiService from "../utils/api";
 import { useNavigate, useLocation } from "react-router-dom";
 import { StyledWrapper } from '../styles/sharedStyles';
 import "../styles/pages/PlanTrip.css";
@@ -218,7 +219,7 @@ const PlanTrip = () => {
         
         // If we have a thread ID, also clean it up on the server
         if (threadIdRef.current) {
-          axios.delete(`http://localhost:5001/api/openAiRoutes/cancelRequest/${threadIdRef.current}`)
+          apiService.cancelRequest(threadIdRef.current)
             .catch(err => console.error("Failed to cancel request on server:", err));
         }
       }
@@ -302,11 +303,7 @@ const PlanTrip = () => {
       }, 500);
       
       // Initiate the request with the signal
-      const response = await axios.post(
-        `http://localhost:5001/api/openAiRoutes/planTrip`,
-        formData,
-        { signal }
-      );
+      const response = await apiService.planTrip(formData, { signal });
 
       // Clear the interval if it's still running
       clearInterval(checkThreadIdInterval);
