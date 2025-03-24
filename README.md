@@ -198,8 +198,7 @@ FlyAway uses a relational database to manage data efficiently across three prima
     start_date DATE,
     end_date DATE,
     album_s3location TEXT
-  );
-
+    );
     ```
 
     ```bash
@@ -215,8 +214,7 @@ FlyAway uses a relational database to manage data efficiently across three prima
     start_date DATE,
     end_date DATE,
     recommendation JSON
-  );
-
+    );
     ```
 
   Finalizing Setup
