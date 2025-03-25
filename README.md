@@ -34,6 +34,61 @@ The main purpose of FlyAway is to simplify holiday planning through AI technolog
 - Budget estimation recommendations
 - Incorporation of real user reviews in recommendation process
 
+## How to use ?
+
+FlyAway provides a user-friendly and intuitive interface that guides you through planning your perfect trip. Below are snapshots of our key pages along with explanations on how to use each feature.
+
+### Home Page
+
+Quick AI Recommendations: Access AI-powered travel recommendations directly from the homepage. Choose from suggested trips such as romantic getaways in Paris or culinary adventures in Tokyo.
+
+![Home Page](photos_for_readme/home_page.jpg)
+
+### Navigation Menu
+
+For registered users, the extended menu provides quick access to all features of FlyAway, including your profile, trips, and wishlist. Easily navigate the platform with everything just a click away.Unregistered users will be able only to plan A trip and get a recommendation.
+
+![Navigation Menu](photos_for_readme/menu.jpg)
+
+
+### Plan Your Trip
+
+Here, users can detail their travel preferences to receive tailored recommendations. Fill out information such as destination, budget, trip duration, and more. Submitting this form will create an AI recommendation based on your specified needs.
+
+![Plan Your Trip](photos_for_readme/plan_trip.jpg)
+
+### Recommendation Page
+
+The core of FlyAway where personalized trip recommendations are detailed. Navigate through different sections like hotels, attractions, and dining to plan every aspect of your trip. Users can save recommendations to their Wishlist for future reference and ask the AI model to improve the recommendation as well.
+
+![Recommendation Page](photos_for_readme/recommendation.jpg)
+
+### Wishlist
+
+View and manage saved travel ideas with their AI recommendations. Click on any wish card to revisit the detailed AI-generated travel suggestions.
+
+![Wishlist](photos_for_readme/wishlist.jpg)
+
+### My Memories
+
+Create a collection of your past trips. Edit details, add memories like photos and reviews, or delete trips that are no longer needed.
+
+![My Trips](photos_for_readme/my_trips.jpg)
+
+### Profile Page
+
+Update personal details such as your name, email, and password. Ensure your information is always current to enhance your travel planning experience.
+
+![Profile Page](photos_for_readme/profile.jpg)
+
+### About Us
+
+Learn about the FlyAway team and our mission. Understand the values and technology behind your travel recommendations.
+
+![About Us](photos_for_readme/about_us.jpg)
+
+
+
 ## Tech Stack
 
 - **Frontend**: React.js
