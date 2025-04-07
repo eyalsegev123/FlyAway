@@ -28,6 +28,8 @@ app.get("/", (req, res) => {
   res.send("Welcome to FlyAway!");
 });
 
-app.listen(process.env.BACK_PORT, () => {
-  console.log(`Server running on port ${process.env.BACK_PORT}`);
+const PORT = process.env.PORT || process.env.BACK_PORT || 5001;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
