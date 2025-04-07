@@ -1,28 +1,3 @@
-// const { Pool } = require("pg");
-// const path = require("path");
-// const dotenv = require("dotenv");
-
-// // Configure dotenv to look for .env file in root directory
-// dotenv.config();
-
-// // Set up the connection pool with database credentials from .env
-// const pool = new Pool({
-//   user: process.env.PGUSER,
-//   host: process.env.PGHOST,
-//   database: process.env.PGDATABASE,
-//   password: process.env.PGPASSWORD,
-//   port: process.env.PGPORT,
-// });
-
-// // Test the connection
-// pool
-//   .connect()
-//   .then(() => console.log("Connected to the database successfully!"))
-//   .catch((err) => console.error("Database connection error:", err));
-
-// module.exports = pool;
-
-
 
 const { Pool } = require("pg");
 const path = require("path");
@@ -57,3 +32,41 @@ pool
 
 module.exports = pool;
 
+
+//TABLES CREATION:
+
+// CREATE TABLE users (
+//   user_id SERIAL PRIMARY KEY,
+//   name VARCHAR(255),
+//   mail VARCHAR(255),
+//   password VARCHAR(255),
+//   birthday DATE,
+//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+// );
+
+
+// CREATE TABLE trips (
+//   trip_id SERIAL PRIMARY KEY,
+//   user_id INTEGER,
+//   review TEXT,
+//   stars INTEGER,
+//   destination VARCHAR(255),
+//   trip_name VARCHAR(255),
+//   start_date DATE,
+//   end_date DATE,
+//   album_s3location TEXT
+// );
+
+// CREATE TABLE wishlist (
+//   wish_id SERIAL PRIMARY KEY,
+//   user_id INTEGER,
+//   destination VARCHAR(255),
+//   trip_length INTEGER,
+//   budget INTEGER,
+//   wish_name TEXT,
+//   notes TEXT,
+//   trip_genres VARCHAR(255),
+//   start_date DATE,
+//   end_date DATE,
+//   recommendation JSON
+// );
