@@ -30,7 +30,7 @@ The main purpose of FlyAway is to simplify holiday planning through AI technolog
 - Personalized trip planning with customizable itineraries
 - Detailed day-by-day schedule planning for the first week to jumpstart trip organization
 - User wishlist management for future travel ideas, including the AI recommendation
-- Past trips management for memories, includind photos and reviews
+- Past trips management for memories, including photos and reviews
 - Budget estimation recommendations
 - Incorporation of real user reviews in recommendation process
 
