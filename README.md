@@ -94,6 +94,8 @@ Learn about the FlyAway team and our mission. Understand the values and technolo
 - **Frontend**: React.js
 - **Backend**: Node.js, Express.js
 - **Database**: Postgres - SQL (via connection pool)
+- **Deployment: Vercel
+- **DB hosting: Render
 - **Authentication**: Custom auth system with bcrypt password hashing and localStorage persistence
 - **Styling**: Styled Components
 - **Routing**: React Router
